@@ -1,0 +1,620 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\graphicspath{ {./img/} }
+\usepackage[ruled,vlined]{algorithm2e}
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\DeclareMathOperator{\tr}{Tr} %variance
+\DeclareMathOperator{\var}{Var} %variance
+\DeclareMathOperator{\cov}{Cov} %covariance
+\DeclareMathOperator{\E}{\mathbb{E}}% expected value
+\DeclareMathOperator{\betaHat}{\hat{\bm{\beta}}}
+
+
+
+\begin{document}
+
+
+\title{Probabilistic Artificial Intelligence}
+\author{A. Krause}
+\date{}
+
+\maketitle
+
+\section{Probability Review}
+
+	Is not really worth writing out.
+						
+
+\section{Probability \& Bayesian Networks}
+
+	\subsection{Problem with High Dimensional Distributions}
+	
+		Suppose We're dealing with $X_1,\ldots X_n$ random variables whose domain is binary, i.e. $X_i \in \{0 ,1 \}$, and We want to specify this distribution. 
+		
+		First approach is brutally tabular - just enumerate $2^n$ and give each possible case a probability. Truly terrible. We'll need $2^n-1$ parameters, with the -1 being in there due to the constraint that We know that the probabilities must sum to 1.
+		
+		Another is to decompose the probability distribution into conditional probabilities and use the product rule, You know $P(A=a, B=b) = P(A=a|B=b)P(B=b)$ and all that. To think about the number of parameters We'll need to specify focus on the last term of the product, it'll be $P(X_n|X_1,\ldots X_{n-1})$. To specify this final conditional You'll have $2^{n-1}$ combinations of priors, each of which will need a probability value, nevermind all the other conditionals. 
+		
+		Anyway, problem with high dimensional distributions is that if We don't make any assumptions about them, specifying them is a nightmare. Marginalizing them out runs into the same problems.
+		
+		So what do We do?
+		
+	\subsection{What do We do?}
+	
+		Assume independence of course - if We assume everything is totally independent, then all We need to specify the probability of success (or failure) for each independent variable to calculate the probability of any event.
+		
+		Problem there is that this setup is useless - We want to be able to do prediction and inference or something, and if everything is independent, then knowing stuff won't help You predict other stuff. 
+		
+		Instead, the idea is to focus in the intermediate case - there is some stuff that is intertwined, and there is some stuff that is independent. If We do a good job with those structures We stand a chance of doing something useful.
+		
+	\subsection{Conditional Independence}
+	
+		Is simple - $X, Y$ may not be independent in general, but given some $Z$ We can say $X\perp Y| Z$, which says $X$ is independent of $Y$ given $Z$.
+		
+		This usually occurs given common causes - if I have a fever I am more likely to have a cough, but if We say that I have a flu then whether I present the symptom of fever or cough can be said to be independent (if We make the assumption that symptoms are independent given disease).
+		
+	\subsection{Is used in Naive Bayes}
+	
+		Where, Naive Bayes model is essentially just using conditional independence to make predictions:
+		
+		We have vectors $\mathbf{x}_1,\ldots \mathbf{x}_n\in\mathbb{R}^d$ of features and We'd like to assign a feature to each vector. Well, dealing with real numbers may be problematic - vectors of discrete features is easier to visualize. Point is, We have a vector of features.
+		
+		Suppose We have $c_1,\ldots,c_k$ classes to choose from. The idea then is that the features are independent given the class label, i.e. 
+		
+		\begin{align}
+			P\left( \bigcap^d_{j=1} \mathbf{x}_{i, j} | c^l_i \right) = \prod^d_{j=1} P(\mathbf{x}_{i, j} | c^l_i)
+		\end{align}
+		
+		So what that mess is saying is that the probability of the conjunction of the $d$ features We observe for sample $i$ given the label for sample $i$ is equal to the product of their probabilities, i.e. We assume conditional independence of features given label. All that's left is to write down the 'ole Bayes rule:
+		
+		\begin{align}
+			P(c^l_i | \mathbf{x}_i) = \frac{P(\mathbf{x}_i | c^l_i)P(c^l_i)}{P(\mathbf{x}_i)}
+		\end{align}
+		
+		Is the probability of the class label $l$ for the $i$'th sample. Observe that if We compute this for every class, the denominator remains the same. Since the label We are going to assign is simply the one with the highest conditional variance, We don't have to compute the normalization term! Lucky us. 
+		
+		Naive in Naive Bayes comes from the fact that We are using a very simple assumption and basically nothing else - not exploiting any structures in data etc.
+		
+	\subsection{A slightly more general setup}
+	
+		 Would be that maybe not all the variables are conditionally independent, but some are. 
+		 
+		 The notation this course uses for this is $P(X_i|X_{\mathbf{A}_i})$, with the subscript being a set of variables. The idea is that $\mathbf{A}_i$ is the set of R.V.s such that $X_i$ is independent of the rest of them. 
+		 
+		 In the naive Bayes case, this is always just one variable - the category assignment. We can relax this however, and let some variables get intertwined - say 3 of them intertwined, which would result in needing 8 parameters to specify their joint distribution if the features are binary (and maybe 8$\times k$ for different classes).
+		 
+		 We can observe that
+		 
+		 \begin{align}
+		 	\sum^n_{i=1} 2^{|\mathbf{A}_i|} \le n\cdot 2^{\max_{i\in n} |\mathbf{A}_i|}		 
+		 \end{align}
+		 
+		 Which is just a course upper bound for the number of parameters involved. Really, it comes down to the individual cases and how intertwined the variables are.
+		 
+	\subsection{Bayesian Networks}
+	
+		Are just a way of figuring out that minimal set $\mathbf{A}_i$.
+		
+		Here is the setup:
+		
+		1. We decide on an ordering of the random variables, giving us $X_1,\ldots,X_n$.
+		
+		2. For each variable in the set $X_i$, let $A$ be the minimal subset of $\{ 1,\ldots i-1 \}$, such that $X_i \perp X_{\bar{A}} | X_A$ and let $\text{Pa}(X_i) = A$.
+		
+		So basically, given the parents of a node, the node is independent of all other ancestors. 
+		
+		This ensures that there are no loops in the DAG which ensures a valid distribution. 
+		
+		For $P(X_i|X_{A_i})$, We learn it from data or some such. 
+		
+	\subsection{D-Separation}
+	
+		We meet again.
+		
+		The question We have is - given a graph and a set of nodes as known, We want to know whether $X_i, X_j$ are independent. 
+		
+		The idea is to observe that We can read the flow of information off the graph.
+		
+		Taking 3 nodes at a time (in a sense a fundamental building block of the graph):
+		
+		1. $A\to B\to C$:  $A\perp C | B$, since $B$ in a sense stops the flow of information - if We didn't know $B$, then knowing $A$ would influence our beliefs about what $B$ may be and knowing that influences our belief about what $C$ would be. However, if We know what value $B$ has, then any effect $A$ could have had is void - all effect that $A$ could have on $C$ was through the medium of $B$ - if $A$ can' change $B$ due to $B$ already being known, then $A$ can't affect $C$.
+		
+		Likewise, since independence is symmetric, We can observe that knowing $C$ would tell us about $B$, since We observed the result caused by $B$, and knowing that would tell us something about $A$ - however if $B$ is known then the "evidence" of $C$ is explained away.
+		
+		2. $A \leftarrow B \leftarrow C$: same as before.
+		
+		3. $A\leftarrow B \to C$: $A\perp C | B$ since We have observed the common cause - if We did not know $B$, then observing $C$ would make $B$ more likely which might make $A$ more likely etc.
+		
+		4. $A \to B \leftarrow C$: $A \perp C$ So this one's different - $A$ and $C$ can both affect $B$ - if We don't know the value of $B$, then $A$ and $C$ are independent.
+		
+		However, $A\not\perp C | B$. The idea is that observing the cause and effect makes the other cause less likely - observing an alarm makes it so it's more likely that a burglary caused it rather than an earthquake, making the earthquake less likely. Or something like that.
+		
+		Anyway, those are the 4 cases of separation. If two nodes are separated, then they are independent.
+		
+		Note that We then have the fact that: if nodes are d-separated, then they are independent. However, unless We have a "faithful" property, We can't say that if the nodes are independent "irl", then they are d-separated: We may have spurious connections in the graph without knowing about it.
+		
+		
+\newpage
+\section{D-Separation Algorithm}
+
+	So, a Bayesian network consists of a tuple: a DAG $G$ and a set of tables $P$, where the tables specify $P(X_i|\text{Pa}(X_i))$.
+	
+	\subsection{Simple Algorithm for ascertaining D-Separation}
+	
+		Goes like this: 
+		
+		1. For all evidence nodes, mark the nodes and all of their ancestors.
+		
+		2. Perform breadth-first search. Remove blocked connections from the search queue as You progress (which You can do, since all You need to know is which nodes We have information about).
+		
+	\subsection{What do We use BNs for anyway}
+	
+		We may wish to know marginal probabilities - 
+		
+		\begin{align}
+			P(X_i=x_i|X_S=x_s
+		\end{align}
+		
+		In which case We'd end up marginalizing over stuff in the network.
+		
+		We may also wish to know the \textbf{Most Probable Explanation} or MPE:
+		
+		\begin{align}
+			\argmax_{x_{\bar{S}}}P(X_{\bar{S}} = x_{\bar{S}} | X_S = x_s)	
+		\end{align}	
+		
+		i.e. We partition the nodes into observed nodes $S$ and unobserved nodes $\bar{S}$, and given the observations We want to figure out what is the likeliest assignment to the unobserved nodes  - what fits best with what We have observed.
+		
+		A relaxation of this is \textbf{Maximum a Posteriori} or MAP, which instead of partitioning the set, simply have some evidence $S$ and another set, call it $A$, of variables We care about. In MAP there may be variables that are neither in the observed set, nor in the set of variables that We care about.
+		
+		In general, these queries are obviously pretty difficult - We have an exponential number of combinations. To have any hope, We need to exploit some structural information of the problem.
+		
+	\subsection{Variable Elimination}
+	
+		For starters, We do it on
+		
+		\begin{align}
+			X_1\to X_2\to X_3\to X_4\to X_5
+		\end{align} 
+		
+		We wanna compute $P(X_1 | X_5)$, so the joint distribution basically. 
+		
+		The idea is to observe that the variables We are marginalizing out share common \textbf{factors}, and We can reuse those factors for efficient computation. Goes like this:
+		
+		\begin{align}
+			P(X_1, X_5) &= \sum_{X_2, X_3, X_4} P(X_1, X_2, X_3, X_4, X_5)\\
+			&= \sum_{X_2, X_3, X_4} P(X_1)P(X_2|X_1)P(X_3|X_2)P(X_4|X_3)P(X_5|X_4)\\
+			&= \sum_{X_2, X_3} P(X_1)P(X_2|X_1)P(X_3|X_2)\sum_{X_4}P(X_4|X_3)P(X_5|X_4)\\
+			&= \sum_{X_2, X_3} P(X_1)P(X_2|X_1)P(X_3|X_2)\underbrace{\sum_{X_4}P(X_4|X_3)P(X_5|X_4)}_{g_4(X_3, X_5)}\\
+			&= \sum_{X_2, X_3} P(X_1)P(X_2|X_1)P(X_3|X_2)g_4(X_3, X_5)\\
+			&= \sum_{X_2} P(X_1)P(X_2|X_1)\sum_{X_3}P(X_3|X_2)g_4(X_3, X_5)\\
+			&= \sum_{X_2} P(X_1)P(X_2|X_1)\underbrace{\sum_{X_3}P(X_3|X_2)g_4(X_3, X_5)}_{g_{3, 4}(X_2, X_5)}\\
+			&= \sum_{X_2} P(X_1)P(X_2|X_1)g_{3, 4}(X_2, X_5)\\
+			&= P(X_1)\sum_{X_2} P(X_2|X_1)g_{3, 4}(X_2, X_5)\\
+			&= P(X_1)\underbrace{\sum_{X_2} P(X_2|X_1)g_{3, 4}(X_2, X_5)}_{g_{2, 3, 4}(X_1, X_5)}\\
+			&= P(X_1)g_{2, 3, 4}(X_1, X_5)
+		\end{align}
+		
+		So, to maybe step through this a little - that first $\sum_{X_2, X_3, X_4}$ is just three summations - could replace that with three summation signs, each dealing with 1 variable.
+		
+		Then We simply observe that the "latest" variables are repeated across all "earlier" variables - terms with $X_2$ always need to deal with $X_5$, and those \textbf{factors} are always repeated, so We compute them and just store them.
+		
+		In $\sum_{X_4}P(X_4|X_3)P(X_5|X_4) = g_{3, 4}(X_3, X_5)$ We are saying that this particular $g$ marginalizes out $X_4$. The "input" are values of $X_3$, so in the binary case, this $g$ is a $2\times 2$ table that given $X_3=0$ gives probabilities of $X_5=0$ and $X_5=1$ and likewise for $X_3$. So in a sense it maps $X_3$ to $X_5$. 
+		
+		In order to compute $g$ in this binary setting, We'll need 4 computations per $g$ - in $\sum_{X_4}P(X_4|X_3)P(X_5|X_4) = g_{3, 4}(X_3, X_5)$, We'll have to compute 
+		
+		\begin{align}
+			P(X_4=0|X_3=0)P(X_5=0|X_4=0) + P(X_4=1|X_3=0)P(X_5=0|X_4=1)
+		\end{align}
+		
+		So basically, for each output and input (giving a total of 4 combinations), the variable We are marginalizing out can take 2 values, so We need to do an addition per combination, yielding 4 total additions per generation of a $g$ term. 
+		
+		So! For our trouble, We have reduced what would have been exponentially expensive to compute into something linear, since We get just 4 additions per generation of $g$!
+		
+	\subsection{General Algorithm}
+	
+		Actually works on factors.
+		
+		1. Start with some nodes You care $X$ and some evidence $E=e$.
+		
+		2. (!) Choose an ordering for the variables, so that We have $X_1\cdots X_n$. This is not the same ordering We decided on for the Bayes' net - this is the order in which We are going to remove the variables.
+		
+		3. Generate an initial \textbf{factor} for each node $X_i$ - this is just the table of $P(X_i=x|\text{Pa}(X_i))$.
+		
+		4. For each $X_i\not\in \{X, E \}$:
+		
+		5. Collect all factors which depend on $X_i$ and generate a new factor 
+		
+		\begin{align}
+			g = \sum_{x_i}\prod_j g_j
+		\end{align}
+		
+		So $g_j$ are factors which depend on $X_i$.
+		
+		Keep doing step 5 until a factor depending only on $E$ and $X$ is left.
+		
+		6. Normalize the result - the result gives us $P(X, E)$ and We want $P(X|E=e)$, so We get $P(E=e)$ by marginalizing out $X$ from our result to get the normalizing factor.
+		
+		We're doing the same thing We did in the chain example - marginalizing variables out one at a time and storing those results for later marginalizations.
+		
+		One thing to "watch out for" or basically just do is try to push the "sum" part as deep into the equations as possible - recall that $g_4(X_3, X_5)$ was the "deepest" term, which is to say it was common to the most factors - the more common the factor, the more computation We save by marginalizing it out early.
+		
+		Visually I think one can think of this as deleting nodes and updating the corresponding probabilities.
+		
+	\subsection{How to pick a good elimination ordering?}
+	
+		If You have a polytree (i.e. a DAG that is a tree if We remove edge directions), then You have a simple algorithm:
+		
+		1. Pick a root (random is fine, maybe pick one with a lot of neighbours).
+		
+		2. Make all edges point towards the root (fine to do since We have no confusing cycles).
+		
+		3. Create a topological ordering of the nodes - all this means is that $X_i\in \text{descendants}(X_j)\implies i > j$, i.e. descendants have a greater order.
+		
+		4. Use the topological order as the order for Variable Elimination.
+		
+	\subsection{Multiple Queries}
+	
+		Are bad in the naive approach - sure, in the ideal case We have pretty neat linear performance, but if $n$ queries run in $n$ time, We still have an $n^2$ running time.
+		
+		However, We should observe that most computation is duplicated. If We again consider
+		
+		\begin{align}
+			X_1\to X_2\to X_3\to X_4\to X_5
+		\end{align} 
+		
+		and think about computing $P(X_1|X_5)$ and $P(X_2|X_5)$, observe that the tail of the computation remains the same - We're marginalizing out $X_3, X_4$. Only difference between the two queries is that the first marginalizes out $X_2$ where as the second one marginalizes out $X_1$. If We store this computation, We can make our queries much more efficient.
+		
+	\subsection{Factor Graphs}
+	
+		Are graphs of factors lol.
+		
+		If You'd like to draw one based on something already familliar, simply take the graph for a BN. Now (though this is personal preference) create a factor for each leaf node - this will represent $P(X_i)$ where $X_i$ is the leaf node in question.
+		
+		Then for non-leaf nodes, for each node create a new factor which depends on all the parents on that node and the node itself. Dependencies manifest themselves as connections in the graph.
+		
+	\subsection{But what do We do with these Factor Graphs?}
+		
+		Belief Propagation, is the algorithm's name. Wee.
+		
+		We'll first do Belief Propagation for non-loopy graphs, since that's nicer.
+		
+		So, at all times, We have the bipartite Factor Graph thing going on. At all times there are factors, and at all times, there are nodes. Sure thing.
+		
+		Now We want to introduce this message-passing idea - factors and nodes "communicate", as it were, by passing messages. 
+		
+		So, with our current initialization of each edge node having a factor dedicated to that edge node, at the start of it all there are no nodes that are candidates for passing a message - only the edge factors are. I think.
+		
+		So, how do factors pass a message? The notation of factor $u$ sending a message to node $v$ looks like
+		
+		\begin{align}
+			\mu_{u\to v} = \sum_{\mathbf{x}_u\sim x_v} f_u(\mathbf{x}_u) \prod_{v'\in N(u)\setminus\{v\}} \mu_{v'\to u}(x_{v'})
+		\end{align}
+		
+		What the hell is that, right?
+		
+		So, this first bit, $\prod_{v'\in N(u)\setminus\{v\}}$ says: for all neighbours $v'$ except the node I'm sending to, which is $v$ (giving ($v'\in N(u)\setminus\{v\}$) in total), We take the incoming messages (and since this is a message from a factor, the messages to the factor must come from nodes) just take the product of all of 'em. 
+		
+		Recall that factors, well, they are certainly initialized with conditional probabilities, but I think that as the algorithm progresses they are just guaranteed to be positive. But I think it still makes sense to think of them this way overall. 
+		
+		So when We take the product of multiple factors, We are in a sense merging variables while multiplying the results. For example, if some node $v$ can take 10 values, and has 2 factors each of size $10\times 10$, and if the factors somehow share 1 variable, then the result of the multiplication will be $10\times 19$, where a join will be performed on the joint variable and the "result" column as it were will be multiplied. There's a slide for it lol.
+		
+		Anyway, so We take the product. Sure. We then multiply that product by the factor - which is yet another instance of factor multiplication. Note that the factor doesn't change at any point - We define it at the start with something like $p(X_i|\text{Pa}(X_I))$, and that's what it'll be. It's the messages that get updated.
+		
+		Finally We sum over the result of the entire thing - the $x_{\mathbf{u}}\sim x_v$ there means that We are simply summing over all variables that are not the target variable.
+		
+		So what does this give us in the end? Do these messages factor to node messages have some vague interpretation? Well, the factor messages are a product of node messages, so We should maybe start with those.
+		
+		Node messages from node $u$ to factor $v$ are
+		
+		\begin{align}
+			\mu_{u\to v}(x_v) = \prod_{u'\in N(v)\setminus \{u \}} \mu_{u'\to v}(x_v)
+		\end{align}
+		
+		So these are just the product of all incoming messages from factors that are neighbours of $u$, aside from the factor We are sending to.
+		
+		So nodes receive messages with all variables but the node variable summed out. Factors receive these same messages but from different nodes, i.e. they receive a bunch of basically unconditional (and unnormalized?) probabilities, and then they multiply those with the factor, which is a conditional probability, in effect giving the unconditional probability (again, not normalized). Was that so hard?
+		
+		So, again, the deal is as follows: the key message, in a sense, is the one sent from a factor to a node. This is the product of all the messages sent to the factor by it's neighbouring nodes (except the target node), which is then summed down to contain on the variable in the target node. 
+		
+		The product is basically a cross product - the messages contain dependent $k$ variables each, and if each variable has $2$ possible values, then We get $2^{2k}$ entries in the result of the product - We're computing every possible combination.
+		
+		That's basically it I think.
+		
+		
+		
+		
+		
+		
+		
+		
+		
+\newpage
+\section{Practice}
+
+	\subsection*{Exercise Series 1}
+	
+		\textbf{Q1}
+
+			$P(test|disease)=0.99$, $P(\neg test| \neg disease) = 0.99$, $P(disease) = 0.0001$.
+			
+			\begin{align}
+				P(disease | test) = \frac{P(test|disease)P(disease)}{P(test)}
+			\end{align}
+			
+			\begin{align}
+				P(test) &= P(test|disease)P(disease) + P(test|\neg disease)P(\neg disease)\\
+				&= 0.99\cdot 0.0001 + 0.01*0.999\\
+				&= 0.010098
+			\end{align}
+			
+			So in the end We get $0.99\cdot 0.0001/0.010098=0.0098$.
+			
+		\textbf{Q2}
+		
+			\textbf{a)}
+		
+				\begin{align}
+					P(a|b, c) = \frac{P(a, b ,c)}{P(b, c)}
+				\end{align}
+				
+				\begin{align}
+					P(b|a, c) = \frac{P(a, b, c)}{P(a, c)}
+				\end{align}
+				
+				\begin{align}
+					\frac{P(a, b ,c)}{P(b, c)} &= \frac{P(a, b, c)}{P(a, c)}\\
+					\frac{P(b|a, c)P(a|c)P(c)}{P(b, c)} &= \frac{P(a|b, c)P(b|c)P(c)}{P(a, c)}\\
+					\frac{P(b|a, c)P(a|c)P(c)}{P(b|c)P(c)} &= \frac{P(a|b, c)P(b|c)P(c)}{P(a|c)P(c)}\\
+					\frac{P(b|a, c)P(a|c)}{P(b|c)} &= \frac{P(a|b, c)P(b|c)}{P(a|c)}
+				\end{align}
+				
+				And then it's just multiplication.
+			
+			\textbf{b)}
+			
+				$a$ may be caused by $b$ which may be caused by $c$.
+				
+			\textbf{c)}
+			
+				\begin{align}
+					P(a|b) = \frac{P(a, b)}{P(b)} = P(a)\implies P(a, b) = P(a)P(b)
+				\end{align}
+		
+				\begin{align}
+					P(a|b, c) &= \frac{P(a, b, c)}{p(b, c)}\\
+					&= \frac{P(c|a, b)P(a|b)P(b)}{P(c|b)P(b)}\\
+					&= \frac{P(c|a, b)P(a)}{P(c|b)}\\
+				\end{align}
+				
+	\subsection*{Tutorial \# 2}
+	
+		So, We have an alternative D-separation algorithm. We have sets of variables $\mathbf{X, Y, Z}$ and We want to ascertain whether $\mathbf{X \perp Y | Z}$.
+		
+		The proposed algorithm goes like this:
+		
+		1. For every leaf $W$, remove $W$ from the graph if it is not in $\mathbf{X, Y, Z}$. Repeat this step until no leaf can be removed (so We trimmed all the chains and stuff).
+		
+		2. Delete all outgoing edges of nodes in $\mathbf{Z}$.
+		
+		Well, the intuition for the second step is simple - in both cases of chains, the outgoing edges symbolize flow of information which has already in a sense been stopped. 
+		
+		Then We have the generator where yep, knowing the parent separates the children, so that's all good.
+		
+		Then We have the collider, and since that has no outgoing nodes (if We consider just the 3 nodes alone), then yeah, there are no nodes to delete since either a) the connecting node is in the set $\mathbf{Z}$, or one of descendants of $\mathbf{Z}$ is, so it won't get deleted because there is information there or b) neither the connector nor any of it's descents are in any of the sets and it'll eventually get deleted, which will correspond to independence which is a-okay.
+		
+		Anyway, here is the query:
+		
+		We have nodes $X, Y$ and a set of nodes $\mathbf{Z}$ such that $\mathbf{Z}$ contains all nodes which are the ancestors of $X, Y$, aside from $X, Y$ themselves. The query then is: are $X, Y$ D-separated?
+		
+		\begin{proof}
+			Suppose We use the above algorithm to ascertain separation. 
+			
+			1. All Descendants of $X, Y$ will be removed, except for descendants of one node that are the descendants of another. A node cannot be descendant and ascendant of both since that would result in a cycle. Any such connections will manifest in a chain, which will be severed by the algorithm, so everything to do with descendants is sorted.
+			
+			2. Ascendants are even easier - $X$, $Y$ will have no incoming edges since the ascendants are in $Z$, so they will be separated there too, so it's over.
+		\end{proof} 
+
+	\newpage
+	\subsection*{Homework \#2}
+	
+		Variable Eliminator wee.
+		
+		So! We have 
+		
+		\begin{equation}
+			P(A, B, C, D, E, F) = P(A)P(C)P(B|A, C)P(E|B)P(D|C)P(F|E, D)
+		\end{equation}	
+			
+		Well, We'll choose the ordering to be the most dependent first - this isn't a polytree, alas, so We can't just do topological algorithm bit.
+		
+		So let's do $F, E, B, D, C, A$.
+		
+		\textbf{Q1}
+		
+			\begin{equation}
+				P(A=t|B=t, D=f)
+			\end{equation}
+			
+			Well first thing to do is to check which parts of the graph are straight independent of our query - $E$ and $F$ are immediately off the table due to independence.
+			
+			After that, recall the factor multiplication thing. For the intuition behind product of factors, maybe just stare at it - what's it doing? 
+			
+			Okay so here is what is happening - on the surface of it You may think We're doing wacky stuff like $P(A|B)P(A|C)$, which doesn't actually simplify to much of anything. However, observe that when constructing these factors, We are operating on a closed set of variables, and it will always be the case that when You multiply out all the factors, all the conditional terms will at some point cancel out via the product rule.
+			
+			Anyway, so, We should create them factors.
+			
+			\begin{center}
+				\begin{tabular}{ |c|c| } 
+					\hline
+					A & P(A) \\
+					\hline 
+					F & 0.7 \\ 
+					T & 0.3 \\ 
+					\hline
+				\end{tabular}
+			\end{center}
+			
+			
+			\begin{center}
+				\begin{tabular}{ |c|c|  } 
+					\hline
+					C & P(C) $g_2$\\
+					\hline 
+					F & 0.4 \\ 
+					T & 0.6 \\ 
+					\hline
+				\end{tabular}
+			\end{center}
+
+			
+			\begin{center}
+				\begin{tabular}{ |c|c|c|c|  } 
+					\hline
+					A& C& B & P(C$|$A, B) $g_3$\\
+					\hline 
+					f & f & f & 0.8 \\
+					f & f & t & 0.2 \\
+					f & t & f & 0.2 \\
+					f & t & t & 0.8 \\
+					t & f & f & 0.7 \\
+					t & t & t & 0.3 \\
+					t & t & f & 0.5 \\
+					t & t & t & 0.5 \\ 
+					\hline
+				\end{tabular}
+			\end{center}
+			
+			
+			\begin{center}
+				\begin{tabular}{ |c|c|c|  } 
+					\hline
+					C & D & P(D$|$C) $g_5$ \\
+					\hline 
+					f & f & 0.1 \\
+					f & t & 0.9 \\
+					t & f & 0.25\\
+					t & t & 0.75 \\ 
+					\hline
+				\end{tabular}
+			\end{center}
+
+			Okay so now We multiply the factors. For this We need an order, and $F, E, B, D, C, A$ is one. $A$ is our variable of interest, so We aren't going to sum that one out. $D, B$ are evidence, so summing them out isn't right. $F, E$ are independent given $D, B$ so no point in considering those - just assign a factor of 1 to them. That leaves $C$ lol.
+			
+			In general, You don't want to sum over: query, independent or evidence variables.
+			
+			So, now We just collect all factors that happen to contain $C$ and multiply them:
+			
+			\begin{center}
+				\begin{tabular}{ |c|c|c|  } 
+					\hline
+					C & D & $g_2\times g_5 = g_6$\\
+					\hline 
+					f & f & 0.04 \\
+					f & t & 0.36 \\
+					t & f & 0.15\\
+					t & t & 0.45 \\ 
+					\hline
+				\end{tabular}
+			\end{center}			
+			
+			\begin{center}
+				\begin{tabular}{ |c|c|c|c|c|  } 
+					\hline
+					A& B& C & D & $g_6\times g_3 = g_7$\\
+					\hline 
+					f & f & f & f & 0.032 \\
+					f & f & f & t & 0.288 \\
+					f & f & t & f & 0.030 \\
+					f & f & t & t & 0.090 \\
+					f & t & f & f & 0.008 \\
+					f & t & f & t & 0.072 \\
+					f & t & t & f & 0.120 \\
+					f & t & t & t & 0.360 \\
+					t & f & f & f & 0.028 \\
+					t & f & f & t & 0.252 \\
+					t & f & t & f & 0.075 \\
+					t & f & t & t & 0.225 \\
+					t & t & f & f & 0.012 \\
+					t & t & f & t & 0.108 \\
+					t & t & t & f & 0.075 \\
+					t & t & t & t & 0.225 \\
+					\hline
+				\end{tabular}
+			\end{center} 
+			
+			And then We sum out $C$:
+						
+			
+			\begin{center}
+				\begin{tabular}{ |c|c|c|c|  } 
+					\hline
+					A& B & D & $g_9$\\
+					\hline 
+					f & f  & f & 0.062 \\
+					f & f  & t & 0.378 \\
+					f & t  & f & 0.128 \\
+					f & t  & t & 0.432 \\
+					t & f  & f & 0.103 \\
+					t & f  & t & 0.477 \\
+					t & t  & f & 0.087 \\
+					t & t  & t & 0.333 \\
+					\hline
+				\end{tabular}
+			\end{center}
+			
+			Okay so now what. I guess You take all factors involving the query variable and the evidence variables? 
+			
+			\begin{align}
+				&P(A=t|B=t, D=f) = 0.087\times 0.3 = 0.0261\\
+				&P(A=f|B=t, D=f) = 0.128\times 0.7 = 0.0896
+			\end{align}
+			
+			0.1157 is the total, so We just normalize the probabilities. 
+			
+			Okay, so, overall the process is - omit query, evidence and independent variables from ordering, multiply out remaining factors and sum 'em etc. Then for the query take all relevant factors (e.g. $P(A)$ in the above case) and take the product. For evidence, simply find the total probability given evidence and normalize.
+			
+			
+			
+			
+			
+			
+\end{document}	

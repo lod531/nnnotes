@@ -1,0 +1,140 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\graphicspath{ {./img/} }
+\usepackage[ruled,vlined]{algorithm2e}
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\DeclareMathOperator{\tr}{Tr} %variance
+\DeclareMathOperator{\var}{Var} %variance
+\DeclareMathOperator{\cov}{Cov} %covariance
+\DeclareMathOperator{\E}{\mathbb{E}}% expected value
+\DeclareMathOperator{\betaHat}{\hat{\bm{\beta}}}
+
+
+
+\begin{document}
+
+
+\title{Probabilistic Artificial Intelligence}
+\author{A. Krause}
+\date{}
+
+\maketitle
+
+\section{Probability Review}
+
+	Is not really worth writing out.
+						
+
+\section{Bayesian Linear Regression}
+
+	The idea is simple - ordinary linear regression (and variants thereof) yield a point estimate $\hat{y}$. We'd like to know how uncertain We are about this estimate.
+	
+	\subsection{Ridge Regression as Bayesian Inferece}
+	
+		Recall that We can find the coefficients for the best linear fit by doing
+		
+		\begin{align}
+			X^\top (X\mathbf{w} - \mathbf{y}) &= 0\\
+			X^\top X\mathbf{w} - X^\top \mathbf{y} &= 0\\
+			X^\top X\mathbf{w} &= X^\top \mathbf{y} \\
+			\mathbf{w} &= (X^\top X)^{-1}X^\top \mathbf{y}
+		\end{align}
+		
+		Is the way that usually goes. Now, in order to get the solution for ridge regression We do
+		
+		\begin{align}
+			\mathbf{w} = (X^\top X + \lambda I)^{-1}X^\top \mathbf{y}
+		\end{align}
+				
+		Is the modification for ridge regression to penalize large coefficients in $\mathbf{w}$. 
+	
+		So, now, let's make things probabilistic: 
+		
+		For $\mathbf{w}$, let's assume that $\mathbf{w}\sim\mathcal{N}(0, \sigma^2_{\mathbf{W}})$ and also let's assume that $\mathbf{w}\perp\mathbf{x}_i \;\forall i\in [n]$, so We have a normal prior over the weights and a-priori the weights are independent of the data - without knowing anything about $\mathbf{x}_i$, this is all We've got.
+		
+		Then let's make the standard 
+		
+		\begin{align}
+			P(\mathbf{y}_i | \mathbf{w}, \mathbf{x}_i) \sim\mathcal{N}(\mathbf{w}^\top\mathbf{x}_i, \sigma^2_{\mathbf{y}})
+		\end{align}
+		
+		So We're assuming that given the one true weight vector, our labels are normally distributed around the predicted mean. They are also of course independent, and all have the same variance. 
+		
+		So now the idea is - We have a prior on the weights, and We have a likelihood function which involves the weights. By the glory of Bayes' rule, that's enough to try to calculate a posterior on the weights:
+		
+		\begin{align}
+			P(\mathbf{w}|\mathbf{x}_{1\ldots n}, \mathbf{y}_{1\ldots n}) &= \frac{1}{z}\cdot P(\mathbf{w}, \mathbf{x}_{1\ldots n}, \mathbf{y}_{1\ldots n})\label{normalization}\\
+			 &= \frac{1}{z}\cdot P(\mathbf{x}_{1\ldots n})\cdot p(\mathbf{w}|\mathbf{x}_{1\ldots n})\cdot P(\mathbf{y}_{1\ldots n}|\mathbf{w}, \mathbf{x}_{1\ldots n})\\
+			&= \frac{1}{z'}\cdot p(\mathbf{w}|\mathbf{x}_{1\ldots n})\cdot P(\mathbf{y}_{1\ldots n}|\mathbf{w}, \mathbf{x}_{1\ldots n})\label{take_out_x}\\
+			&= \frac{1}{z'} \mathcal{N}(0, \sigma^2_{\mathbf{W}}) \cdot \prod^n_{i=1} \mathcal{N}(\mathbf{w}^\top\mathbf{x}_i, \sigma^2_{\mathbf{y}})\\
+			=& \frac{1}{z'} \frac{1}{z_{\mathbf{w}}}\exp\left(-\frac{1}{\sigma^2_{\mathbf{w}}}\|\mathbf{w}\|^2 \right) \cdot \frac{1}{z_{\mathbf{y}}}\prod^n_{i=1} \exp\left(-\frac{1}{\sigma^2_{\mathbf{y}}}\cdot\|y_i - \mathbf{w}^\top\mathbf{x}_i \|^2\right)
+		\end{align}
+			So, at \ref{normalization} We are simply using the whole $P(A|B) = P(A, B)/P(B)$ thing, to rearrange the terms any way We like - the point is to have one conjunction above and one below, and factorize the above conjunction with the chain rule in a way that can leverage our assumptions.
+			
+			Then at \ref{take_out_x}, We absorb that $P(\mathbf{x}_{1\ldots n})$ term since it's kind of irrelevant - just some Gaussian that We'll ultimately not care about. 
+			
+			Finally We use an assumption or two. 
+			
+			Now, note that when fitting $\mathbf{w}$, We're going to maximize our result. Since We just take about an extrema, We can start stripping parts away:
+			
+		\begin{align}
+			\argmax_{\mathbf{w}} &= \frac{1}{z'} \frac{1}{z_{\mathbf{w}}}\exp\left(-\frac{1}{\sigma^2_{\mathbf{w}}}\|\mathbf{w}\|^2 \right) \cdot \frac{1}{z_{\mathbf{y}}}\prod^n_{i=1}\exp\left(-\frac{1}{\sigma^2_{\mathbf{y}}}\cdot\|y_i - \mathbf{w}^\top\mathbf{x}_i \|^2\right)\\
+			&= \exp\left(-\frac{1}{\sigma^2_{\mathbf{w}}}\|\mathbf{w}\|^2 \right) \cdot \prod^n_{i=1}\exp\left(-\frac{1}{\sigma^2_{\mathbf{y}}}\cdot\|y_i - \mathbf{w}^\top\mathbf{x}_i \|^2\right)\\
+			&= \exp\left(-\frac{1}{\sigma^2_{\mathbf{w}}}\|\mathbf{w}\|^2 \right) \cdot \prod^n_{i=1}\exp\left(-\frac{1}{\sigma^2_{\mathbf{y}}}\cdot\|y_i - \mathbf{w}^\top\mathbf{x}_i \|^2\right)\\
+			&= \exp\left(-\frac{1}{\sigma^2_{\mathbf{w}}}\|\mathbf{w}\|^2  - \sum^n_{i=1} \frac{1}{\sigma^2_{\mathbf{y}}}\cdot\|y_i - \mathbf{w}^\top\mathbf{x}_i \|^2\right)\\
+			&= -\frac{1}{\sigma^2_{\mathbf{w}}}\|\mathbf{w}\|^2  - \sum^n_{i=1} \frac{1}{\sigma^2_{\mathbf{y}}}\cdot\|y_i - \mathbf{w}^\top\mathbf{x}_i \|^2\label{constant}\\
+			\argmin_{\mathbf{w}}&= \frac{\sigma^2_{\mathbf{y}}}{\sigma^2_{\mathbf{w}}}\|\mathbf{w}\|^2  + \sum^n_{i=1} \|y_i - \mathbf{w}^\top\mathbf{x}_i \|^2\
+		\end{align}
+		
+		Where in \ref{constant}, We just multiplied by the positive constant $\sigma^2_{\mathbf{y}}$ to get a clean coefficient for the $\lambda$ term.
+		
+		Anyway this shows that if We choose $\lambda=\frac{\sigma^2_{\mathbf{y}}}{\sigma^2_{\mathbf{w}}}$, then the solution to the ridge regression problem is equivalent to finding the maximum a posteriori solution. ($P(\mathbf{w}|\mathbf{x}_{1\ldots n}, \mathbf{y}_{1\ldots n})$ is the posterior in question).
+		
+	\subsection{Distribution of the weights}
+	
+		Okay, so, We have that under Bayesian regression
+		
+		\begin{align}
+			\mathbf{w} &= \mathbf{w} = (X^\top X + \lambda I)^{-1}X^\top \mathbf{y}\\
+			&= \mathbf{w} = (X^\top X + \frac{\sigma^2_{\mathbf{y}}}{\sigma^2_{\mathbf{w}}} I)^{-1}X^\top \mathbf{y}\\
+		\end{align}
+			
+\end{document}	
