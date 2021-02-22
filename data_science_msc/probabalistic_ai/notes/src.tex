@@ -47,6 +47,10 @@
 \DeclareMathOperator{\E}{\mathbb{E}}% expected value
 \DeclareMathOperator{\betaHat}{\hat{\bm{\beta}}}
 
+\makeatletter
+\renewcommand\thesection{}
+\renewcommand\thesubsection{\@arabic\c@section.\@arabic\c@subsection}
+\makeatother
 
 
 \begin{document}
@@ -58,12 +62,76 @@
 
 \maketitle
 
-\section{Probability Review}
+\section{Lecture 1 - Probability Review}
 
-	Is not really worth writing out.
+	\subsection{Probability Space}
+
+		Okay so We start with defining a \textbf{probability space}, and the idea with that thing is just to give You everything You need to do probabalistic stuff. Without further ado, a probability space is a triple consisting of $(\Omega, \mathcal{A}, P)$.
+		
+		$\Omega$ is called the \textbf{sample space} and is just a set of all possible outcomes of an experiment. For the flip of two coins, You get $\Omega = \{HH, HT, TH, TT \}$.
+		
+		$\mathcal{A}$ is the \textbf{event space}, and it is usually thought of as every possible combination of elements of $\Omega$. But why is it defined this way? Well, the idea is that \textit{combinations} of outcomes are events. For instance, an event might be getting one or more  tail, and that event corresponds to a subset $\{TH, HT, TT \}\in\Omega$. You can come up with much more complicated events in case of more complicated sample spaces. Point here is that We just have a set of all possible events, which We will now use in:
+		
+		$P$ - think of $P$ as function $P:\mathcal{A}\to[0, 1]$. All P does is assign a probability for each event in $\mathcal{A}$. 
+		
+		With those three constructs We can talk about outcomes of an experiment, group outcomes of an experiment into events, and talk about the probabilities of those events. There are of course some other constraints for this all to make sense, like $P(\Omega)=1$ and $\forall S\subset\Omega: P(S)\in[0, 1])$.
+		
+		Random variables then can be thought of as functions - let $X$ be a random variable, then $X:\mathcal{A}\to\mathbb{R}$, roughly. The output range depends on the variable - is it discrete, continuous, is it univariate or multivariate etc.
+		
+		Then You have three axioms for it all to work:
+		
+		Normalization: $P(\Omega) = 1$, so probability of all possible outcomes must equal to 1.
+		
+		Non-negativity: $S\in\mathcal{A}\implies P(S)\ge 0$.
+		
+		$\sigma$-additivity - probabilities of disjoint events can simply be added.
+		
+		Then You can come up with stories for random variables and get distributions like Bernoulli for 1 flip of a coin, Binomial for many flips, multinomial for dice outcomes etc.
+		
+		If the variable is continuous You get a PDF and a CDF, PDF must be non-negative and CDF must integrate to 1 etc.
+		
+		Then You get Your Gaussian, Your vector of random variables and a \textbf{joint distribution} (meaning You specify a value for each variable in vector).
+		
+		Then You get Your conditional distribution defined by
+		
+		\[ P(A|B) = \frac{P(A\cap B)}{P(B)} \]
+		
+		In it's simplest form. That becomes Bayes' Rule if You observe the \textbf{product rule} $P(B|A)P(A) = P(A\cap B)$. You can keep taking stuff out too, so
+		
+		\[ P(A, B, C) = P(A|B, C)P(B|C)P(C) \]
+		
+		That's the chain product rule. 
+		
+		The other important rule is the \textbf{sum rule} (or marginalization), in that
+		
+		\[ P(X_1=y, X_2=z) = \sum_{x\in\sup{X_3}} P(X_3=x) P(X_1=y)P(X_2=z)\]
+		
+		While We're here, let's also clear up \textbf{prior, likelihood} and \textbf{posterior} probabilities.
+		
+		I suppose talking about distributions makes sense - the prior distribution of $X$ is, well, the distribution of $X$ without any additional information. Just what We know about $X$ before the experiment.
+		
+		Likelihood is $P(E|X=x)$ and should really be thought of as a function that takes the value of $X$, i.e. what $X$ turned out to be, and it gives You the probability of evidence $E$ given that $X=x$. In English one might say that $P(E|X=x)$ is the likelihood that We observe $E$ given $X=x$. $X$ is usually some hidden variable(s) that We say generated evidence $E$.
+		
+		Posterior is the same as conditional probability - $P(X|E)$, or distribution of $X$ given that some evidence is true. The distinction between posterior and likelihood is that in likelihood We are talking about the likelihood of something else given the variable We care about $X$, where as in the posterior We are interested in adjusting the distribution of our variable $X$ given some evidence. 
+		
+		Then there's independence and conditional independence, no worries there.
+		
+		High dimensional (binary in the most trivial case) multivariate distributions require an exponential number of parameters to fully specify. Marginalizing out variables runs into the same problem, so, We have as problems:
+		 
+		 Representation (how to represent high dimensional distributions in a not parameter-exponential way), learning (given data, learn the distribution that produced it) and inference (given a distribution, make predictions)
+		
+	\subsection{Gaussians}
+	
+		\[ P(X=x) = \frac{1}{2\pi\sqrt{|\Sigma|}}\cdot\exp\left(-\frac{1}{2}(x-\mu)^\top\Sigma ^{-1} (x-\mu) \right) \] 
+		
+		With $\mu$ being a mean of vectors of $\Sigma$ being the covariance matrix.
+		
+		etc. Really when it comes to the formula don't memorize them. Just remember that adding Gaussians or conditioning Gaussians on Gaussians results in a Gaussian, multiplying them generally doesn't.
+		
+	
 						
 
-\section{Bayesian Linear Regression}
+\section{Lecture 2 - Bayesian Linear Regression}
 
 	The idea is simple - ordinary linear regression (and variants thereof) yield a point estimate $\hat{y}$. We'd like to know how uncertain We are about this estimate.
 	
@@ -136,5 +204,11 @@
 			\mathbf{w} &= \mathbf{w} = (X^\top X + \lambda I)^{-1}X^\top \mathbf{y}\\
 			&= \mathbf{w} = (X^\top X + \frac{\sigma^2_{\mathbf{y}}}{\sigma^2_{\mathbf{w}}} I)^{-1}X^\top \mathbf{y}\\
 		\end{align}
+		
+\newpage
+
+\section{Homework}
+
+	
 			
 \end{document}	
