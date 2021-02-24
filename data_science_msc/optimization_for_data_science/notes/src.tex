@@ -125,7 +125,7 @@
 		\begin{definition}[Differentiability]
 			Let $f:\mathbf{dom}(f)\to\mathbb{R}^m, \mathbf{dom}(f)\subset\mathbb{R}^d$, then $f$ is called \textnormal{differentiable} at $\mathbf{x}$ in the interior of $\mathbf{dom}(f)$ if there exists a matrix $A\in\mathbb{R}^{m\times d}$ and an error function $r:\mathbb{R}^d\to\mathbb{R}^m$ in some neighbourhood of $\mathbf{0}\in\mathbb{R}^d$ such that $\forall\;\mathbf{y}$ in some neighbourhood of $\mathbf{x}$:
 			
-			\[f(\mathbf{y}) = f(\mathbf{x}) + A(\mathbf{y-x}) + r(\mathbf{y-x}) \]
+			\[ f(\mathbf{y}) = f(\mathbf{x}) + A(\mathbf{y-x}) + r(\mathbf{y-x}) \]
 			
 			where
 			
@@ -140,7 +140,7 @@
 		
 		So, remarks: the idea is that $f$ is differentiable if it is approximated arbitrarily well by some linear function ($f(\mathbf{x}) + A(\mathbf{y-x})$) and that the error of this approximation is sublinear, i.e. as size of the difference $\mathbf{y-x}$ decreases linearly, the error term $r(\mathbf{y-x})$ decreases even faster.
 		
-		There are also some notation to be aware of - $\nabla f(\mathbf{x})$ is the gradient vector and it is a\textit{column}, and $Df(\mathbf{x}) = \nabla f(\mathbf{x})^\top$, so then We can write stuff like $f(\mathbf{y}) = f(\mathbf{x}) + \nabla f(\mathbf{y-x})^\top + r(\mathbf{y-x})$
+		There are also some notation to be aware of - $\nabla f(\mathbf{x})$ is the gradient vector and it is a\textit{column}, and $A = Df(\mathbf{x}) = \nabla f(\mathbf{x})^\top$, so then We can write stuff like $f(\mathbf{y}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y-x}) + r(\mathbf{y-x})$
 		
 		\begin{lemma}[Chain Rule]
 			Let $f:\mathbf{dom}(f)\to\mathbb{R}^m,\mathbf{dom}(f)\in\mathbb{R}^d$ and  $g:\mathbf{dom}(g)\to\mathbb{R}^d$, $g$ be differentiable at $\mathbf{x}\in\mathbf{dom}(g)$ and $f$ be differentiable at $g(\mathbf{x})$, then
@@ -170,8 +170,251 @@
 	
 		Is a relaxation of the mean value theorem. Really it's Lipschitz but from the perspective of mean value theorem:
 		
-		Suppose $f:\mathbf{dom}(f)\to\mathbb{R}$ is differentiable over the interval $X\subset\mathbf{dom}(f)$.
+		Suppose $f:\mathbf{dom}(f)\to\mathbb{R}$ is differentiable over the open interval $X\subset\mathbf{dom}(f)$, and suppose that $\forall\mathbf{x}\in X \implies |f'(\mathbf{x})| \le B$, then We can say
+		
+		\[ |f(\mathbf{y}) - f(\mathbf{x})| = |f'(c)(\mathbf{y-x}) \le B|\mathbf{y-x}| \]
+		
+		Which, recall, $f'(c)$ is just the slope of the the line between $f(\mathbf{y}) - f(\mathbf{x})$, and We know it exists by the Mean Value Theorem.
+		
+		So, really, (sort of by definition almost really), any function whose derivative is bounded by $B$ is $B$-Lipschitz over that whatever interval $X$. 
+		
+		So We went from mean theorem to Lipschitz, sort of. Ugh the notes do this:
+		
+		\[ |f'(c)| \le \lim_{\delta\to 0} \bigg| \frac{f(c+\delta) - f(c)}{\sigma} \bigg| \le B \]
+		
+		Which, like, yeah, the value of the derivative is bounded in a Lipchitz function. Shocking. I feel like this is a trivial observation but off We go to prove it (ah it's sorta nontrivial since We are not in the univariate case and have to deal with the Spectral norm):
+		
+		\begin{theorem}
+			Let $f:\mathbf{dom}(f)\to\mathbb{R}$ be a continuous differentiable function over some  $X\subseteq\mathbf{dom}(f), B\in\mathbb{R}_+$, where $X$ is open and convex, then the following two statements are equivalent:
+			
+			\begin{align*}
+				i)\;& \| f(\mathbf{y}) - f(\mathbf{x}) \| \le B\cdot \|\mathbf{y-x}\|, \qquad \; \forall\mathbf{x, y}\in X. \\
+				ii)\;& |Df(\mathbf{x})\| \le B,\qquad  \forall\mathbf{x}\in X.
+			\end{align*}
+			
+		\end{theorem}
+		
+		\begin{proof}
+			First, let's assume $i)$ and prove $ii)$:
+			
+			\begin{align}
+				\| f(\mathbf{y}) - f(\mathbf{x}) \|& \le B\cdot \|\mathbf{y-x}\| \\
+			\end{align}
+			
+			Recall that We have 
+			
+			\begin{align*}
+				f(\mathbf{y}) &= f(\mathbf{x}) + \nabla f\mathbf{(x)^\top(y-x)} + r(\mathbf{y-x}) \\
+				f(\mathbf{y}) -  f(\mathbf{x}) &= \nabla f\mathbf{(x)^\top(y-x)} + r(\mathbf{y-x}) \\
+			\end{align*}
+			
+			Using the above
+			\begin{align*}
+				\|f(\mathbf{y}) - f(\mathbf{x})|& \le B\cdot \|\mathbf{y-x}\| \\
+				\| \nabla f\mathbf{(x)^\top(y-x)} + r(\mathbf{y-x}) \| &\le B\cdot \|\mathbf{y-x}\| \\
+				\| \nabla f\mathbf{(x)^\top(x+v-x)} + r(\mathbf{x+v-x}) \| & \le B\cdot \| \mathbf{x+v-x} \|, \; (\mathbf{y = x+v}) \\
+				\| \nabla f\mathbf{(x)^\top(v)} + r(\mathbf{v}) \| & \le B\cdot \| \mathbf{v} \|  \\
+				\| \nabla f\mathbf{(x)^\top(v)} + r(\mathbf{v}) \| \le \| \nabla f\mathbf{(x)^\top(v)} \| + \| r(\mathbf{v})  \|  &\le B\cdot \| \mathbf{v} \|  \\
+				\| \nabla f\mathbf{(x)^\top(v)} \| + \| r(\mathbf{v})  \|  &\le B\cdot \| \mathbf{v} \|  \\
+				\frac{\| \nabla f\mathbf{(x)^\top(v)} \|}{\| \mathbf{v} \|} + \frac{\| r(\mathbf{v})  \|}{\| \mathbf{v} \|}  &\le \frac{B\cdot \| \mathbf{v} \|}{\| \mathbf{v} \|}  \\				
+				\frac{\| \nabla f\mathbf{(x)^\top(v)} \|}{\| \mathbf{v} \|}  &\le B - \frac{\| r(\mathbf{v})  \|}{\| \mathbf{v} \|}  
+			\end{align*}
+			
+			And now comes some shenanigans. Let $\mathbf{v} = t\cdot\mathbf{v}^*$ such that $\mathbf{v^*}$ is a unit vector and 
+			
+			\[ \frac{\| \nabla f\mathbf{(x)^\top(v^*)} \|}{\| \mathbf{v^*} \|} = \| \nabla f\mathbf{(x)} \| \]
+			
+			Then We just do 
+			
+			\begin{align*}
+				\frac{\| \nabla f\mathbf{(x)^\top(v)} \|}{\| \mathbf{v} \|}  &\le B - \frac{\| r(\mathbf{v})  \|}{\| \mathbf{v} \|}  \\
+				\frac{\| \nabla f\mathbf{(x)} ^\top t\mathbf{(v^*)} \|}{\| t  \mathbf{v^*} \|}  &\le B - \frac{\|  r(t\mathbf{v^*})  \|}{\| t\mathbf{v^*} \|}  \\
+				\frac{ |t| \| \nabla f\mathbf{(x)^\top(v^*)} \|}{ |t| \| \mathbf{v^*} \|}  &\le B - \frac{\|  r(t\mathbf{v^*})  \|}{\| t\mathbf{v^*} \|}  \\
+				\frac{  \| \nabla f\mathbf{(x)^\top(v^*)} \|}{  \| \mathbf{v^*} \|}  &\le B - \frac{\|  r(t\mathbf{v^*})  \|}{\| t\mathbf{v^*} \|}  \\
+				 \| \nabla f\mathbf{(x)} \|  &\le B - \frac{\|  r(t\mathbf{v^*})  \|}{\| t\mathbf{v^*} \|}  \\
+			\end{align*}
+			
+			and as $t\mathbf{v^*}\to\mathbf{0}$, We get our result.
+			
+			Now for  the other direction, let's create the following function:
+			
+			\[ g(t) = \mathbf{f(x) + t(y-x)} \]
+			
+			This simply gives us smooth means of traversal through the function, which will allow us to use the bounded differentials. We then define $h(t) = f(g(t))$, so We are just wrapping our traversal function with, well, the function of interest $f$. This allows us to say
+			
+			\begin{align*}
+				\|f(\mathbf{y}) - f\mathbf{x})\| &= \| h(1) - h(0) \| \\
+				&= \bigg\| \int^1_{t=0} h'(t) dt \bigg\| \\
+				&= \bigg\| \int^1_{t=0} D(\mathbf{x} + t(\mathbf{y-x}))(\mathbf{y-x}) dt \bigg\| \\
+				&\le  \int^1_{t=0}  \| D(\mathbf{x} + t(\mathbf{y-x}))(\mathbf{y-x}) \| dt\quad\text{Jensen's Inequality} \\
+				&\le  \int^1_{t=0}  \| D(\mathbf{x} + t(\mathbf{y-x})) \| \| (\mathbf{y-x}) \| dt\quad\text{Spectral Norm} \\
+				&\le  \int^1_{t=0}  B \| (\mathbf{y-x}) \| dt\quad\text{Bounded differentials} \\
+				&\le   B \| (\mathbf{y-x}) \| 
+			\end{align*}
+		\end{proof}
+		
+\section{Convex Functions}
+
+	\begin{definition}[Convex Function]
+		A function $f:\mathbf{dom}(f)\to\mathbb{R}$ is a \textnormal{convex function} if i) $\mathbf{dom}(f)$ is a convex set and ii) if $\forall\;\mathbf{x, y}\in\mathbf{dom}(f)$ it is true that
+		
+		\[ f(\lambda\mathbf{x} + (1-\lambda)\mathbf{y}) \le \lambda f(\mathbf{x}) + (1-\lambda)f(\mathbf{y})  \]
+		
+		for $\lambda\in [0, 1]$.
+	\end{definition}
+	
+	A useful concept to go along with the convex function is the epigraph:
+	
+	\[ \mathbf{epi}(f) = \{ (\mathbf{x}, \alpha) \in\mathbb{R}^{d+1}: \mathbf{x}\in\mathbf{dom}(f), \alpha \ge f(\mathbf{x})\}. \]
+		
+	So just the set of all points above the graph of the function $f$.
+	
+	\begin{observation}
+		Function $f:\mathbf{dom}(f)\to\mathbb{R}$ is convex if and only if $\mathbf{epi}(f)$ is a convex set.
+	\end{observation}
+	
+	\begin{proof}
+		First direction, We can assume convex $f$:
+		
+		\begin{align*}
+			f(\lambda\mathbf{x} + (1-\lambda)\mathbf{y}) \le \lambda f(\mathbf{x}) + (1-\lambda)f(\mathbf{y})
+		\end{align*}
+		
+		We need to prove:
+		
+		\begin{align*}
+			\forall (\mathbf{x}, \alpha_x),\; (\mathbf{y}, \alpha_y)\in\mathbf{epi}(f): \lambda(\mathbf{x}, \alpha_x)+(1-\lambda)(\mathbf{y}, \alpha_y) \in\mathbf{epi}(f)
+		\end{align*}
+		
+		So We have the point $(\underbrace{\lambda\mathbf{x} + (1-\lambda)\mathbf{y}}_q, \underbrace{\lambda\alpha_x + (1-\lambda)\alpha_y}_w)$. Now We just need to assert that $q\in\mathbf{dom}(f), w\ge f(q)$ to satisfy the epigraph conditions. We know that $q\in\mathbf{dom}(f)$ by convexity of the domain of $f$, and for the second bit
+		
+		\begin{align*}
+			f(\lambda\mathbf{x} + (1-\lambda)\mathbf{y}) \le \lambda \alpha_x + (1-\lambda)\alpha_y\\
+			f(\lambda\mathbf{x} + (1-\lambda)\mathbf{y}) \le \lambda f(\mathbf{x}) + (1-\lambda)f(\mathbf{y})
+		\end{align*}
+		
+		Which is true by convexity of $f$. Wee.
+		
+		Now for the other side - We can assume that $\mathbf{epi}(f)$ is a convex set, and We wish to prove that $f$ is convex, so We want
+		
+		\begin{align*}
+			f(\lambda\mathbf{x} + (1-\lambda)\mathbf{y}) \le \lambda f(\mathbf{x}) + (1-\lambda)f(\mathbf{y})
+		\end{align*}
+		
+		This in words is quite trivial - take the two endpoints, they by definition are in the epigraph, then consider all points in between and observe that since they too are in the epigraph since the epigraph is convex they must be lie above the graph, concluding the proof.
+	\end{proof}
+	
+	\begin{lemma}[Jensen's Inequality]
+		For a convex function $f:\mathbf{dom}(f)\to\mathbb{R}$ and a random variable $X$ such that $X$ has a mean and $support(X)\in\mathbf{dom}(f)$ it is true that
+		
+		\[ E(f(X)) \le f(E(X))\]
+	\end{lemma}
+	
+	\begin{proof}
+		Let $\mu = E(X)$, and construct a tangent $a+bX$ to the convex function $X$ at $\mu$ such that $a + b\mu = f(\mu)$. By convexity of $f$ We have
+		
+		\begin{align*}
+			f(X) &\ge a+bX\\
+			E(f(X) &\ge E(a+bX)\\
+			E(f(X) &\ge a+bE(X)\\
+			E(f(X) &\ge a+b\mu\\
+			E(f(X)) &\ge f(\mu)\\
+			E(f(X)) &\ge f(E(X))
+		\end{align*}
+	\end{proof}
+	
+	\subsection{First Order Characterization of Convexity}
+
+		\begin{lemma}
+			Suppose $f$ is differentiable, then $f$ is also convex if and only if $\forall\mathbf{x, y}\in\mathbf{dom}(f)$
+			
+			\[ f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y-x})  \]
+		\end{lemma}
+		
+		And intuitively this just means that the graph of $f$ is above the tangent to $f$ at any point.
+		
+		\begin{proof}
+			First direction relies on rearranging convexity:
+			
+			\begin{align*}
+				f(\lambda \mathbf{x} + (1-\lambda)(\mathbf{y})) \le \lambda f(\mathbf{x}) + (1-\lambda)f(\mathbf{y}) \\
+				f(\lambda \mathbf{x} + \mathbf{y}-\lambda\mathbf{y}) \le \lambda f(\mathbf{x}) + f(\mathbf{y}) -\lambda f(\mathbf{y}) \\
+				f( \mathbf{y} + \lambda(\mathbf{x-y})) \le f(\mathbf{y}) + \lambda (f(\mathbf{x}) - f(\mathbf{y})) \\
+				f( \mathbf{y} + \lambda(\mathbf{x-y})) -  f(\mathbf{y}) \le  \lambda (f(\mathbf{x}) - f(\mathbf{y})) \\
+				f( \mathbf{y} + \lambda(\mathbf{x-y})) -  f(\mathbf{y}) \le  \lambda (f(\mathbf{x}) - f(\mathbf{y})) \\
+				\frac{f( \mathbf{y} + \lambda(\mathbf{x-y})) -  f(\mathbf{y})}{\lambda} \le f(\mathbf{x}) - f(\mathbf{y}) \\
+				\frac{f( \mathbf{y} + \lambda(\mathbf{x-y})) -  f(\mathbf{y})}{\lambda} + f(\mathbf{y}) \le f(\mathbf{x})  \\
+				\frac{\nabla f(\mathbf{x})^\top \lambda(\mathbf{x-y}) + r(\lambda(\mathbf{x-y})) }{\lambda} + f(\mathbf{y}) \le f(\mathbf{x}) \\
+				\frac{\nabla f(\mathbf{x})^\top \lambda(\mathbf{x-y})}{\lambda} + \frac{r(\lambda(\mathbf{x-y})) }{\lambda} + f(\mathbf{y}) \le f(\mathbf{x}) \\
+				{\nabla f(\mathbf{x})^\top (\mathbf{x-y})} + f(\mathbf{y}) \le f(\mathbf{x})\quad\lim_{t\to 0}
+			\end{align*}
+			
+			So two pieces to this one - reframing convexity as having one "fixed" point (in this case $\mathbf{y}$, and observing that 
+			
+			\[ f( \mathbf{y} + \lambda(\mathbf{x-y})) -  f(\mathbf{y}) = \nabla f(\mathbf{y})^\top \lambda(\mathbf{x-y}) + r(\lambda(\mathbf{x-y}))  \]
+			
+			Since We are calculating the difference from $f(\mathbf{y})$ when our intput is shifted by $\lambda(\mathbf{x-y})$.
+		\end{proof}
+		
+		\begin{proof}
+			Now for the other direction, i.e. first order characterization implies convexity.
+			
+			First We establish some point $\mathbf{z}$ in between $\mathbf{x, y}$:
+			
+			\[ \mathbf{z} = \lambda \mathbf{x} + (1-\lambda)\mathbf{y} \]
+			
+			By first order characterization We then have
+			
+			\begin{align*}
+				f(\mathbf{x}) &\ge f(\mathbf{z}) + \nabla f(\mathbf{z})^\top (\mathbf{x-z})\\
+				f(\mathbf{y}) &\ge f(\mathbf{z}) + \nabla f(\mathbf{z})^\top (\mathbf{y-z})\\
+			\end{align*}
+			
+			Then We start constructing our conclusion by multiplying the first line by $\lambda$ and the second by $(1-\lambda)$:
+			
+			\begin{align*}
+				\lambda f(\mathbf{x}) &\ge \lambda f(\mathbf{z}) + \lambda \nabla f(\mathbf{z})^\top (\mathbf{x-z})\\
+				(1-\lambda) f(\mathbf{y}) &\ge (1-\lambda) f(\mathbf{z}) + (1-\lambda) \nabla f(\mathbf{z})^\top (\mathbf{y-z})\\
+			\end{align*}
+			
+			And then We add those two and simplify
+			
+			\begin{align*}
+				\lambda f(\mathbf{x}) + (1-\lambda) f(\mathbf{y}) &\ge \\ 
+				\lambda f(\mathbf{z}) + \lambda \nabla f(\mathbf{z})^\top (\mathbf{x-z}) + &(1-\lambda) f(\mathbf{z}) + (1-\lambda) \nabla f(\mathbf{z})^\top (\mathbf{y-z})\\
+				\lambda f(\mathbf{x}) + (1-\lambda) f(\mathbf{y}) &\ge \\ 
+				\lambda f(\mathbf{z}) + \lambda \nabla f(\mathbf{z})^\top (\mathbf{x-z}) + & f(\mathbf{z}) -\lambda f(\mathbf{z}) + (1-\lambda) \nabla f(\mathbf{z})^\top (\mathbf{y-z})\\
+				\lambda f(\mathbf{x}) + (1-\lambda) f(\mathbf{y}) &\ge \\ 
+				f(\mathbf{z}) + \lambda \nabla f(\mathbf{z})^\top (\mathbf{x-z}) &+ (1-\lambda) \nabla f(\mathbf{z})^\top (\mathbf{y-z})\\
+				\lambda f(\mathbf{x}) + (1-\lambda) f(\mathbf{y}) &\ge \\ 
+				f(\mathbf{z}) +  \nabla f(\mathbf{z})^\top \bigg( \lambda (\mathbf{x-z}) &+ (1-\lambda)(\mathbf{y-z})\bigg)
+			\end{align*}
+			
+			Now We just focus on those gradient terms:
+			
+			\begin{align*}
+				 \lambda (\mathbf{x-z}) + (1-\lambda)(\mathbf{y-z}) &= \lambda\mathbf{x} - \lambda\mathbf{z} + \mathbf{y-z} - \lambda\mathbf{y}+\lambda\mathbf{z}\\
+				&= \lambda\mathbf{x} + (-\lambda - 1 + \lambda)\mathbf{z} + \mathbf{y} - \lambda\mathbf{y}\\
+				&= \lambda\mathbf{x} + (1-\lambda)\mathbf{y} -\mathbf{z} \\
+				&= 0
+			\end{align*}
+			
+			So there's really one bit to to this proof - take the tangent at the middle point $\mathbf{z}$ and compare it with the endpoints $f(\mathbf{x}), f(\mathbf{y})$, and from there it's addition and simplification.
+		\end{proof}
+		
+		Only really useful if You have a derivative. I think in later chapters this is generalized with subgradients. Furthermore there are obviously convex functions like the absolute value operator that are not differentiable.
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 
 
-\end{document}
+\end{document} 
