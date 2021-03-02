@@ -404,11 +404,353 @@
 		
 		Only really useful if You have a derivative. I think in later chapters this is generalized with subgradients. Furthermore there are obviously convex functions like the absolute value operator that are not differentiable.
 		
+		\begin{lemma}
+			An alternative first-order characterization of convexity is:
+			
+			\[ \nabla f(\mathbf{y}) - \nabla f(\mathbf{x}))^\top (\mathbf{y-x}) \ge 0 \]
+		\end{lemma}
 		
+		A loose intuition for this is that whatever direction You go in $(\mathbf{y-x}$, the gradient will also point in that same direction.
 		
+		\begin{proof}
+			By convexity We have these two statements
+			
+			\begin{align*}
+				f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y-x})\\
+				f(\mathbf{x}) \ge f(\mathbf{y}) + \nabla f(\mathbf{y})^\top (\mathbf{x-y})
+			\end{align*}
+			
+			Adding those two and cancelling out $f(\mathbf{y}), f(\mathbf{x})$ gives
+			
+			\begin{align*}
+				 0 &\ge \nabla f(\mathbf{x})^\top (\mathbf{y-x}) + \nabla f(\mathbf{y})^\top (\mathbf{x-y})\\
+				 0 &\ge -\nabla f(\mathbf{x})^\top (\mathbf{x-y}) + \nabla f(\mathbf{y})^\top (\mathbf{x-y})\\
+				 0 &\ge (\mathbf{x-y})( \nabla f(\mathbf{y}) -\nabla f(\mathbf{x}))^\top\\
+				 0 &\le (\mathbf{y-x})( \nabla f(\mathbf{y}) -\nabla f(\mathbf{x}))^\top
+			\end{align*}
+			
+			Which concludes this direction. All We needed to do was "look" at each point from the direction of the other point and combine the perspectives.
+			
+			Now for the other direction, We have
+			
+			\[ \nabla f(\mathbf{y}) - \nabla f(\mathbf{x}))^\top (\mathbf{y-x}) \ge 0 \]
+			
+			Let $\mathbf{y} = \mathbf{x} + t(\mathbf{y-x})$ to yield (note that the above holds for $t\in [0, 1]$)
+			
+			\begin{align*}
+				\nabla f(\mathbf{x} + t(\mathbf{y-x})) - \nabla f(\mathbf{x}))^\top (\mathbf{x} + t(\mathbf{y-x}) - \mathbf{x}) &\ge 0 \\
+				\nabla f(\mathbf{x} + t(\mathbf{y-x})) - \nabla f(\mathbf{x}))^\top t(\mathbf{y-x}) &\ge 0 \\
+				\nabla f(\mathbf{x} + t(\mathbf{y-x})) - \nabla f(\mathbf{x}))^\top (\mathbf{y-x}) &\ge 0 \\
+				\nabla f(\mathbf{x} + t(\mathbf{y-x}))^\top(\mathbf{y-x}) - \nabla f(\mathbf{x})^\top (\mathbf{y-x}) &\ge 0 \\
+				\nabla f(\mathbf{x} + t(\mathbf{y-x}))^\top (\mathbf{y-x})  &\ge  \nabla f(\mathbf{x})^\top (\mathbf{y-x}) \\
+			\end{align*}
+			
+			Now We define 
+			
+			\[ h(t) = f(\mathbf{x} + t(\mathbf{y-x})) \]
+			
+			and therefore 
+			
+			\[ h'(t) = \nabla  f(\mathbf{x} + t(\mathbf{y-x}))^\top(\mathbf{y-x}) \]
+			
+			Which We can use to rewrite
+			
+			\begin{align*}
+				\nabla f(\mathbf{x} + t(\mathbf{y-x}))\top (\mathbf{y-x})  &\ge  \nabla f(\mathbf{x})^\top (\mathbf{y-x}) \\
+				h'(t)  &\ge  \nabla f(\mathbf{x})^\top (\mathbf{y-x}) 
+			\end{align*}
+			
+			And this still holds for all $t\in [0, 1]$.
+			
+			And now comes just random stuff plucked from the air: observe that by the Mean Value Theorem, it is true that there exists a $c$ such that $h'(c) = h(1) - h(0)$.
+			
+			\begin{align*}
+				f(\mathbf{y}) = h(1) = h(0) + h(1) - h(0) = h(0) + h'(c)\\
+				f(\mathbf{y}) \ge h(0) +\nabla f(\mathbf{x})^\top (\mathbf{y-x}) \\
+				f(\mathbf{y}) \ge f(\mathbf{x}) +\nabla f(\mathbf{x})^\top (\mathbf{y-x}) \\
+			\end{align*}
+			
+			Honestly no fun and seemingly unmotivated proof. 
+		\end{proof}
 		
+	\subsection{Second-order characterization of convexity}
+	
+		\begin{lemma}
+			If $f$ is twice differentiable on it's domain, namely
+			
+			\[ \nabla^2 f(\mathbf{x})_{i. j} =  \ \frac{\partial^2 f}{\partial \mathbf{x}_i \partial \mathbf{x}_j}  \]
+			
+			exists and $\nabla^2 f(\mathbf{x})$ is positive definite (or positive semidefinite), then $f$ is convex.
+		\end{lemma}
 		
+		\begin{proof}
+			Is omitted, at least for now.
+		\end{proof}
 		
+	\subsection{Operations that preserve convexity}
+	
+		\begin{lemma}
+			i) Multiplying by a positive constant, addition of convex functions while taking the intersection of their domains preserves convexity.
+			
+			ii) Let g be a linear function and f be a convex function, then $f\circ g$ is also convex.
+		\end{lemma}
+
+\section{Minimizing Convex Functions}
+
+	\begin{definition}
+		A function $f:\mathbf{dom}(f)\to\mathbb{R}$ has a local minimum $\mathbf{x}\in\mathbf{dom}(f)$ if there exists $\varepsilon >0$ such that
+		
+		\[ f(\mathbf{y}) \ge f(\mathbf{x})\qquad \forall\mathbf{y}\in\mathbf{dom}(f),\; \|\mathbf{y-x}\| < \varepsilon   \]
+	\end{definition}
+	
+	In this case thing of $\varepsilon$ as a sort of radius for the local minimum. All points in the domain within that radius are greater than $f(\mathbf{x})$, so We have a neat little local dent (or plateau).
+	
+	\begin{lemma}
+		Let $\mathbf{x^*}$ be a local minimum to a convex function $f:\mathbf{dom}(f)\to\mathbb{R}$, then       $\mathbf{x^*}$ is a global minimum meaning
+		
+		\[ f(\mathbf{x^*}) \le f(\mathbf{y})\quad  \forall \mathbf{y}\in\mathbf{dom}(f).\]
+	\end{lemma}
+	
+	\begin{proof}
+		Is simple - let $\mathbf{y}\in\mathbf{dom}(f)$ be such that $f(\mathbf{y}) < f(\mathbf{x^*})$. Let $\mathbf{y'} = \lambda\mathbf{y} + (1-\lambda)\mathbf{x^*}$. Then for $\lambda\in (0, 1)$ by convexity We have $f(\mathbf{y'}) < f(\mathbf{x^*})$. Choosing $\lambda$ small enough to violate $\|\mathbf{y' - x^*}\| < \varepsilon$ contradicts local minima assumption of $\mathbf{x^*}$.
+	\end{proof}
+	
+	Then there's a bunch of caveats. Convex functions need not have a global minimum - $f(x) = x$ etc. Then even if it is bounded from below, asymptotic functions won't have a minimum e.g. $f(x) = e^x$.
+	
+	\begin{lemma}
+		Suppose $f:\mathbf{dom}(f)\to\mathbb{R}$ is convex and differentiable, and let $\mathbf{x}\in\mathbf{dom}(f)$. If $\nabla f(\mathbf{x}) = \mathbf{0}$, then $\mathbf{x}$ is a global minimum.
+	\end{lemma}
+	
+	\begin{proof}
+		Assuming $\nabla f(\mathbf{x}) = \mathbf{0}$, with first order characterization We have
+		
+		\begin{align*}
+			f(\mathbf{y}) &\ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y-x})\\
+			&\ge f(\mathbf{x}) + \mathbf{0}\\
+			&\ge f(\mathbf{x})
+		\end{align*}
+	\end{proof}
+	
+	\begin{lemma}
+		Suppose $f$ is convex and differentiable and let $\mathbf{x}\in\mathbf{dom}(f)$ be a global minimum, then it is true that $\nabla f(\mathbf{x}) = \mathbf{0}$.
+	\end{lemma}
+	
+	\subsection{Strictly Convex Functions}
+	
+		\begin{definition}
+			A function $f:\mathbf{dom}\to\mathbb{R}$ is strictly convex if it is true $\forall\; \mathbf{x\neq y}\in\mathbf{dom}(f),\; \lambda\in (0,1)$ that
+			
+			\[ f(\lambda(\mathbf{x}) + (1-\lambda)\mathbf{y}) < \lambda f(\mathbf{x}) + (1-\lambda) f(\mathbf{y}) \]
+		\end{definition}
+		
+		\begin{lemma}
+			The second derivative matrix a.k.a. Hessian of a strictly convex function is positive definite (if it exists).
+		\end{lemma}
+		
+		\begin{lemma}
+			Suppose $f$ is strictly convex, then $f$ has a unique global minimum.
+		\end{lemma}
+		
+		\begin{proof}
+			Let $f:\mathbf{dom}(f)\to\mathbb{R}$ be a strictly convex function. Suppose there are two global minima $\mathbf{x\neq y}\in\mathbf{dom}(f)$. Then by taking a linear combination of those two minima, by strict convexity, We obtain an even lower point, violating the assumption that $\mathbf{x, y}$ were minima.
+		\end{proof}
+		
+	\subsection{Constrained Optimization}
+	
+		\begin{definition}
+			Let $f:\mathbf{x}\to\mathbb{R}$ be some function, $X\subseteq\mathbf{dom}(f)$ and $\mathbf{x}\in X$. If
+			
+			\[ f(\mathbf{y} \ge f(\mathbf{x})\quad\forall\mathbf{y}\in X \]
+			
+			Then $\mathbf{x}$ is a minimizer of $f$ over $X$.
+		\end{definition}
+		
+		\begin{lemma}
+			Let $f:\mathbf{dom}(f)\to\mathbb{R}$ be a convex differentiable function, $X\subseteq\mathbf{dom}(f)$, then $\mathbf{x^*}\in X$ is a minimizer of $f$ over $X$ if and only if
+			
+			\[ \nabla f(\mathbf{x^*})^\top (\mathbf{x - x^*}) \ge 0\quad \forall\mathbf{x}\in X. \]
+		\end{lemma}
+		
+		Basically no direction exists such that the gradient is negative from our optimal point. Makes sense - if the above was not true, We could take a step against the direction of the gradient and obtain a smaller minimum.
+		
+\section{Existence of a minimizer}
+
+	We care about this since most algorithms assume the existence of a minimizer. Here are some ways of going about proving such a minimizer exists:
+	
+	\subsection{Sublevel sets and Weierstrass Theorem}
+	
+		\begin{definition}
+			Let $f:\mathbb{R}^d\to\mathbb{R}, \alpha\in\mathbb{R}$, the set
+			
+			\[ f^{\le\alpha} = \{\mathbf{x}\in\mathbb{R}^d : f(\mathbf{x} \le \alpha \}  \]
+			
+			is called the $\alpha$-sublevel set of $f$.
+		\end{definition}
+		
+		So just the closed (due to the $\le$ condition) subset of the domain of $f$. Cool.
+		
+		\begin{theorem}
+			Suppose $f:\mathbb{R}^d\to\mathbb{R}$ is a convex function with a bounded nonempty sublevel set $f^{\le\alpha}$, then $f$ has a global minimum.
+		\end{theorem}
+		
+		\begin{proof}
+			We know that the sublevel set is continuous since it is a subset of the convex domain of $f$. Furthermore We know it is bounded, so somewhere along that continuous line a minimum is achieved, and since all points outside of the sublevel set are larger, We've got a global minimum.
+		\end{proof}
+		
+	\subsection{Recession cone and lineality space}
+	
+		The idea is that there is probably some "direction of recession" in our convex set $C$, and that is the reason the sublevel set is not bounded. Think of the case $f(x) = x$ - the line with slope -1 is a direction of recession. Formally:
+		
+		\begin{definition}
+			Let $C$ be a convex set, then $\mathbf{y}\in \mathbf{R}^d$ is a direction of recession if for some $\mathbf{x}\in C$ and $\lambda \in \mathbb{R}_+ $ it holds that $\mathbf{x}+\lambda\mathbf{y}\in C$.
+		\end{definition}
+		
+		Basically the set extends infinitely in that direction.
+		
+		\begin{lemma}
+			For a closed convex set $C$ with $\mathbf{y}\in C$, then the following statements are equivalent:
+			
+			\begin{align*}
+				i)&\; \exists\mathbf{x}\in C: \mathbf{x} + \lambda\mathbf{y} \in C,\;\forall\lambda\ge 0\\
+				ii)&\; \forall\mathbf{x}\in C: \mathbf{x} + \lambda\mathbf{y} \in C,\;\forall\lambda\ge 0
+			\end{align*}
+		\end{lemma}
+		
+		\begin{proof}
+			We only need to prove $i)\to ii)$. First assume 
+			
+			\[ \exists\mathbf{x}\in C: \mathbf{x} + \lambda\mathbf{y} \in C,\;\forall\lambda\ge 0\\ \]
+			
+			Now define $w_k = \mathbf{x} + k\lambda\mathbf{y}, k\in\mathbb{N}$. $w_k\in C$ by our assumption. 
+			
+			Now, We need to show that $\mathbf{x'}+\lambda\mathbf{y}\in C$ for any $\mathbf{x'}$. To this end suppose We have
+			
+			\begin{align*}
+				\frac{1}{k}w_k + (1-\frac{1}{k})\mathbf{x'}\\
+			\end{align*}
+			
+			And then let $k$ go to infinity.
+			
+			So what did We do? We took the direction of recession, stretched it out infinitely by some factor $k$, and then formulated a line between the infinite point and any other point $\mathbf{x'}$ using the same factor We used to stretch out the line. This way, when taking limits, the factors cancel and convexity gives us membership in the closed set.
+		\end{proof}
+		
+		\begin{lemma}
+			Let $C$ be a closed convex set and let $\mathbf{y}_1, \mathbf{y}_2\in C$ be directions of recession of $C$, then $\mathbf{y} = \lambda_1\mathbf{y}_1 + \lambda_2\mathbf{y}_2,\;lambda_1\lambda_2\in\mathbb{R}_+$ is also a direction of recession in $C$.
+		\end{lemma}
+		
+		\begin{proof}
+			Scale both $\mathbf{y}$ by $1/(\lambda_1 + \lambda_2)$, which allows us to assume without loss of generality that $\lambda_1 + \lambda_2 = 1$. Anyway, now the idea is to simply
+			
+			\begin{align*}
+				\mathbf{x} + \lambda\mathbf{y} = \mathbf{x} + \lambda (\lambda_1\mathbf{y}_1 + \lambda_2\mathbf{y}_2) &= \mathbf{x} + \lambda \lambda_1\mathbf{y}_1 +  \lambda\lambda_2\mathbf{y}_2\\
+				&=\lambda_1\mathbf{x} + \lambda_2\mathbf{x} + \lambda \lambda_1\mathbf{y}_1 +  \lambda\lambda_2\mathbf{y}_2\\
+				&=\lambda_1(\mathbf{x} + \lambda\mathbf{y}_1) + \lambda_2(\mathbf{x}  +  \lambda\mathbf{y}_2)
+			\end{align*}
+			
+			Since both endpoints are in the set, We are done. So the idea there was to split the new direction of recession into it's original components and since the result will be between  the two original directions, by convexity the new point is also in $C$. The scaling thing is there to make it neat.
+
+		\end{proof}
+		
+		\begin{definition}
+			Let $C\subseteq{R}^d$ be a closed convex set, then $\mathbf{y}\in C$ is a \textnormal{direction of constancy} if both $\mathbf{y, -y}$ are directions of recession.
+		\end{definition}
+		
+		So, a direction of constancy has with it associated a linear subspace called \textit{lineality space L(C)}. The set shape here is something like cylinder for example. Anyway, lineality spaces are sort of straight lines, where as recession stuff is more like a cone, since it only deals with one direction (especially in convex cases, You're getting a cone). Remember that We are still just dealing with sets, though.
+		
+		\begin{lemma}
+			Let $C\subseteq\mathbb{R}^d$ be a closed convex set and $\mathbf{y}_1, \mathbf{y}_2$ be directions of constancy, then $\mathbf{y} = \lambda_1\mathbf{y}_1 + \lambda_2\mathbf{y}_2, \lambda_1, \lambda_2\in\mathbb{R}$ is also a direction of constancy.
+		\end{lemma}
+		
+		\begin{proof}
+			Simply use above lemma and deal with positive and negative directions one at a time.
+		\end{proof}
+		
+		So how do We use this stuff for functions? Well, We have our sublevel sets.  If the sublevel sets are well behaved, then We have a global minimum. 
+		
+		\begin{lemma}
+			Let $f:\mathbb{R}^d\to\mathbb{R}$ be a convex function, then any two non-empty sublevel sets $f^{\le\alpha},f^{\le\alpha'}, \alpha\neq\alpha'$ share the same directions of recession.
+		\end{lemma}
+		
+		\begin{proof}
+			We first assume that a sublevel set $f^{\le\alpha}$ has a direction of recession $\mathbf{y}$ giving us
+			
+			\[ f(\mathbf{x} + \lambda\mathbf{y}) \le \alpha \]
+			
+			The claim is that We can actually state a stronger version of the above:
+			
+			\[ f(\mathbf{x} + \lambda\mathbf{y}) \le f(\mathbf{x}) \]
+			
+			To prove this We let $\mathbf{z} = \lambda\mathbf{y}$, $\mathbf{w}_k = \mathbf{x}+k\lambda\mathbf{y}\in f^{\le\alpha}$ We get
+			
+			\begin{align*}
+				\mathbf{x}+\mathbf{z} = \bigg(1 - \frac{1}{k} \bigg)\mathbf{x} + \frac{1}{k}\mathbf{w}_k
+			\end{align*}
+			
+			Which We can then use to say
+			
+			\begin{align*}
+				f(\mathbf{x+z})  =  f\bigg(  \bigg(1 - \frac{1}{k} \bigg)\mathbf{x} + \frac{1}{k}\mathbf{w}_k \bigg) &\le \bigg( 1-\frac{1}{k} \bigg)f(\mathbf{x}) + \frac{1}{k}f(\mathbf{w}_k)\\
+				&\le \bigg( 1-\frac{1}{k} \bigg)f(\mathbf{x}) + \frac{1}{k}f(\mathbf{w}_k)\\
+				&\le \bigg( 1-\frac{1}{k} \bigg)f(\mathbf{x}) + \frac{1}{k}\alpha\\
+				&\le f(\mathbf{x}) \quad \bigg( \lim_{k\to\inf}\bigg)
+			\end{align*}
+			
+			The trick with directions of recession seems to be to allow an endpoint extend to infinity, and this allows for terms to vanish. In this case, We chose the endpoints such that We could use our definition of convexity. 
+			
+			Anywho, once We have the non-increasing term, it's simple. Since they non-empty sublevel sets, they must have some point in their intersection $\mathbf{x'}$, and by our non-increasing fact We can say $f(\mathbf{x'}+\lambda\mathbf{y})\le f(\mathbf{x'})$, and so it is in any sublevel set We'd like.
+		\end{proof}
+		
+		\begin{definition}
+			R(f) is the set of directions of recession, L(f) is the set of $f$.
+		\end{definition}
+		
+		Having all of the above, We can make the following statement:
+		
+		\begin{lemma}
+			Let $f\mathbb{R}^d\to\mathbb{R}$ be a convex function, then the following are equivalent:
+			
+			i) $\mathbf{y}\in\mathbb{R}^d$ is a direction of recession of f.
+			
+			ii) $f(\mathbf{x}+\lambda\mathbf{y})\le f(\mathbf{x}),\forall\mathbf{x}\in\mathbb{R}^d, \lambda\ge 0$.
+			
+			iii) $(\mathbf{y}, 0)\in\mathbb{R}^{d+1}$ is a "horizontal" direction of recession of the convex set $\mathbf{epi}(f)$.
+		\end{lemma}
+		
+		The first two are clear.
+		
+		To understand the third one, first think of the epigraph. In our usual case of $f$ having a single output dimension, We got our graph on the cartesian plane, and the epigraph was everything above the graph. No big deal.
+		
+		Now, observe that $f$ in this case was one dimensional, and the epigraph is two dimensional since We need to add another dimension to the points to account for the output of the function $f$.
+		
+		Now think about directions \textit{in the epigraph}. We have a direction in the input space - $\mathbf{y}$. No worries there. In our 2D example, that's either left or right lol. By creating the vector $(\mathbf{y}, 0)\in\mathbb{R}^{d+1}$, We are saying that as You move along $\mathbf{y}$ in the input space, the output value does not change. In the epigraph, it is "horizontal". 
+		
+	\subsection{Coercive functions}
+	
+		Aren't very interesting in that they are too nice:
+		
+		\begin{definition}
+			A $f\mathbb{R}^d\to\mathbb{R}$ convex function is \textnormal{coercive} if it's recession cone is trivial, i.e. $R(f) = \mathbf{0}$.
+		\end{definition}
+		
+		So no matter which way You go, the function is increasing. 
+		
+		\begin{lemma}
+			Let $f:\mathbb{R}^d$ be a coercive function, then every nonempty sublevel set $f^{\le\alpha}$ is bounded.
+		\end{lemma}
+		
+		\begin{proof}
+			The proof is a nightmare so We are just going to skip it. Probably not a nightmare if You've done real analysis though.
+		\end{proof}
+			
+			The point is that We claim that coercive functions have bounded sublevel sets, and We know that bounded sublevel sets obviously have a global minimum, so:
+		
+		\begin{theorem}
+			Let $f:\mathbb{R}^d\to\mathbb{R}$ be a coercive function, then $f$ has a global minimum.
+		\end{theorem}
+		
+	\subsection{Weakly Coercive Functions}
+	
+		Are simply functions such that their recession cone and lineality space are the same set. We then come back to having coercive functions by taking the compliment of the lineality space of a weakly coercive function $f$.
 		
 		
 		

@@ -1,0 +1,464 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+
+\begin{document}
+
+
+\title{Optimization for Data Science}
+\author{Bernd G$\ddot{\text{a}}$rtner, Martin Jaggi}
+\date{}
+
+\maketitle
+
+\section{Gradient Descent}
+
+	A few quick notes:1	
+	
+ 	We assume $f:\mathbb{R}^d\to\mathbb{R}$ is a differentiable convex function and that it has a global minimum $\mathbf{x}^*\in\mathbb{R}^d$, and then our goal is finding a $\mathbf{x}\in\mathbb{R}^d$ with $\varepsilon > 0$ such that:
+ 	
+ 	\[ f(\mathbf{x})  -  f(\mathbf{x}^*) < \varepsilon   \]
+	
+	So We're not necessarily chasing the global minimum, just any point in the domain that is minimal.
+		
+\section{The Algorithm}
+
+	The old familliar:
+	
+	\[ \mathbf{x}_{t+1} = \mathbf{x}_t - \gamma\nabla f(\mathbf{x}_t) \]
+	
+	Nothing shocking here. We are just doing our best at every step to reduce the function. $\mathbf{x}_0\in\mathbb{R}^d$ is simply random.
+	
+	$\gamma$ there is the stepsize. Larger stepsize means larger steps, which means We may "overshoot" our target. Furthermore We had
+	
+	\[ f(\mathbf{x}_t + \mathbf{v}_t) = f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top (\mathbf{x}_t -\mathbf{v}_t) + r(\mathbf{x}_t -\mathbf{v}_t) \approx  f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top (\mathbf{x}_t -\mathbf{v}_t) \]
+		
+	So We're losing that $r$ term, the direction is according to the gradient and for the time being $\gamma$ is fixed (though it may make sense to vary it in accordance to stuff).
+	
+\section{Vanilla Analysis}
+
+	Okay so up first We let $\mathbf{g}_t = \nabla f(\mathbf{x}_t)$ which gives us
+	
+	\begin{align*}
+		\mathbf{x}_{t+1} = \mathbf{x}_t - \gamma\nabla f(\mathbf{x}_t)\\
+		\mathbf{x}_{t+1} = \mathbf{x}_t - \gamma\mathbf{g}_t\\
+		\mathbf{x}_{t+1} - \mathbf{x}_t =  - \gamma\mathbf{g}_t\\
+		\frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1}) =  \mathbf{g}_t
+	\end{align*}
+	
+	And now We do
+	
+	\begin{align*}
+		\mathbf{g}^\top (\mathbf{x}_t - \mathbf{x}^*) = \frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*)
+	\end{align*}
+	
+	What are We up to here? We are project the well, this is weird. The problem I'm having here is that $\mathbf{g}_t$ seems to be pointing away from the minimum, while oh they are both away from the minimum. Weird way of phrasing it. So We taking the gradient at time $t$, and project on to that step We take \textit{from} the global minimum \textit{to} the point $\mathbf{x}_t$. So this is just getting the overlap of those two directions (plus some scaling by lengths, but whatever). 
+	
+	At this point see appendix for cosine law thingie.
+	
+	So, by the cosine law We've  got
+	
+	\begin{align*}
+		\|\mathbf{a - b}\|^2 &= \|\mathbf{a}\|^2 + \|\mathbf{b}\|^2 - 2\mathbf{a}^\top\mathbf{b}\\
+		2\mathbf{a}^\top\mathbf{b} &= \|\mathbf{a}\|^2 + \|\mathbf{b}\|^2 - \|\mathbf{a - b}\|^2 \\
+		\mathbf{a}^\top\mathbf{b} &=\frac{1}{2}\big( \|\mathbf{a}\|^2 + \|\mathbf{b}\|^2 - \|\mathbf{a - b}\|^2 \big)
+	\end{align*}
+	
+	Slotting in our vectors there We get
+	
+	\begin{align*}
+		\frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) &=\\
+		\frac{1}{\gamma}\frac{1}{2}\big( \|\mathbf{x}_t - \mathbf{x}_{t+1}\|^2 &+ \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| (\mathbf{x}_t - \mathbf{x}_{t+1} -(\mathbf{x}_t - \mathbf{x}^*) \|^2 \big) \\
+		&= \frac{1}{2\gamma}\big( \|\mathbf{x}_t - \mathbf{x}_{t+1}\|^2 + \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) \\
+	\end{align*}
+	
+	All that happens then is We stare at it for a little while and observe that $\mathbf{x}_t - \mathbf{x}_{t+1} = \gamma\mathbf{g}_t$, so
+	
+	\begin{align*}
+		\frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) &= \frac{1}{2\gamma}\big( \|\mathbf{x}_t - \mathbf{x}_{t+1}\|^2 + \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) \\
+		\frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) &= \frac{1}{2\gamma}\big( \| \gamma\mathbf{g}_t\|^2 + \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) \\
+		\frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) &= \frac{1}{2\gamma}\big( \gamma^2\|\mathbf{g}_t\|^2 + \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) \\
+		\frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) &=  \frac{\gamma}{2} \|\mathbf{g}_t\|^2 + \frac{1}{2\gamma}\big( \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) \\
+	\end{align*}
+	
+	Now, if We look at that second term, it's a bit silly. Take $t=0$: 
+	
+	\[  \|\mathbf{x}_0 - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{1} \|^2 \]
+	
+	What is that? The first term is the vector from the start of the sequence to the end, and the second term is the vector from the first step in the sequence to the end. We're left then with the (squared) change in magnitude due to the first step. With $t=1$, We'll be left with the change in magnitude due to the second step and so forth. Ultimately, We're just splitting the distance from the start to the end lots of little chunks! This becomes useful if We think about summing over our series, like so:
+	
+	\begin{align*}
+		\frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) &= \frac{\gamma}{2} \|\mathbf{g}_t\|^2 + \frac{1}{2\gamma}\big( \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big)\\
+		\mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &= \frac{\gamma}{2} \|\mathbf{g}_t\|^2 + \frac{1}{2\gamma}\big( \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big)\\
+		\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &= \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2 + \frac{1}{2\gamma}\big( \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big)\bigg)\\
+		\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &= \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2 + \frac{1}{2\gamma}\big( \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big)\bigg)\\
+		\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &= \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma}\big( \|\mathbf{x}_0 - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{T} \|^2 \big)\\
+	\end{align*}
+	
+	Up to this point We are precise. Now We are going to drop the distance between our last point and the global minimum. I suppose an argument for doing is is that there is not much point in keeping track of the last bit - $T$ steps is what We are given, so that is what We work with. In theory You can get a tighter bound by keeping this term around I suppose. 
+	
+	\begin{align*}
+		\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &= \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma}\big( \|\mathbf{x}_0 - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{T} \|^2 \big)\\
+		\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2
+	\end{align*}
+	
+	Ah I bet We'd drop the other term there too, but We can't - dropping the negative term makes  the bound looser and We're okay with that, but We can't make it tighter without solid argumentation so We can't drop a positive norm.
+	
+	Anyway, We haven't used anything about our function $f$ yet, just the differentiability and the gradient descent structure.  Using first order characterization of convexity We can say
+	
+	\begin{align*}
+		f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + \nabla f(\mathbf{x})^\top (\mathbf{x^*-\mathbf{x}}_t)\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) &\ge  \nabla f(\mathbf{x})^\top (\mathbf{x^*-\mathbf{x}}_t)\\
+		-( f(\mathbf{x}^*) - f(\mathbf{x}_t)) &\le  - \nabla f(\mathbf{x})^\top (\mathbf{x^*-\mathbf{x}}_t)\\
+		-( f(\mathbf{x}^*) - f(\mathbf{x}_t)) &\le  - \nabla f(\mathbf{x})^\top (\mathbf{x^*-\mathbf{x}}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)&\le  \nabla f(\mathbf{x})^\top (\mathbf{x}_t - \mathbf{x^*}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)&\le  \mathbf{g}^\top (\mathbf{x}_t - \mathbf{x^*}_t)\\
+	\end{align*}
+	
+	Wee. That last line is particularly leading, You probably see where We're going with it:
+	
+	\begin{align*}
+		\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2\\
+		\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2
+	\end{align*}
+	
+	With this We get an average error (by simply dividing by $T$) upper bound, and so the smallest error attained along our series of 0..$T$ is certainly less than that.
+	
+\section{Lipschitz Convex Functions}
+
+	Simple - We bound the gradient:
+	
+	\begin{theorem}
+		Let $f:\mathbb{R}^d\to\mathbb{R}$ be a differentiable convex function, $\|\mathbf{x}_0-\mathbf{x^*}\| \le R$, $\|\mathbf{g}_t\|\le B$, $\forall\mathbf{x}$. Choosing stepsize
+		
+		\[ \gamma = \frac{R}{B\sqrt{T}} \]
+		
+		gradient descent yields
+		
+		\begin{align*}
+		\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \frac{RB}{\sqrt{T}}
+	\end{align*}
+	
+	\end{theorem}
+	
+	\begin{proof}
+		As before We have
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2
+		\end{align*}
+	
+		Using our bound for the gradients We get
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2\\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0}  \frac{\gamma B^2}{2}  + \frac{R^2}{2\gamma} \\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le  \frac{T \gamma B^2}{2}  + \frac{R^2}{2\gamma} 
+		\end{align*}
+		
+		Now We differentiate the right side w.r.t. $\gamma$ to find an extremum:
+		
+		\begin{align*}
+			\frac{d}{d\gamma} \bigg(\frac{T \gamma B^2}{2}  + \frac{R^2}{2\gamma}\bigg) &=  \frac{T B^2}{2}  + \frac{d}{d\gamma} \bigg( \frac{R^2}{2\gamma}\bigg)\\
+			&=  \frac{T B^2}{2}  + \frac{d}{d\gamma} \bigg( \frac{R^2}{2\gamma}\bigg)\\
+			&=  \frac{T B^2}{2}  + \frac{d}{d\gamma} \bigg( \frac{R^2}{2} \gamma^{-1}\bigg)\\
+			&=  \frac{T B^2}{2}  - \frac{R^2}{2} \gamma^{-2}
+		\end{align*}
+		
+		Now We set it to zero
+		
+		\begin{align*}
+			0 &=  \frac{T B^2}{2}  - \frac{R^2}{2} \gamma^{-2} \\
+			- \frac{T B^2}{2}  &=   - \frac{R^2}{2} \gamma^{-2}\\
+			T B^2  &=  R^2 \gamma^{-2}\\
+			\frac{T B^2}{R^2}  &= \gamma^{-2}\\
+			\frac{R^2}{T B^2}  &= \gamma^{2}\\
+			\frac{R}{B\sqrt{T} }  &= \gamma
+		\end{align*}
+		
+		We know this is a local minimum since the second derivative is positive. 
+		
+		Using the above We get
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le  \frac{T \gamma B^2}{2}  + \frac{R^2}{2\gamma} \\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le  \frac{R}{B\sqrt{T} }\frac{T B^2}{2}  + \frac{B\sqrt{T} }{R}\frac{R^2}{2} \\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \frac{\sqrt{T}R B}{2}  + \frac{B\sqrt{T} R}{2}\\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le RB\sqrt{T}\\
+			\frac{\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*)}{T} &\le \frac{RB\sqrt{T}}{T}\\
+			\frac{\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*)}{T} &\le \frac{RB}{\sqrt{T}}\\
+		\end{align*}
+	\end{proof}
+
+	So say We want
+	
+	\begin{align*}
+		\min^{T-1}_{t=0} f(\mathbf{x}_t) - f(\mathbf{x}^*) \le \varepsilon
+	\end{align*}
+	
+	Well, the minimum is less than the average so We can safely say 
+
+	\begin{align*}
+		\min^{T-1}_{t=0} f(\mathbf{x}_t) - f(\mathbf{x}^*)  \le \frac{RB}{\sqrt{T}}  \le \varepsilon
+	\end{align*}
+	
+	And then it's just messing about:
+	
+	\begin{align*}
+		\varepsilon \ge \frac{RB}{\sqrt{T}}\\
+		\sqrt{T}\varepsilon \ge RB\\
+		\sqrt{T} \ge \frac{RB}{\varepsilon}\\
+		T \ge \frac{R^2B^2}{\varepsilon^2}\\
+	\end{align*}
+	
+	So We get $\mathcal{O}\big(\frac{1}{\varepsilon^2}\big)$.
+
+\section{Smooth convex functions}
+
+	Alright, so, smooth functions (not necessarily convex for now ) are functions bounded from above by some parabaloid, like so:
+	
+	\begin{definition}
+		Let $f:\mathbf{dom}(f)\to\mathbb{R}$ be a differentiable function, and let $X\subseteq\mathbf{dom}(f)$ be a convex set, if for some $L\ge 0$ it is true that
+		
+		\[ f(\mathbf{y}) \le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y-x}) + \frac{L}{2} \|\mathbf{y-x}\|^2,\;\forall \mathbf{x, y}\in X \]
+		
+		then $f$ is smooth over $X$ with parameter $L$. If $X=\mathbf{dom}(f)$, then $f$ is simply smooth.
+	\end{definition}
+
+	So convexity bounds from below, smoothness bounds from above. For polynomials We can say
+	
+	\begin{lemma}
+		Let $f(\mathbf{x}) = \mathbf{x}^\top Q \mathbf{x} + \mathbf{b^\top x} + c$ where $Q$ is symmetric and everything is adequately dimensioned, then $f$ is smooth with parameter $2\|Q\|$.
+	\end{lemma}
+	
+	Basically smooth with the second derivative.
+	
+	\begin{lemma}
+		Let $f:\mathbf{R}^d\to\mathbb{R}$ be convex and differentiable, then the following two statements are equivalent:
+		
+		i) f is smooth with parameter $L$
+		
+		ii) $\| \nabla f(\mathbf{y}) - \nabla f(\mathbf{x}) \| \le L \|\mathbf{y-x}\|$
+	\end{lemma}
+
+	\begin{lemma}
+		Operations that preserve function smoothness are scaled positive sums of said functions and composition with a linear function, where if $g$ is a linear function then $f(g(x))$ leaves things smooth and $g(f(x))$ scales the smoothness parameter by $\|A\|^2$, where $A$ is the spectral norm of the linear operator.
+	\end{lemma} 
+
+	\begin{lemma}
+		Let $f:\mathbb{R}^d\to\mathbb{R}$ be a differentiable and smooth function with parameter $L$, then with
+		
+		\[ \gamma = \frac{1}{L} \]
+		
+		gradient descent step satisfies
+		
+		\[ f(\mathbf{x}_{t+1}) \le f(\mathbf{x}_t) - \frac{1}{2L}\|f(\mathbf{x}_t)\|^2 \]
+		
+		This is called sufficient decrease - since We're getting a decrease 
+	\end{lemma}
+	
+	\begin{proof}
+		Is not too bad actually. By smoothness We have
+		
+		\begin{align*}
+			f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top(\mathbf{x}_{t+1} - \mathbf{x}_t) + \frac{L}{2}\| \mathbf{x}_{t+1} - \mathbf{x}_t \|^2\\
+			f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top \bigg(-\frac{1}{L}\mathbf{g}_t \bigg) + \frac{L}{2} \bigg\| -\frac{1}{L}\mathbf{g}_t \bigg\|^2\\
+			f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}_t) -\frac{1}{L}\| \nabla f(\mathbf{x}_t) \|^2 + \frac{1}{2L} \| \nabla f(\mathbf{x}_t) \|^2\\
+			f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}_t) -\frac{1}{2L}\| \nabla f(\mathbf{x}_t) \|^2
+		\end{align*}
+	\end{proof}
+	
+	\begin{theorem}
+		Let $f:\mathbb{R}^d\to\mathbb{R}$ be a convex and differentiable function, and furthermore let $f$ be smooth with parameter $L$, then with stepsize
+		
+		\[ \gamma = \frac{1}{L} \]
+		
+		gradient descent satisfies
+		
+		\[ f(\mathbf{x}_T) - f(\mathbf{x^*}) \le \frac{L}{2T} \|\mathbf{x}_0 - \mathbf{x}^* \|^2,\; T>0.  \]
+	\end{theorem}
+	
+	\begin{proof}
+		Well, first We use sufficient decrease to get some handle on the gradients here. This makes sense, after all, if the graph is bounded from above, this has a lot to say about the gradient. From sufficient decrease We have 
+		
+		\begin{align*}
+			f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}_t) -\frac{1}{2L}\| \nabla f(\mathbf{x}_t) \|^2\\
+			f(\mathbf{x}_{t+1}) - f(\mathbf{x}_t) &\le  -\frac{1}{2L}\| \nabla f(\mathbf{x}_t) \|^2\\
+			f(\mathbf{x}_t) - f(\mathbf{x}_{t+1})  &\ge  \frac{1}{2L}\| \nabla f(\mathbf{x}_t) \|^2\\
+		\end{align*}
+		
+		From vanilla analysis We had:
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2
+		\end{align*}
+		
+		Focusing on the gradient term there, with sufficient decrease We get We have
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) = \frac{1}{2L}\sum^{T-1}_{t=0}   \|\mathbf{g}_t\|^2 &\le \sum^{T-1}_{t=0} f(\mathbf{x}_t) - f(\mathbf{x}_{t+1})\\
+			&\le  f(\mathbf{x}_0) - f(\mathbf{x}_{T})
+		\end{align*}
+		
+		Plugging  this back into vanilla analysis leads to 
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2\\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le f(\mathbf{x}_0) - f(\mathbf{x}_{T}) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2
+		\end{align*}
+		
+		We can bring over those two $f$ terms to get 
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le f(\mathbf{x}_0) - f(\mathbf{x}_{T}) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2\\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) - (f(\mathbf{x}_0) - f(\mathbf{x}_{T})) &\le  \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2\\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) - f(\mathbf{x}_0) + f(\mathbf{x}_{T}) &\le  \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2 \\
+			\sum^{T}_{t=1}f(\mathbf{x}_t) - f(\mathbf{x}^*)  &\le  \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2
+		\end{align*}
+		
+		Alright so then by sufficient decrease We know that $f(\mathbf{x}_{t+1} \le f(\mathbf{x}_t$, so the last iterate in the sequence is the smallest, and the smallest is certainly smaller than the average yielding
+		
+		\begin{align*}
+			f(\mathbf{x}_T) - f(\mathbf{x^*}) \le \frac{L}{2T}\|\mathbf{x}_0 - \mathbf{x}^*\|^2  
+		\end{align*}
+		
+		If We wish the error to be lower than $\varepsilon$ (letting $R = \|\mathbf{x}_0 - \mathbf{x}^*\|$) We get
+		
+		\begin{align*}
+			\frac{L}{2T}\|\mathbf{x}_0 - \mathbf{x}^*\|^2   \le \varepsilon\\
+			\frac{LR^2}{2T}   \le \varepsilon\\
+			\frac{LR^2}{2\varepsilon}   \le T
+		\end{align*}
+		
+		
+		
+	\end{proof}
+
+
+\section{Accelerated Gradient Descent}
+
+	\subsection{Hinton's video}
+	
+		Can be found \href{https://www.youtube.com/watch?v=LdkkZglLZ0Q}{\color{blue}{here}}.
+		
+		So We are at some point $\mathbf{x}$. Let's say We've already iterated a couple of times. 
+		
+		One of the terms We'll have at this point is momentum, and We go in accordance to the momentum, which is to say We'll just make a step in the direction of the momentum.
+		
+		Having done so, We now have some $\mathbf{x'}$ at which We arrived by going in the direction of the momentum (I don't think We scale the momentum  vector before taking the first step, by the by, so no $\gamma$ yet.). Now at this new point $\mathbf{x'}$, We take the derivative and take a standard gradient descent step. Now We have a point $\mathbf{x''}$, and this will be the starting point for the next iteration.
+		
+		The last thing We do now before starting all over again is We is We update the momentum. We add the gradient We just computed at $\mathbf{x'}$ to the momentum, so now the momentum vector points from $\mathbf{x}$ to $\mathbf{x''}$, and We attenuate it a bit by multiplying the momentum by some constant close to 1, like 0.95. 
+
+	\subsection{Their version}
+	
+		They have
+		
+		\begin{align*}
+			\mathbf{y}_{t+1} &= \mathbf{x}_t - \frac{1}{L}\nabla f(\mathbf{x}_t),\\
+			\mathbf{z}_{t+1} &= \mathbf{z}_t - \frac{t+1}{2L}\nabla f(\mathbf{x}_t),\\
+			\mathbf{x}_{t+1} &= \frac{t+1}{t+3}\mathbf{y}_{t+1} + \frac{2}{t+3}\mathbf{z}_{t+1}.
+		\end{align*}
+
+		Which is equivalent to Hinton's video, of course, just a bit messed about. $L$ there is  the smoothness parameter of $f$.
+		
+		Alright so first We have $\mathbf{y}_{t+1}$ which is just the standard smooth step - the best step We could take, and it's in accordance with the result We got for gradient descent with smooth functions. We're just noting it down, but this is not our new $\mathbf{x}_{t+1}$.
+		
+		$\mathbf{z}_{t+1}$ is the momentum term. We have the previous momentum, and We are adding the gradient at  the current point to it. Weird thing is is that We are not really attenuating the momentum here? It's not being multiplied by $.99$ or whatever. 
+		
+		Finally We have our new $\mathbf{x}_{t+1}$. It's a combination of $\mathbf{y}_{t+1}$ and $\mathbf{z}_{t+1}$. As time increases, We basically leave the $\mathbf{y}_{t+1}$ untouched. I guess this is where We attenuate $\mathbf{z}_{t+1}$, since We are scaling it by the reciprocal of $t$. So instead of keeping an attenuated version of momentum, We keep an unattenuated one and just scale it before adding it to previous coordinates. 
+		
+	\subsection{Inconsistencies}
+	
+		Alright so in Hinton's version (that We like lol) We take a large step based on momentum, and then correct course with a gradient from that gambled point and update the momentum with the gradient.
+		
+		In our version, We seemingly take the gradient at the very beginning, which I do not like.
+		
+		Let's think of the gradient as the focal point, since We are only allowed to compute one at a time. 
+		
+		Alright so the algorithms are equivalent (surprise), I think. Our $\mathbf{x}_t$ is Hinton's $\mathbf{x'}$, the point We arrive at after taking the momentum step. We then take the gradient at this point, correct our momentum with it (yielding $\mathbf{z}_{t+1}$). $\mathbf{y}_{t+1}$ has to be our "corrected" step $\mathbf{x''}$ in Hinton's version. 
+		
+		Let's try the first step. We are at $\mathbf{x}_0$, from here We calculate a gradient and calculate what it would be like to take that step, which is our $\mathbf{y}_1$. Then We compute the slightly corrected momentum $\mathbf{z}_1$. Then We compute our next landing point by basically going to $\mathbf{y}_1$ and adding on to that our new momentum, which is the sum of old momentum plus new gradient.
+		
+		My problem is that to me,  the point of accelerated momentum is that We take a big momentum step, and then adjust our landing position with some actual information from the gradient. This is Hinton's video. In the notes' version however, it feels as if though We are taking the gradient and adding it to the momentum and taking a great big leap, which would not compensate for the risk We took in the leap to begin with.
+		
+		The resolution is that the point We take the gradient at \textit{is} the result of a momentum leap. We take a leap, calculate an adjustment, and take another leap. The adjustment calculated at time $t+1$ adjusts for the risk We took in leaping at time $t$.
+		
+		This is hard to follow. Hinton's version is clear, so let's just keep that fixed in our minds. In the notes' version, We arrive at a point via a correction and leap from time $t$. We calculate a gradient correction $t+1$. This gradient correction $t+1$ is in fact adjusting the leap We took at time $t$.
+		
+		Maybe an even simpler way to think about it is that the core idea is to take a leap and then adjust with gradient information. Since We are stacking steps, it does not matter whether You take the leap first and adjust second or adjust first and leap second - You still get alternating leaps and adjustments. 
+		
+		What is the difference from normal momentum? In standard momentum We just keep a discounted sum of previous gradients. We take a step by taking the momentum leap and add on to that momentum leap the gradient from time $t$. 
+		
+		Is it about where You take the gradient? Momentum: calculate gradient, move in direction of gradient, and take a momentum leap. Nesterov: Take a momentum leap, move in direction of gradient.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+\newpage
+\section{Appendix}
+
+	\subsection{Cosine Rule}
+	
+		Cosine rule is just a generalization of $(a-b)^2 = a^2 + b^2 - 2ab$ in the case where $a, b$ do not lie in the same plane. Letting them be vectors We get
+		
+		\begin{align*}
+			\|\mathbf{a - b}\|^2 = \|\mathbf{a}\|^2 + \|\mathbf{b}\|^2 - 2\mathbf{a}^\top\mathbf{b} 
+		\end{align*}
+		
+		So just their individual lengths minus an interaction term twice. We can expand on that interaction term since recall $\mathbf{a}^\top\mathbf{b} = \|\mathbf{a}\|\|\mathbf{b}\|\cos(\theta)$ giving us
+		
+		\begin{align*}
+			\|\mathbf{a - b}\|^2 = \|\mathbf{a}\|^2 + \|\mathbf{b}\|^2 - 2\|\mathbf{a}\|\|\mathbf{b}\|\cos(\theta) 
+		\end{align*}
+		
+		Makes this a bit more apparent - the interaction term is just their lengths scaled by their overlap. Basically this generalization is account for the case where there is an angle between the things We are multiplying - in the original case, everything lines up perfectly so We get $-2ab$, but in this new general case We scale the interaction down since the components are no longer parallel (and think about the perpendicular case - $\mathbf{a, b}$ point in completely different directions so when You look at the length of $\mathbf{a-b}$ You just get their individual lengths added. Ain't it neat?
+\end{document} 
