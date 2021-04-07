@@ -1,0 +1,437 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\usepackage[makeroom]{cancel}
+\newcommand{\Emptyset}{\text{\o}}
+
+\begin{document}
+
+
+\title{Nonsmooth optimization}
+\author{Bernd G$\ddot{\text{a}}$rtner, Martin Jaggi}
+\date{}
+
+\maketitle
+
+\section{Subgradient and subdifferentiation}
+
+	\begin{definition}
+		Let $f:\mathbb{R}^d\to\mathbb{R}$ be a convex function. A vector $\mathbf{g}$ is a subgradient of $f$ at $\mathbf{x}\in\mathbf{dom}(f)$ if
+		
+		\[ f(\mathbf{y}) \ge f(\mathbf{x}) + \mathbf{g}^\top (\mathbf{y-x}) \; \forall\mathbf{y}\in\mathbf{dom}(f). \]
+		
+		The set of all subgradients of $f$ at $\mathbf{x}$ is called the \textnormal{subdifferential} and is denoted by $\partial f$.
+	\end{definition}
+	
+	The subgradient is not always unique, hence the subdifferential set.
+	
+	\begin{lemma}
+		if $f$ is convex and differentiable, then $\partial f(\mathbf{x}) = \{ \nabla f(\mathbf{x} \}$.
+	\end{lemma}
+	
+	Which, to me, just comes from the fact that the derivative is unique. Similarly
+	
+	\begin{lemma}
+		If f is differentiable at $x\in\mathbf{dom}(f)$, then $\partial f(\mathbf{x})\subseteq \{ \nabla f(\mathbf{x}) \}$.
+	\end{lemma}
+	
+	And there is a subgradient version of Lipschitz
+	
+	\begin{lemma}
+		Let $f$ be convex with an open domain then
+		
+		i) $\|\mathbf{g}\| \le B\;\forall \mathbf{x}\in\mathbf{dom}(f),\;\forall\mathbf{g}\in\partial f(\mathbf{x})$
+		
+		ii) $|f\mathbf{y}) - f(\mathbf{x})| \le B\|\mathbf{y-x}\|$
+		
+		are equivalent.
+	\end{lemma}
+	
+	\subsection{Topological properties}
+	
+		Of the subdifferential set that is.
+		
+		\begin{lemma}
+			Let $f:\mathbb{R}^d\to\mathbb{R}$ be a convex function. Then the subdifferential at any point $\mathbf{x}\in\mathbf{dom}(f)$ is a closed convex set.
+		\end{lemma}
+		
+		Now for something completely different
+		
+		\begin{definition}
+			Let $S,T$ be two nonempty convex sets in $\mathbb{R}^n$ and  let $H = \{\mathbf{x} \in\mathbb{R}^n : \mathbf{a^\top x} = b  \},\;\mathbf{a}\neq 0$ is said to \textnormal{separate} $S$ and $T$ if $S\cup T \cancel{\subset} H$ and
+			
+			\begin{align*}
+				S\subset H^- = \{ \mathbf{x}\in\mathbb{R}^n: \mathbf{a^\top\mathbf{x}}\le b \} \\
+				S\subset H^+ = \{ \mathbf{x}\in\mathbb{R}^n: \mathbf{a^\top\mathbf{x}}\ge b \} 
+			\end{align*}
+			
+			Similarly, the hyperplane is said to \textnormal{strictly separate} $S$ and $T$ if 
+			
+			\begin{align*}
+				S\subset H^{--} = \{ \mathbf{x}\in\mathbb{R}^n: \mathbf{a^\top\mathbf{x}}< b \} \\
+				S\subset H^{++} = \{ \mathbf{x}\in\mathbb{R}^n: \mathbf{a^\top\mathbf{x}}> b \} 
+			\end{align*}
+			
+		\end{definition}
+		
+		And then honestly some weird and seemingly useless shit about the subdifferential. Basically if $f$ is convex then there are subdifferentials in the relative interior.
+		
+	\subsection{Subdifferential and directional derivative}
+	
+		Okay so now We are taking a derivative in a direction, namely
+		
+		\[ f'(\mathbf{x, d}) = \lim_{\delta\to 0^+} \frac{f(x+\delta d) - f(x)}{\delta} \]
+		
+		And when the function is differentiable We get $f'(\mathbf{x, d}) = \nabla f(\mathbf{x})^\top\mathbf{d}$. I suppose this sort of makes sense - the derivative tells You the change in certain directions, the overall gradient vector then points in the direction of greatest change, and You can project that 
+		
+		\begin{lemma}
+			When f is convex, the ratio
+			
+			\[ \Emptyset (\delta) =  \frac{f(x+\delta d) - f(x)}{\delta}  \]
+			
+			is non-decreasing for $\delta > 0$.
+		\end{lemma}
+		
+		Pretty simple, just means $f$ is, well, non-decreasing (or rather it's gradient is).
+		
+		I refuse to prove that the gradient is the direction of steepest ascent.
+		
+	\subsection{Calculus of Subgradient}
+	
+		So calculating the subdifferential is hard, actually, so the idea is to arrive at it constructively. Recall that We have that the subgradient exists almost everywhere for convex functions, so We can just compose them to get to more interesting cases.
+		
+		We can take a linear combination of convex functions,
+		
+		We can take an affine function and feed it into a convex function,
+		
+		Taking the max of a set of convex functions,
+		
+		And chain function apparently also works. 
+		
+	\subsection{Subgradient method}
+	
+		Two quantities We'll care about are
+		
+		\[ R^2 = \max_{\mathbf{x, y}\in X} \|\mathbf{x-y}\|^2 \]
+		
+		Where $X$ is the subset of the domain of $f$ that We care about. So this is just the squared diameter thanks.
+		
+		and $B$, the Lipschitz constant. $f$ will probably be locally Lipschitz.
+		
+	\subsection{Subgradient descent}
+	
+		Let $\mathbf{x}_1 \in X$ be the starting point, then
+		
+		\[ \mathbf{x}_{t+1} = \prod_X(\mathbf{x}_t - \gamma_t g(\mathbf{x}_t))\]
+		
+		\begin{theorem}
+			Assume $f$ is convex, then Subgradient Descent satisfies
+			
+			\[ \min_{1\ge t\ge T} f(\mathbf{x}_t) - f^* \le \bigg( \sum^T_{t=1} \gamma_t \bigg)^{-1} \bigg(\frac{1}{2} \|\mathbf{x}_1-\mathbf{x}^*\|^2 + \frac{1}{2}\sum^T_{t=1} \gamma^2_t \|g(\mathbf{x}_t)\|^2  \bigg) \]
+			
+			and
+			
+			\[f(\mathbf{\hat{x}}_T) - f^* \le \bigg( \sum^T_{t=1} \gamma_t \bigg)^{-1} \bigg(\frac{1}{2} \|\mathbf{x}_1-\mathbf{x}^*\|^2 + \frac{1}{2}\sum^T_{t=1} \gamma^2_t \|g(\mathbf{x}_t)\|^2  \bigg) \]
+			
+			where
+			
+			\[\mathbf{ \hat{x}}_T  = \bigg( \sum^T_{t=1}\gamma_t \bigg)^{-1}\bigg( \sum^T_{t=1} \gamma_\mathcal{T} \mathbf{x}_t \bigg)\]
+		\end{theorem}
+		
+		\begin{proof}
+			Alright
+			
+			\begin{align*}
+				\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 &= \| \prod_X(\mathbf{x}_t - \gamma_t g(\mathbf{x}_t)) - \prod_X(\mathbf{x}^*) \|^2 \\
+				&\le \| \mathbf{x}_t - \gamma_t g(\mathbf{x}_t) - \mathbf{x}^* \|^2\\
+				&\le \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2 - 2(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)
+			\end{align*}
+			
+			Where the first inequality is justified as follows: We are project two vectors into $X$ and taking the distance between them. The projection operator can only decrease the distance between those vectors, since either they are not projected and the distance is unchanged or they are and they are brought closer (in the convex set $X$).
+			
+			The second is just the cosine law for vectors.
+			
+			Rearranging We get
+			
+			\begin{align*}
+				\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 &\le \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2 - 2(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)\\
+				 2(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)&\le \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2\\
+				(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)&\le\frac{1}{2}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)
+			\end{align*}
+			
+			Okay so next is that by convexity of $f$ We have
+			
+			\[ (\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*) \ge \gamma_t(f(\mathbf{x}_t )- f^*)  \]
+			
+			How did We get here though. By convexity and subgradients We have
+			
+			\begin{align*}
+				f(\mathbf{y}) &\ge f(\mathbf{x}) + g(\mathbf{x})^\top(\mathbf{y}-\mathbf{x})\implies\\
+				f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + g(\mathbf{x}_t)^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+				f(\mathbf{x}^*) - f(\mathbf{x}_t) &\ge  g(\mathbf{x}_t)^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+				f(\mathbf{x}_t) - f(\mathbf{x}^*)   &\le  g(\mathbf{x}_t)^\top(\mathbf{x}_t - \mathbf{x}^*)\\
+				\gamma_t(f(\mathbf{x}_t) - f(\mathbf{x}^*))   &\le  \gamma_tg(\mathbf{x}_t)^\top(\mathbf{x}_t - \mathbf{x}^*)\\
+				 \gamma_tg(\mathbf{x}_t)^\top(\mathbf{x}_t - \mathbf{x}^*) &\ge   \gamma_t(f(\mathbf{x}_t) - f(\mathbf{x}^*)) \\
+				  \gamma_tg(\mathbf{x}_t)^\top(\mathbf{x}_t - \mathbf{x}^*) &\ge   \gamma_t(f(\mathbf{x}_t) - f^*) 
+			\end{align*}
+			
+			So that's annoying. But now We can write
+			
+			\begin{align*}
+				(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)&\le\frac{1}{2}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				\gamma_t(f(\mathbf{x}_t) - f^*)  &\le \frac{1}{2}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				\sum^T_{t=1} \gamma_t(f(\mathbf{x}_t) - f^*)  &\le \sum^T_{t=1}\frac{1}{2}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				\sum^T_{t=1} \gamma_t(f(\mathbf{x}_t) - f^*)  &\le \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2 - \|\mathbf{x}_{T+1} - \mathbf{x}^* \|^2 +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)\\
+				\sum^T_{t=1} \gamma_t(f(\mathbf{x}_t) - f^*)  &\le \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2  +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)\\
+			\end{align*}
+			
+			We haven't actually done anything complicated yet. Just used the non-expansiveness of projection to get rid the projection operator, and replaced the gradient with a subgradient. In fact, I think this is identical to vanilla analysis except for those tricks.
+			
+			Anyway, by definition, We have
+			
+			\begin{align*}
+				\sum^T_{t=1} \gamma_t(f(\mathbf{x}_t) - f^*)  &\le \sum^T_{t=1} \gamma_t \big(\min_{1\le t \le T} f(\mathbf{x}_t)-f^* \big) = \big(\min_{1\le t \le T} f(\mathbf{x}_t)-f^* \big) \sum^T_{t=1} \gamma_t 
+			\end{align*}
+			
+			Which means We can say
+			
+			\begin{align*}
+				\sum^T_{t=1} \gamma_t(f(\mathbf{x}_t) - f^*)  &\le \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2  +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)\\
+				 \big(\min_{1\le t \le T} f(\mathbf{x}_t)-f^* \big) \sum^T_{t=1} \gamma_t  &\le \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2  +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)\\
+				 \min_{1\le t \le T} f(\mathbf{x}_t)-f^*   &\le \bigg(  \sum^T_{t=1} \gamma_t \bigg)^{-1} \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2  +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)
+			\end{align*}
+			
+			Which proves the first direction. Wee.
+			
+			For the other claim We use convexity. Basically We want to say
+			
+			\begin{align*}
+				\sum^T_{t=1} \gamma_t(f(\mathbf{x}_t) - f^*) \ge \bigg( \sum^T_{t=1}\gamma_t \bigg)\cdot (f(\mathbf{\hat{x}}_T) - f^*)
+			\end{align*}
+			
+			And why is this true. Well, recall that 
+		
+			\[\mathbf{ \hat{x}}_T  = \bigg( \sum^T_{t=1}\gamma_t \bigg)^{-1}\bigg( \sum^T_{t=1} \gamma_\mathcal{T} \mathbf{x}_t \bigg)  \]
+			
+			So $\mathbf{ \hat{x}}_T $ is a convex sum as far as I can tell - the coefficients sum to 1.  So We can arrive at our desired equation by starting (with convexity)
+			
+			\begin{align*}
+				\bigg( \sum^T_{t=1} \gamma_t\bigg)^{-1}\sum^T_{t=1} \gamma_t  f(\mathbf{x}_t) &\ge f\bigg( \bigg( \sum^T_{t=1}\gamma_t \bigg)^{-1}\bigg( \sum^T_{t=1} \gamma_t \mathbf{x}_t \bigg) \bigg) \\
+				\bigg( \sum^T_{t=1} \gamma_t\bigg)^{-1}\sum^T_{t=1} \gamma_t f(   \mathbf{x}_t) &\ge f(\mathbf{ \hat{x}}_T) \\
+				\sum^T_{t=1} \gamma_t  f(\mathbf{x}_t) &\ge\bigg( \sum^T_{t=1} \gamma_t\bigg) f(\mathbf{ \hat{x}}_T) \\
+				\sum^T_{t=1} \gamma_t  f(\mathbf{x}_t - f^*) &\ge\bigg( \sum^T_{t=1} \gamma_t\bigg) (f(\mathbf{ \hat{x}}_T) - f^*) \\
+			\end{align*}
+			
+			Where in that last step We just subtracted $\sum^T_{t=1} \gamma_t f^*$ to get the desired form.
+			
+			To complete the proof We go back to our original formulation:
+			
+			\begin{align*}
+				\sum^T_{t=1} \gamma_t(f(\mathbf{x}_t) - f^*)  &\le \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2  +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)\\
+				 \bigg( \sum^T_{t=1} \gamma_t\bigg) (f(\mathbf{ \hat{x}}_T) - f^*) &\le \sum^T_{t=1} \gamma_t(f(\mathbf{x}_t) - f^*)  \le \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2  +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)\\
+				  \bigg( \sum^T_{t=1} \gamma_t\bigg) (f(\mathbf{ \hat{x}}_T) - f^*) &\le \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2  +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)\\
+					 f(\mathbf{ \hat{x}}_T) - f^* &\le \bigg( \sum^T_{t=1} \gamma_t\bigg)^{-1} \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2  +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)		  
+			\end{align*}
+		\end{proof}
+		
+		\begin{observation}
+			By the way, You can change the previous theorem to read
+			
+			\begin{align*}
+				\min_{1\le t \le T} f(\mathbf{x}_t)-f^*   &\le \frac{ \frac{1}{2}\big( \| \mathbf{x}_1 - \mathbf{x}^* \|^2  +  \sum^T_{t=1}  \|\gamma_t g(\mathbf{x}_t) \|^2   \big)}{ \sum^T_{t=1} \gamma_t}\\
+				\min_{1\le t \le T} f(\mathbf{x}_t)-f^*   &\le \frac{ \frac{1}{2}\big(R^2  +  \sum^T_{t=1}  \gamma_t^2 B^2   \big)}{ \sum^T_{t=1} \gamma_t}
+			\end{align*}
+		\end{observation}
+		
+		By letting $R$ be distance to solution and $B$ be some sort of lipschitz upper bound. 
+		
+		Now for some \textbf{convergence with various stepsizes}:
+		
+		1. Constant stepsize $\gamma_t = t$:
+		
+		We let $\epsilon_T$ be the error after $T$ steps, and We see what happens to it:
+		
+		\begin{align*}
+			\epsilon_T   &\le \frac{ \frac{1}{2}\big(R^2  +  \sum^T_{t=1}  \gamma_t^2 B^2   \big)}{ \sum^T_{t=1} \gamma_t}\\
+			\epsilon_T   &\le \frac{ \frac{1}{2}\big(R^2  +  \sum^T_{t=1}  \gamma^2 B^2   \big)}{ \sum^T_{t=1} \gamma}\\
+			\epsilon_T   &\le \frac{ R^2  +   T  \gamma^2 B^2   }{ 2T \gamma}\\
+			\epsilon_T   &\le \frac{ R^2 }{ 2T \gamma} +  \frac{ T  \gamma^2 B^2   }{ 2T \gamma}\\
+			\epsilon_T   &\le \frac{ R^2 }{ 2T \gamma} +  \frac{   \gamma B^2   }{ 2 }\\
+			\epsilon_T   &\le  \frac{   \gamma B^2   }{ 2 } \quad\lim_{T\to\infty}
+		\end{align*}
+		
+		So the error does not diminish to zero even with an infinite number of steps, which makes sense. You can of course also take the derivative of the right side and try to find the optimal step size, yielding $\gamma^* = R/(B\sqrt{T})$.
+		
+		
+		2. Non-summable  but diminishing step size
+		
+		So We have that 
+		
+		\[ \sum^T_{t=1} \gamma_t = \infty,\quad \lim_{T\to\infty} \gamma_t = 0 \]
+			
+		\begin{align*}
+			\epsilon_T   &\le \frac{ \frac{1}{2}\big(R^2  +  \sum^T_{t=1}  \gamma_t^2 B^2   \big)}{ \sum^T_{t=1} \gamma_t}\\
+			\epsilon_T   &\le \frac{ R^2}{2 \sum^T_{t=1} \gamma_t}  +  \frac{ 2\sum^T_{t=1}  \gamma_t^2 B^2   }{ \sum^T_{t=1} \gamma_t}
+		\end{align*}	
+		
+		Well, that first term goes to zero clearly. Similarly on the right hand side the numerator goes to zero faster then the denumerator.
+		
+		3. Non-summable but square summable:
+		
+		So sum of the first order terms is infinite, sum of squared is bounded. That's very clearly going to go to zero as per previous example.
+		
+		4. Polyak is, well, I don't care, but goes to zero.
+		
+	\subsection{Convergence for strongly convex functions}
+	
+		\begin{theorem}
+			Assume f is $\mu$-strongly convex, then subgradient descent with step size
+			
+			\[ \gamma_t = \frac{1}{\mu t} \]
+			
+			satisfies
+			
+			\[ \min_{1\le t\le T} f(\mathbf{x}_t) - f^* \le \frac{B^2 \log(T) + 1)}{2\mu T} \]
+			
+			and
+			
+			\[ f(\hat{\mathbf{x}}_T) - f^* \le \frac{B^2 \log(T) + 1)}{2\mu T},\]
+			
+			where $\hat{\mathbf{x}}_T = \frac{1}{T}\sum^T_{t=1} \mathbf{x}_t$.
+		\end{theorem}
+		
+		\begin{proof}
+			First We have strong convexity:
+			
+			\[ f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y-x}) + \frac{\mu}{2} \|\mathbf{x-y}\|^2 \]
+			
+			then let $\mathbf{x} = \mathbf{x}_t, \mathbf{y} = \mathbf{x}^*$:
+			
+			\begin{align*}
+				f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top (\mathbf{x}^*-\mathbf{x}_t) + \frac{\mu}{2} \|\mathbf{x}^*- \mathbf{x}_t\|^2 \\
+				f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + \mathbf{g}_t^\top (\mathbf{x}^*-\mathbf{x}_t) + \frac{\mu}{2} \|\mathbf{x}^*- \mathbf{x}_t\|^2 \\
+				\mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*)  &\ge f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{\mu}{2} \|\mathbf{x}^*- \mathbf{x}_t\|^2 \\
+				\gamma_t\mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*)  & \ge \gamma_t\bigg(f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{\mu}{2} \|\mathbf{x}^*- \mathbf{x}_t\|^2 \bigg) \\
+			\end{align*}
+			
+			Recall We had
+			
+			\begin{align*}
+				\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 &= \| \prod_X(\mathbf{x}_t - \gamma_t g(\mathbf{x}_t)) - \prod_X(\mathbf{x}^*) \|^2 \\
+				&\le \| \mathbf{x}_t - \gamma_t g(\mathbf{x}_t) - \mathbf{x}^* \|^2\\
+				&\le \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2 - 2(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)
+			\end{align*}
+			
+			and by rearranging that We had
+			
+			\begin{align*}
+				\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 &\le \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2 - 2(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)\\
+				 2(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)&\le \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2\\
+				(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)&\le\frac{1}{2}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)
+			\end{align*}
+			
+			So now We just stick our new strongly convex result in there
+			
+			\begin{align*}
+				(\gamma_t g(\mathbf{x}_t))^\top ( \mathbf{x}_t - \mathbf{x}^*)&\le\frac{1}{2}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				\gamma_t\big(f(\mathbf{x}_t) - f(\mathbf{x}^*)  &+ \frac{\mu}{2} \|\mathbf{x}^*- \mathbf{x}_t\|^2 \big) \le\\
+				\frac{1}{2}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  &+ \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{\mu}{2} \|\mathbf{x}^*- \mathbf{x}_t\|^2  &\le \frac{1}{2\gamma_t}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{\mu}{2} \|\mathbf{x}^*- \mathbf{x}_t\|^2  &\le \frac{\mu t}{2}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+			\end{align*}
+			
+			Fuck that. We juts subtract $\frac{\mu}{2} \|\mathbf{x}^*- \mathbf{x}_t\|^2 $ from both stupid sides to get 
+			
+			\begin{align*}
+				&-\frac{\mu}{2} \|\mathbf{x}^*- \mathbf{x}_t\|^2  + \frac{\mu t}{2}\big( \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				&\frac{\mu (t-1)}{2} \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \frac{\mu t}{2}\big(\|\gamma_t g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				&\frac{\mu (t-1)}{2} \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \frac{\mu t}{2}\big(\gamma_t^2\| g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				&\frac{\mu (t-1)}{2} \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \frac{\mu t}{2}\big(\frac{4}{\mu^2 t^2}\| g(\mathbf{x}_t) \|^2  - \|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				&\frac{\mu (t-1)}{2} \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \frac{2}{\mu t}\| g(\mathbf{x}_t) \|^2  - \frac{\mu t}{2}\big(\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)
+			\end{align*}
+			
+			Ugh.
+			
+			We therefore have
+			
+			\begin{align*}
+				f(\mathbf{x}_t) - f(\mathbf{x}^*)  &\le 
+				\frac{\mu (t-1)}{2} \| \mathbf{x}_t - \mathbf{x}^* \|^2  + \frac{2}{\mu t}\| g(\mathbf{x}_t) \|^2  - \frac{\mu t}{2}\big(\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)
+			\end{align*}
+			
+			Then it's a sum but I am confused about the coefficients.  The gradient term We can take out since there is no cancellation there. 
+			
+			So We have
+			
+			\begin{align*}
+				\frac{\mu (t-1)}{2} \| \mathbf{x}_t - \mathbf{x}^* \|^2   - \frac{\mu t}{2}\big(\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				\frac{\mu t}{2} \| \mathbf{x}_t - \mathbf{x}^* \|^2 - \frac{\mu }{2} \| \mathbf{x}_t - \mathbf{x}^* \|^2  - \frac{\mu t}{2}\big(\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \big)\\
+				\frac{\mu }{2}\bigg( t\| \mathbf{x}_t - \mathbf{x}^* \|^2 -  \| \mathbf{x}_t - \mathbf{x}^* \|^2  - t\big(\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \bigg)\\
+				\frac{\mu }{2}\bigg( (t-1)\| \mathbf{x}_t - \mathbf{x}^* \|^2   - t\big(\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2 \bigg)
+			\end{align*}
+			
+			And so now the question is does this telescope. It does. The first term remains, then You get $t$ of the second term. At $t+1$ You get $t+1-1$ and it all works out. The very first term also disappears since at $t=1$ You're left with $t-1=0$ factor. 
+			
+			You also get a $-T\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2$, but since this is a strictly negative quantity We can drop it. This yields 
+			
+			\begin{align*}
+				\sum ^T_{t=1} f(\mathbf{x}_t) - f(\mathbf{x}^*)  &\le \sum^T_{t=1}  \frac{2}{\mu t}\| g(\mathbf{x}_t) \|^2 \\
+				\sum ^T_{t=1} f(\mathbf{x}_t) - f(\mathbf{x}^*)  &\le \frac{2B^2}{\mu t}\sum^T_{t=1}  \frac{1}{ t}
+			\end{align*}
+			
+			And then apparently it's just a known fact that 
+			
+			\[ \sum^T_{t=1} \frac{1}{t} \le \log(T)+1 \]
+			
+			which gives 
+			
+			\begin{align*}
+				\sum ^T_{t=1} f(\mathbf{x}_t) - f(\mathbf{x}^*)  &\le \frac{2B^2}{\mu t}(\log(T)+1)
+			\end{align*}
+			
+			And the rest is as before, minimum is less than any of the terms on the right, or take a linear combination of the inputs.
+			
+		\end{proof}
+		
+
+		
+		
+		
+\end{document} 

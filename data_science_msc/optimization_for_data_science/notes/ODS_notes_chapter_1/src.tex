@@ -752,8 +752,162 @@
 	
 		Are simply functions such that their recession cone and lineality space are the same set. We then come back to having coercive functions by taking the compliment of the lineality space of a weakly coercive function $f$.
 		
+\newpage
+
+\section{Exercises}
+
+	\textbf{Q2}
+	
+		Let $f:\mathbf{dom}(f)\to\mathbb{R}$, $\mathbf{dom}(f)\subseteq \mathbb{R}^d$ be a convex function, our goal is to show that
+		
+		\[ f\bigg(\sum^N_{i=1} w_i \mathbf{x}_i \bigg) \le \sum^N_{i=1} w_i f( \mathbf{x}_i) \]
+		
+		Where $\sum^N_{i=1} w_i = 1, w_i\ge 0$ and $\mathbf{x}_i\in\mathbf{dom}(f)$. 
+		
+		Now construct a random variable $X$ such that $P(X=\mathbf{x}_i) = w_i$, so $E(X) = \sum^N_{i=1} \mathbf{x}_i w_i = \mu$.
+		
+		By convexity of $f$ We have:
+		
+		\[  f(\mathbf{y}) \ge f(\mu) + \mathbf{g}^\top_\mu (\mathbf{y}-\mu)\; \forall\mathbf{y}\in\mathbf{dom}(f)\]
+		
+		Where,  $\mathbf{g}_mu \in \partial f(\mu)$, and $\partial f(\mu)$ is of course the subgradient set of $f$ at $\mu$. 
+		
+		Now let us construct a new random variable $Y =  f(\mu) + \mathbf{g}^\top_\mu (X-\mu)$.  We can  then say. By the previous inequality and the fact that $X, Y$ are constructed from the same random variable:
+		
+		\begin{align}
+			E(f(X)) &\ge E(Y)\\
+			&\ge E(f(\mu) + \mathbf{g}_\mu (X-\mu))\\
+			&\ge f(\mu) + \mathbf{g}_\mu (E(X)-\mu)\\
+			&\ge f(\mu) + \mathbf{g}_\mu (\mu-\mu)\\
+			&\ge f(\mu) \\
+			&\ge f(E(X)) 
+		\end{align}
+		
+		We can probably do this without using probability stuff.
+		
+		\begin{align}
+			f(\mathbf{y}) &\ge f(\mu) + \mathbf{g}^\top_\mu (\mathbf{y}-\mu)\; \forall\mathbf{y}\in\mathbf{dom}(f)\\
+			f(\mathbf{x}_i) &\ge f(\mu) + \mathbf{g}^\top_\mu (\mathbf{x}_i-\mu)\; \forall i\in\{ 1\ldots N\}\\
+			w_i\cdot f(\mathbf{x}_i) &\ge w_i\cdot \big(f(\mu) + \mathbf{g}^\top_\mu (\mathbf{x}_i-\mu)\big)\; \forall i\in\{ 1\ldots N\}		\\
+			\sum^N_{i=1}w_i\cdot f(\mathbf{x}_i) &\ge \sum^N_{i=1}w_i\cdot \big(f(\mu) + \mathbf{g}^\top_\mu (\mathbf{x}_i-\mu)\big)\\
+			\sum^N_{i=1}w_i\cdot f(\mathbf{x}_i) & \ge f(\mu)  + \sum^N_{i=1}w_i\cdot \big(\mathbf{g}^\top_\mu (\mathbf{x}_i-\mu)\big)\
+		\end{align}
+		
+		Focusing on the last term:
+		
+		\begin{align}
+			\sum^N_{i=1}w_i\cdot \big(\mathbf{g}^\top_\mu (\mathbf{x}_i-\mu)\big) &= \mathbf{g}^\top_\mu \sum^N_{i=1}w_i\cdot (\mathbf{x}_i-\mu)\\
+			&= \mathbf{g}^\top_\mu \bigg( \bigg(\sum^N_{i=1}w_i\cdot \mathbf{x}_i\bigg)-\mu \bigg)\\
+			&= \mathbf{g}^\top_\mu (\mu -\mu )\\
+			&= 0
+		\end{align}
 		
 		
+		Therefore
+		
+		\begin{align}
+			\sum^N_{i=1}w_i\cdot f(\mathbf{x}_i) & \ge f(\mu)  + \sum^N_{i=1}w_i\cdot \big(\mathbf{g}^\top_\mu (\mathbf{x}_i-\mu)\big)\\\
+			\sum^N_{i=1}w_i\cdot f(\mathbf{x}_i) & \ge f(\mu)  + 0\\
+			\sum^N_{i=1}w_i\cdot f(\mathbf{x}_i) & \ge f(\mu)\\
+			\sum^N_{i=1}w_i\cdot f(\mathbf{x}_i) & \ge f(\sum^N_{i=1} \mathbf{x}_i w_i)
+		\end{align}
+		
+	\textbf{Q4}
+	
+		Alright We are trying to show that $f(\mathbf{y}) = \|\mathbf{x} - \mathbf{y}\|^2$, $\mathbf{x, y}\in\mathbb{R}^d$ is a strictly convex function.
+		
+		We just need to show that it's second derivative is positive definite.
+		
+		Let's write the function in basic terms We can differentiate:
+		
+		\begin{align}
+			\|\mathbf{x-y}\|^2 & = (\mathbf{x-y})^\top (\mathbf{x-y})\\
+			& = \sum^d_{i=1} (\mathbf{x}_i - \mathbf{y}_i)^2
+		\end{align}
+		 
+		Then taking the derivative will yield a vector $\frac{\partial f}{\partial \mathbf{y}}$ such that 
+		
+		\begin{align}
+			\frac{\partial f}{\partial \mathbf{x}_i} 	&=  \frac{\partial }{\partial \mathbf{x}_i}  \sum^d_{i=1} (\mathbf{x}_i - \mathbf{y}_i)^2\\
+			&= \frac{\partial }{\partial \mathbf{x}_i}  (\mathbf{x}_i - \mathbf{y}_i)^2\\
+			&= \frac{\partial }{\partial \mathbf{x}_i} \big( \mathbf{x}_i^2  - 2\mathbf{x}_i \mathbf{y}_i + \mathbf{y}_i^2 \big)\\
+			&= 2\mathbf{x}_i  - 2\mathbf{y}_i 
+		\end{align}
+		
+		Now We need to differentiate this vector. This will result in a two dimensional square matrix of size $d\times d$. Let's call that matrix $H$ for Hessian. Recall by convention (and convenience) We have
+		
+		\[ H_{i, j} = \frac{\partial^2 f}{\partial \mathbf{x}_i \partial\mathbf{x}_j} \]
+		
+		With the idea being that if You take the dot product of a vector with a row of the Hessian matrix You'll the rate of change of the rate of change of $f$ w.r.t. $\mathbf{x_i}$, and You need $d$ pieces of information to establish the rate of change of the rate of change for each input. Easy to follow, I know.
+		
+		So!
+		
+		\begin{align}
+			H_{i, j} &=  \frac{\partial^2 f}{\partial \mathbf{x}_i \partial\mathbf{x}_j}\\
+			&=  \frac{\partial f}{\partial \mathbf{x}_i } \frac{\partial f}{\partial \mathbf{x}_j}\\ 
+			&=  \frac{\partial f}{\partial \mathbf{x}_i } 2\mathbf{x}_j  - 2\mathbf{y}_j \\ 
+			&=  \frac{\partial f}{\partial \mathbf{x}_i } 2\mathbf{x}_j - 2\mathbf{y}_j\\
+			&=  \text{2 if }i=j\text{, 0 otherwise}
+		\end{align}
+		
+		So We have a diagonal matrix with non-negative entries, which is positive definite. so We're done!
+		
+	\textbf{Q5}
+	
+		Let $f_1\ldots f_n$ be convex functions, and let $\lambda_1\ldots\lambda_n \in \mathbb{R}_+$, then 
+		
+		\[ f = \sum^n_{i=1} \lambda_i\cdot f_i \]
+		
+		is a convex function on the domain $\cap^n_{i=1} \mathbf{dom}(f_i)$
+		
+		\begin{proof}
+		
+			For $f$ to be convex it's domain has to be convex and We also need
+			
+			\[\lambda f(\mathbf{x}) + (1-\lambda)f(\mathbf{y}) \ge f(\lambda\mathbf{x} + (1-\lambda)\mathbf{y}) \]
+			
+			Well the domain is an intersection of $n$ convex sets so it is itself convex, no worries there.
+			
+			\begin{align}
+				\lambda f(\mathbf{x}) + (1-\lambda)f(\mathbf{y}) &\ge f(\lambda\mathbf{x} + (1-\lambda)\mathbf{y})\\
+				\bigg(\lambda  \sum^n_{i=1} \lambda_i\cdot f_i(\mathbf{x})\bigg) + \bigg((1-\lambda) \sum^n_{i=1} \lambda_i\cdot f_i(\mathbf{y})\bigg) &\ge  \sum^n_{i=1} \lambda_i\cdot f_i(\lambda\mathbf{x} + (1-\lambda)\mathbf{y})
+			\end{align}
+			
+			Now focus on a particular $i$:
+			
+			\begin{align}
+				\lambda  \lambda_i\cdot f_i(\mathbf{x}) +(1-\lambda) \lambda_i\cdot f_i(\mathbf{y}) &\ge \lambda_i\cdot f_i(\lambda\mathbf{x} + (1-\lambda)\mathbf{y})
+			\end{align}
+			
+			So We are just ignoring  summation terms that are not associated with $f_i$ here. If the above holds for all $i$ then the summation of $n$ such equations preserves our desired inequality. Divide by the positive $\lambda_i$:
+			
+			\begin{align}
+				\lambda \cdot f_i(\mathbf{x}) +(1-\lambda) \cdot f_i(\mathbf{y}) &\ge  f_i(\lambda\mathbf{x} + (1-\lambda)\mathbf{y})
+			\end{align}
+			
+			And We know that this is true by convexity of $f_i$, so We're done.
+			
+			For the second equation, simply let $\mathbf{x, y}$ equal the linear combination version of the inputs. No problems there. In particular, by convexity of $f$ We have
+			
+			\[\lambda f(\mathbf{x}) + (1-\lambda)f(\mathbf{y}) \ge f(\lambda\mathbf{x} + (1-\lambda)\mathbf{y}) \]
+			
+			Now simply let $\mathbf{x} = A\mathbf{x} + \mathbf{b}$, $\mathbf{y} = A\mathbf{y} + \mathbf{b}$. Since the inequality held for all $\mathbf{x, y}$, and $g(\mathbf{x}), g(\mathbf{y})\in\mathbf{dom}(f)$, We're good to go. 
+			
+			
+	\textbf{Q7}
+	
+		Alright so We have
+		
+		\[ \sum_{\mathbf{x}\in P} \bigg( \log\bigg(\sum^9_{k=0} e^{(W\mathbf{x})_k} \bigg) - (W\mathbf{x})_{d(\mathbf{x})} \bigg) \]
+			
+			
+			
+			
+			
+			
+			
+			
+		\end{proof}
 		
 		
 		

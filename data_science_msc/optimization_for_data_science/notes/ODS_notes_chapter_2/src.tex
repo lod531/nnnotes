@@ -427,22 +427,224 @@
 		What is the difference from normal momentum? In standard momentum We just keep a discounted sum of previous gradients. We take a step by taking the momentum leap and add on to that momentum leap the gradient from time $t$. 
 		
 		Is it about where You take the gradient? Momentum: calculate gradient, move in direction of gradient, and take a momentum leap. Nesterov: Take a momentum leap, move in direction of gradient.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		
+		They both alternate gradient and momentum steps, that is not the difference. Accelerated descent simply favour the more recent gradients more.
+		
+		\begin{theorem}
+			Let $f\mathbb{R}^d\to\mathbb{R}$ be a convex smooth differentiable function with smoothness parameter $L$. and let it have a global minimum $\mathbf{x'}$, then accelerated gradient descent yields
+			
+			\[ f(\mathbf{y}_T) - f\mathbf{x^*}) \le  \frac{ 2L \| \mathbf{z}_0 - \mathbf{x}^* \|^2}{T(T+1)},\; T>0.  \]
+		\end{theorem}
+
+		\begin{proof}
+			Alright so up first We have the potential function:
+			
+			\[ \Phi(t) = t(t+1)(f(\mathbf{y}_t) - f(\mathbf{x}^*)) + 2L \| \mathbf{z}_t - \mathbf{x}^* \|^2\]
+		
+		
+		So it's a scaled sum of the non-negative difference between the minimum point $\mathbf{x}^*$ and our current iterate $\mathbf{y}_t$ and a scaled distance of our current what the fuck is that momentum? Why is that momentum?  I guess it's not insane? Like, the momentum just has oh dear lord it has \textit{extremely} scaled sum of gradients. Cool. Love it.
+		
+		Okay so all We need to do is show that the potential always decreases.
+		
+		by sufficient decrease We know that
+		
+		\[ f(\mathbf{y}_{t+1} \le f(\mathbf{x}_t) - \frac{1}{2L} \|\nabla f(\mathbf{x}_t) \|^2 \]
+		
+		No worries there.
+		
+		Recall from vanilla analysis We also had
+		
+		\[ \frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) =  \frac{\gamma}{2} \|\mathbf{g}_t\|^2 + \frac{1}{2\gamma}\big( \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big)\]
+		
+		But I am not super convinced We can just switch $\mathbf{x}_t$ for $\mathbf{z}_t$, so let's re-derive this. We had 
+		
+		\begin{align*}
+			\mathbf{g}_t^\top (\mathbf{x}_t-\mathbf{x}^*) = \frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*)
+		\end{align*}
+
+		But now We'll do
+
+		\begin{align*}
+			\mathbf{g}_t^\top (\mathbf{z}_t-\mathbf{x}^*) &= \frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{z}_t - \mathbf{x}^*)\\
+			&= \frac{1}{2\gamma}\big( \|\mathbf{x}_t - \mathbf{x}_{t+1}\|^2 + \|\mathbf{z}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}_t - \mathbf{x}_{t+1} - (\mathbf{z}_t - \mathbf{x}^*)  \|^2 \big)\\
+			&= \frac{\gamma}{2} \|\mathbf{g}_t\|^2 + \frac{1}{2\gamma}\big(\|\mathbf{z}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}_t - \mathbf{x}_{t+1} - (\mathbf{z}_t - \mathbf{x}^*)  \|^2 \big)\\
+			&=\frac{t+1}{4L} \|\mathbf{g}_t\|^2 + \frac{L}{t+1}\big(\|\mathbf{z}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}_t - \mathbf{x}_{t+1} - (\mathbf{z}_t - \mathbf{x}^*)  \|^2 \big)\\
+			&=\frac{t+1}{4L} \|\mathbf{g}_t\|^2 + \frac{L}{t+1}\big(\|\mathbf{z}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}_t - \mathbf{x}_{t+1} - \mathbf{z}_t + \mathbf{x}^*  \|^2 \big)\\
+			&=\frac{t+1}{4L} \|\mathbf{g}_t\|^2 + \frac{L}{t+1}\big(\|\mathbf{z}_t - \mathbf{x}^*\|^2 - \| -\mathbf{x}_t + \mathbf{x}_{t+1} + \mathbf{z}_t - \mathbf{x}^*  \|^2 \big)
+		\end{align*}
+		
+		Alright so now let's focus on
+		
+		\begin{align*}
+			&-\mathbf{x}_t + \mathbf{x}_{t+1} + \mathbf{z}_t\\
+			&-\mathbf{x}_t + \frac{t+1}{t+3}\mathbf{y}_{t+1} + \frac{2}{t+3}\mathbf{z}_{t+1} + \mathbf{z}_t\\
+			&-\mathbf{x}_t + \frac{t+1}{t+3}\bigg( \mathbf{x}_t - \frac{1}{L}\nabla f(\mathbf{x}_t) \bigg)+ \frac{2}{t+3}\bigg( \mathbf{z}_t - \frac{t+1}{2L}\nabla f(\mathbf{x}_t) \bigg) + \mathbf{z}_t\\
+			&-\mathbf{x}_t + \frac{(t+1)\mathbf{x}_t}{t+3} - \frac{t+1}{(t+3)L}\nabla f(\mathbf{x}_t)+ \frac{2\mathbf{z}_t}{t+3}  - \frac{(t+1)2}{(t+3)2L}\nabla f(\mathbf{x}_t) + \mathbf{z}_t\\
+		\end{align*}
+		
+		\begin{align*}
+			\mathbf{y}_{t+1} &= \mathbf{x}_t - \frac{1}{L}\nabla f(\mathbf{x}_t),\\
+			\mathbf{z}_{t+1} &= \mathbf{z}_t - \frac{t+1}{2L}\nabla f(\mathbf{x}_t),\\
+			\mathbf{x}_{t+1} &= \frac{t+1}{t+3}\mathbf{y}_{t+1} + \frac{2}{t+3}\mathbf{z}_{t+1}.
+		\end{align*}
+
+		I am leaving it here since this is taking too long.
+		\end{proof}
+
+\section{Smooth and strongly convex functions}
+
+	Because why not daydream, right?
+	
+	Strongly convex not to be confused with strictly convex, though the idea is similar. Strongly convex means the functions is bounded from below by a parabaloid
+	
+	\begin{definition}
+		Let $f:\mathbf{dom}(f)\to\mathbb{R}$ be a convex and differentiable function with $X\subseteq\mathbf{dom}(f)$ convex and $\mu> 0$, then $f$ is strongly convex over $X$ with parameter $\mu$ if
+		
+		\[ f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y-x}) + \frac{\mu}{2} \|\mathbf{y-x}\|^2,\;\forall\mathbf{x, y}\in X. \]
+	\end{definition}
+	
+	\begin{lemma}
+		If f is strongly convex, then it has a global minimum.
+	\end{lemma} 
+	
+	\begin{lemma}
+		If f is strongly convex, then it's a parabola:
+		
+		\[ f = \frac{\mu}{2} \|\mathbf{x-b}\|^2 + c \]
+	\end{lemma}
+	
+	Okay so from strong convexity We get 
+	
+	\begin{align*}
+		f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y-x}) + \frac{\mu}{2} \|\mathbf{y-x}\|^2\\
+		 - \nabla f(\mathbf{x})^\top(\mathbf{y-x})  \ge  f(\mathbf{x}) - f(\mathbf{y})  + \frac{\mu}{2} \|\mathbf{y-x}\|^2\\
+		 - \nabla f(\mathbf{x}_t)^\top(\mathbf{x^*-x}_t)  \ge  f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{\mu}{2} \|\mathbf{x}^*-\mathbf{x}_t\|^2\\
+		 \nabla f(\mathbf{x}_t)^\top(\mathbf{x}_t - \mathbf{x}^*)  \ge  f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{\mu}{2} \|\mathbf{x}^*-\mathbf{x}_t\|^2\\
+	\end{align*}	
+	
+	Then We again take vanilla analysis and use the above
+	
+	\begin{align*}
+		\frac{1}{\gamma}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) &= \frac{1}{2\gamma}\big( \gamma^2\|\mathbf{g}_t\|^2 + \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) \\
+		\mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &= \frac{1}{2\gamma}\big( \gamma^2\|\mathbf{g}_t\|^2 + \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) \\
+		 f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{\mu}{2} \|\mathbf{x}^*-\mathbf{x}_t\|^2 &\le \frac{1}{2\gamma}\big( \gamma^2\|\mathbf{g}_t\|^2 + \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) \\
+		 f(\mathbf{x}_t) - f(\mathbf{x}^*)   \le \frac{1}{2\gamma}\big( \gamma^2\|\mathbf{g}_t\|^2 + &\|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) - \frac{\mu}{2} \|\mathbf{x}^*-\mathbf{x}_t\|^2 
+	\end{align*}
+	
+	Now We rearrange this into 
+
+	\begin{align*}
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)   &\le \frac{1}{2\gamma}\big( \gamma^2\|\mathbf{g}_t\|^2 + \|\mathbf{x}_t - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 \big) - \frac{\mu}{2} \|\mathbf{x}^*-\mathbf{x}_t\|^2 \\
+		&\le  \frac{\gamma}{2}\|\mathbf{g}_t\|^2 + \frac{1}{2\gamma}\|\mathbf{x}_t - \mathbf{x}^*\|^2 - \frac{1}{2\gamma}\| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 - \frac{\mu}{2} \|\mathbf{x}^*-\mathbf{x}_t\|^2 \\
+		2f(\mathbf{x}_t) - 2f(\mathbf{x}^*) &\le  \gamma\|\mathbf{g}_t\|^2 + \frac{1}{\gamma}\|\mathbf{x}_t - \mathbf{x}^*\|^2 - \frac{1}{\gamma}\| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2 - \mu \|\mathbf{x}^*-\mathbf{x}_t\|^2 \\
+		 \frac{1}{\gamma}\| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2&\le  2f(\mathbf{x}^*) -2f(\mathbf{x}_t) +  \gamma\|\mathbf{g}_t\|^2 + \frac{1}{\gamma}\|\mathbf{x}_t - \mathbf{x}^*\|^2  - \mu \|\mathbf{x}^*-\mathbf{x}_t\|^2 \\
+		\| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2&\le  2\gamma(f(\mathbf{x}^*) -f(\mathbf{x}_t))  +  \gamma^2\|\mathbf{g}_t\|^2 + \|\mathbf{x}_t - \mathbf{x}^*\|^2  - \gamma\mu \|\mathbf{x}^*-\mathbf{x}_t\|^2 \\
+		\| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2&\le  2\gamma(f(\mathbf{x}^*) -f(\mathbf{x}_t))  + \gamma^2\|\mathbf{g}_t\|^2 + (1- \gamma\mu) \|\mathbf{x}^*-\mathbf{x}_t\|^2 
+	\end{align*}
+	
+	Dear lord. Anyway that's a bound lol, and some noise at the end (the $1-\gamma\mu$) bit).
+	
+	\begin{theorem}
+		Let $f\mathbb{R}^d\to\mathbb{R}$ be a convex differentiable smooth and strongly convex function with parameters $L \ge 0$, $\mu > 0$ and a global minimum $\mathbf{x^*}$, then choosing
+		
+		\[ \gamma = \frac{1}{L} \]
+		
+		gradient descent yields with an arbitrary starting point
+		
+		i) Squared distanced to $\mathbf{x^*}$ are geometrically decreasing:
+		
+		\[ \|\mathbf{x}_{t+1} - \mathbf{x^*} \|^2 \le \bigg( 1-\frac{\mu}{L}\bigg)\|\mathbf{x}_t - \mathbf{x}^*\|^2, \; t\ge 0 \]
+	\end{theorem}
+
+		ii) The absolute error after T iterations is exponentially small in T:
+		
+		\[  f(\mathbf{x}_T) - f(\mathbf{x}^*) \le \frac{L}{2}\bigg(1-\frac{\mu}{L}\bigg)^T \|\mathbf{x}_0 - \mathbf{x}^*\|^2 \]
+		
+		\begin{proof}
+			So first We show that the noise disappears. Sufficient decrease says:
+			
+			\begin{align*}
+				f(\mathbf{x}_{t+1}) - f(\mathbf{x}_t) &\le -\frac{1}{2L} \|\nabla f(\mathbf{x}_t)\|^2\\
+				f(\mathbf{x}^*) - f(\mathbf{x}_t) &\le -\frac{1}{2L} \|\nabla f(\mathbf{x}_t)\|^2\\
+			\end{align*}
+			
+			(in the second equation We just replaced the first term with a strictly smaller term). Letting $\gamma = \frac{1}{L}$, We rearrange:
+			
+			\begin{align*}
+				f(\mathbf{x}^*) - f(\mathbf{x}_t) &\le -\frac{1}{2L} \|\nabla f(\mathbf{x}_t)\|^2\\
+				f(\mathbf{x}^*) - f(\mathbf{x}_t) &\le -\frac{\gamma}{2} \|\nabla f(\mathbf{x}_t)\|^2\\
+				f(\mathbf{x}^*) - f(\mathbf{x}_t)) +\frac{\gamma}{2} \|\nabla f(\mathbf{x}_t)\|^2 &\le 0\\
+				2\gamma(f(\mathbf{x}^*) - f(\mathbf{x}_t))) +\gamma^2 \|\nabla f(\mathbf{x}_t)\|^2 &\le 0\\
+			\end{align*}
+			
+			Recall We had the noise term:
+			
+			\begin{align*}
+				\| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2&\le  2\gamma(f(\mathbf{x}^*) -f(\mathbf{x}_t))  + \gamma^2\|\mathbf{g}_t\|^2 + (1- \gamma\mu) \|\mathbf{x}^*-\mathbf{x}_t\|^2 
+			\end{align*}
+			
+			Now We know that that middle term is negative, so We can remove it preserving the inequality:
+			
+		\end{proof}
+
+			\begin{align*}
+				\| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2&\le   (1- \gamma\mu) \|\mathbf{x}^*-\mathbf{x}_t\|^2 \\
+				\| \mathbf{x}^* - \mathbf{x}_{t+1} \|^2&\le   \bigg(1- \frac{\mu}{\gamma} \bigg) \|\mathbf{x}^*-\mathbf{x}_t\|^2 
+			\end{align*}
+			
+			So at each step, We reduce the distance by that factor up there. We can take $T$ steps to get
+			
+			\begin{align*}
+				\| \mathbf{x}^* - \mathbf{x}_{T} \|^2&\le   \bigg(1- \frac{\mu}{\gamma} \bigg)^T \|\mathbf{x}^*-\mathbf{x}_0\|^2 
+			\end{align*}
+			
+			Now just $ii)$ is left. Recall We have smoothness
+			
+			\begin{align*}
+				f(\mathbf{y}) \le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y-x}) + \frac{L}{2} \| \mathbf{y-x}\|^2\\
+				f(\mathbf{y}) \le f(\mathbf{x^*}) + \nabla f(\mathbf{x^*})^\top(\mathbf{y-x^*}) + \frac{L}{2} \| \mathbf{y-x^*}\|^2\\
+				f(\mathbf{y}) \le f(\mathbf{x^*}) + 0^\top(\mathbf{y-x^*}) + \frac{L}{2} \| \mathbf{y-x^*}\|^2\\
+				f(\mathbf{y}) \le f(\mathbf{x^*})  + \frac{L}{2} \| \mathbf{y-x^*}\|^2\\
+				f(\mathbf{x}_T) \le f(\mathbf{x^*})  + \frac{L}{2} \| \mathbf{x}_T-\mathbf{x^*}\|^2\\
+				f(\mathbf{x}_T) - f(\mathbf{x^*}) \le  \frac{L}{2} \| \mathbf{x}_T-\mathbf{x^*}\|^2\\
+			\end{align*}
+			
+			Finally let's try to prove the bound:
+			
+			\begin{align*}
+				f(\mathbf{x}_T) - f(\mathbf{x^*}) &\le  \frac{L}{2} \| \mathbf{x}_T-\mathbf{x^*}\|^2 \le  \frac{L}{2} \bigg(1- \frac{\mu}{\gamma} \bigg)^T \|\mathbf{x}^*-\mathbf{x}_0\|^2 \\
+				f(\mathbf{x}_T) - f(\mathbf{x^*})  &\le  \frac{L}{2} \bigg(1- \frac{\mu}{\gamma} \bigg)^T R^2
+			\end{align*}
+			
+			And We want that second bit to be below $\varepsilon$ I suppose:
+			
+			\begin{align*}
+				\frac{L}{2} \bigg(1- \frac{\mu}{L} \bigg)^T R^2 \le \varepsilon\\
+				\bigg(1- \frac{\mu}{L} \bigg)^T \le \frac{2\varepsilon}{LR^2}\\
+				\bigg(1- \frac{\mu}{L} \bigg)^T \le \frac{2\varepsilon}{LR^2}\\
+				\log \bigg(1- \frac{\mu}{L} \bigg)^T \le \log\bigg( \frac{2\varepsilon}{LR^2}\bigg) \\
+				T\log \bigg(1- \frac{\mu}{L} \bigg) \le \log\bigg( \frac{2\varepsilon}{LR^2}\bigg) \\
+			\end{align*}
+			
+			Now the observation is is that $\log \big(1- \frac{\mu}{L} \big)$ is a strictly negative quantity (since it's a log of less than 1), so when multiplying both sides of the equation by it, We'll need to switch the inequality:
+		
+			\begin{align*}
+				T\log \bigg(1- \frac{\mu}{L} \bigg) &\le \log\bigg( \frac{2\varepsilon}{LR^2}\bigg) \\
+				T  &\ge \frac{\log\bigg( \frac{2\varepsilon}{LR^2}\bigg)}{\log \big(1- \frac{\mu}{L} \big)} 
+			\end{align*}
+			
+			Now We use that whole magic $\log(1 - x) \le -x$ bit to get:
+		
+			\begin{align*}
+				T  &\ge \frac{\log\bigg( \frac{2\varepsilon}{LR^2}\bigg)}{\log \big(1- \frac{\mu}{L} \big)} \\
+				T  &\ge \frac{\log\bigg( \frac{2\varepsilon}{LR^2}\bigg)}{- \frac{\mu}{L}} \\
+				T  &\ge - \frac{L}{\mu}\log\bigg( \frac{2\varepsilon}{LR^2}\bigg) \\
+				T  &\ge \frac{L}{\mu}\log\bigg( \frac{LR^2}{2\varepsilon}\bigg)
+			\end{align*}
+			
+			Good God finally. In the last step We used $-ln(a) = ln(a^{-1})$.
+			
+					
 \newpage
 \section{Appendix}
 
@@ -461,4 +663,217 @@
 		\end{align*}
 		
 		Makes this a bit more apparent - the interaction term is just their lengths scaled by their overlap. Basically this generalization is account for the case where there is an angle between the things We are multiplying - in the original case, everything lines up perfectly so We get $-2ab$, but in this new general case We scale the interaction down since the components are no longer parallel (and think about the perpendicular case - $\mathbf{a, b}$ point in completely different directions so when You look at the length of $\mathbf{a-b}$ You just get their individual lengths added. Ain't it neat?
+		
+		\newpage
+
+\section{Exercises}
+
+	\textbf{Q13}
+	
+		Aight so We wanna prove that
+		
+		\[ \max_{\mathbf{x}\neq 0} \frac{|\mathbf{c}^\top \mathbf{x}|}{\|\mathbf{x}\|} = \|\mathbf{c}\| \]
+		
+		I would use the 'ole $\mathbf{c}^\top\mathbf{x} = \|\mathbf{c}\|\|\mathbf{x}\|\cos(\theta)$, with $\theta$ being the angle between the two vectors, which would give us 
+	
+		\begin{align}
+			&\max_{\mathbf{x}\neq 0} \frac{|\mathbf{c}^\top \mathbf{x}|}{\|\mathbf{x}\|}\\
+			&\max_{\mathbf{x}\neq 0} \frac{\|\mathbf{c}\| \|\mathbf{x}\|\cos(\theta)}{\|\mathbf{x}\|} 
+		\end{align}
+		
+		The expression is of course maximized when $\cos(\theta) = 1$, so choosing $\mathbf{x}$ for this purpose:
+		
+		\begin{align}
+			&\max_{\mathbf{x}\neq 0} \frac{\|\mathbf{c}\| \|\mathbf{x}\|\cos(\theta)}{\|\mathbf{x}\|} \\
+			&\max_{\mathbf{x}\neq 0} \frac{\|\mathbf{c}\| \|\mathbf{x}\|}{\|\mathbf{x}\|} \\
+			&\|\mathbf{c}\|
+		\end{align}
+		
+		
+	\textbf{Q14}
+	
+		So We'd like to show that 
+		
+		\[ f(\mathbf{y}) \le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y-x}) + \frac{L}{2}\|\mathbf{y-x}\|^2 \]
+		
+		Is true for the function $f(\mathbf{x}) = \mathbf{x}^\top Q\mathbf{x} + \mathbf{b}^\top\mathbf{x} + \mathbf{c}$,  $L = 2\|Q\|$ 
+		
+		Let's see if We can write some derivatives. The first order derivative will of course be a vector such that 
+		
+		\begin{align}
+			\frac{\partial f}{\partial \mathbf{x}_i} = \frac{\partial }{\partial \mathbf{x}_i} \mathbf{x}^\top Q\mathbf{x} + \mathbf{b}^\top\mathbf{x} + \mathbf{c}
+		\end{align}
+		
+		Splitting it up We have 
+		
+		\begin{align}
+			\frac{\partial }{\partial \mathbf{x}_i}  \mathbf{b}^\top\mathbf{x} &= \frac{\partial }{\partial \mathbf{x}_i} \sum^d_{i=1} \mathbf{b}_i + \mathbf{x}_i\\
+			&= \mathbf{b}_i
+		\end{align}
+		
+		And for the more complicated term We have 
+		
+		\begin{align}
+			\frac{\partial }{\partial \mathbf{x}_i} \mathbf{x}^\top Q\mathbf{x} &= \frac{\partial }{\partial \mathbf{x}_i} \sum^d_{j=1} \mathbf{x}_j \cdot (Q_{.,i} \mathbf{x})\\
+			&= \frac{\partial }{\partial \mathbf{x}_i} \sum^d_{j=1} \mathbf{x}_j \cdot \sum^d_{k=1} (Q_{.,i})_k \cdot \mathbf{x}_k
+		\end{align}
+		
+		Where $Q_{.,i}$ is a row vector corresponding to the $i$'th row of $Q$.
+		
+		No go. Three separate cases to consider, and no matrix formulation to boot. Doing this bit by bit is no fun.
+		
+		Instead, the suggested approach is to do $f(\mathbf{x+h}) - f(\mathbf{x})$ and look for the "dominant linear part", basically anything quadratic in $\mathbf{h}$ will be negligible 
+		
+		\begin{align}
+			f(\mathbf{x+h}) - f(\mathbf{x}) &= (\mathbf{x+h})^\top Q (\mathbf{x+h}) - \mathbf{x}^\top Q \mathbf{x}\\
+			&= (\mathbf{x+h})^\top Q \mathbf{x} + (\mathbf{x+h})^\top Q \mathbf{h} - \mathbf{x}^\top Q \mathbf{x}\\
+			&= \mathbf{x}^\top Q \mathbf{x} + \mathbf{h}^\top Q \mathbf{x}  + (\mathbf{x+h})^\top Q \mathbf{h} - \mathbf{x}^\top Q \mathbf{x}\\
+			&= \mathbf{x}^\top Q \mathbf{x} + \mathbf{h}^\top Q \mathbf{x}  + \mathbf{x}^\top Q \mathbf{h} + \mathbf{h}^\top Q \mathbf{h} - \mathbf{x}^\top Q \mathbf{x}\\
+			&=  \mathbf{h}^\top Q \mathbf{x}  + \mathbf{x}^\top Q \mathbf{h} + \mathbf{h}^\top Q \mathbf{h} \\
+			&= 2  \mathbf{x}^\top Q \mathbf{h}
+		\end{align}
+		
+		Where We dropped the last term since it was quadratic in $h$. So! Our first derivative is:
+		
+		\begin{align}
+			\frac{\partial f}{\partial \mathbf{x}} = 2  \mathbf{x}^\top Q + \mathbf{b}
+		\end{align}
+		
+		The second order derivative is of course just $2Q$. Recall that Taylor series expansion around any point $\mathbf{x}$ in the multivariate case is:
+		
+		\begin{align}
+			f(\mathbf{y}) \approx f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y-x}) + \frac{1}{2} (\mathbf{y-x})^\top Hf(\mathbf{x}) (\mathbf{y-x})
+		\end{align}
+		
+		And We know that the Taylor series expansion of a polynomial is equivalent to the polynomial. Substituting in our derivatives yields:
+		
+		\begin{align}
+			f(\mathbf{y}) &= f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y-x}) + \frac{1}{2} (\mathbf{y-x})^\top H_{f(\mathbf{x})} (\mathbf{y-x})\\
+			f(\mathbf{y}) &= f(\mathbf{x}) + ( 2  \mathbf{x}^\top Q + \mathbf{b})^\top (\mathbf{y-x}) + \frac{1}{2} (\mathbf{y-x})^\top 2Q (\mathbf{y-x})\\
+			f(\mathbf{y}) &\le f(\mathbf{x}) + ( 2  \mathbf{x}^\top Q + \mathbf{b})^\top (\mathbf{y-x}) + \frac{2\|Q\|}{2}(\mathbf{y-x})^\top  (\mathbf{y-x})
+		\end{align}
+		
+		And You can just read off the desired claim.
+		
+	\textbf{Q16}
+	
+		Let's prove this thing. 
+		
+		For reference purposes:
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2
+		\end{align*}
+	
+		Using our bound for the gradients We get
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2\\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0}  \frac{\gamma B^2}{2}  + \frac{R^2}{2\gamma} \\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le  \frac{T \gamma B^2}{2}  + \frac{R^2}{2\gamma} 
+		\end{align*}
+		
+		Now We differentiate the right side w.r.t. $\gamma$ to find an extremum:
+		
+		\begin{align*}
+			\frac{d}{d\gamma} \bigg(\frac{T \gamma B^2}{2}  + \frac{R^2}{2\gamma}\bigg) &=  \frac{T B^2}{2}  + \frac{d}{d\gamma} \bigg( \frac{R^2}{2\gamma}\bigg)\\
+			&=  \frac{T B^2}{2}  + \frac{d}{d\gamma} \bigg( \frac{R^2}{2\gamma}\bigg)\\
+			&=  \frac{T B^2}{2}  + \frac{d}{d\gamma} \bigg( \frac{R^2}{2} \gamma^{-1}\bigg)\\
+			&=  \frac{T B^2}{2}  - \frac{R^2}{2} \gamma^{-2}
+		\end{align*}
+		
+		Now We set it to zero
+		
+		\begin{align*}
+			0 &=  \frac{T B^2}{2}  - \frac{R^2}{2} \gamma^{-2} \\
+			- \frac{T B^2}{2}  &=   - \frac{R^2}{2} \gamma^{-2}\\
+			T B^2  &=  R^2 \gamma^{-2}\\
+			\frac{T B^2}{R^2}  &= \gamma^{-2}\\
+			\frac{R^2}{T B^2}  &= \gamma^{2}\\
+			\frac{R}{B\sqrt{T} }  &= \gamma
+		\end{align*}
+		
+		We know this is a local minimum since the second derivative is positive. 
+		
+		Using the above We get
+		
+		\begin{align*}
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le  \frac{T \gamma B^2}{2}  + \frac{R^2}{2\gamma} \\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le  \frac{R}{B\sqrt{T} }\frac{T B^2}{2}  + \frac{B\sqrt{T} }{R}\frac{R^2}{2} \\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \frac{\sqrt{T}R B}{2}  + \frac{B\sqrt{T} R}{2}\\
+			\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le RB\sqrt{T}\\
+			\frac{\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*)}{T} &\le \frac{RB\sqrt{T}}{T}\\
+			\frac{\sum^{T-1}_{t=0}f(\mathbf{x}_t) - f(\mathbf{x}^*)}{T} &\le \frac{RB}{\sqrt{T}}\\
+		\end{align*}
+		
+Sorry for this being very verbose - I really don't like skipping steps. Sorry also for probably begin wrong lol. 
+
+For our version We start with the vanilla analysis:
+
+\begin{align*}
+	\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &= \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma}\big( \|\mathbf{x}_0 - \mathbf{x}^*\|^2 - \| \mathbf{x}^* - \mathbf{x}_{T} \|^2 \big)\\
+	\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2
+\end{align*}
+
+So now, what? Introduce
+
+\[ \gamma_t = \frac{R}{\|\mathbf{g}_t\| \sqrt{T}} \]
+
+To get 
+
+\begin{align*}
+	\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma} \|\mathbf{x}_0 - \mathbf{x}^*\|^2\\
+	\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg(  \frac{\gamma_t}{2} \|\mathbf{g}_t\|^2\bigg) + \frac{1}{2\gamma_t} \|\mathbf{x}_0 - \mathbf{x}^*\|^2\\
+	\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg( \frac{R}{2\|\mathbf{g}_t\| \sqrt{T}} \|\mathbf{g}_t\|^2\bigg) +\frac{\|\mathbf{g}_t\| \sqrt{T}}{2R} R^2\\
+	\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg( \frac{R \|\mathbf{g}_t\| }{2 \sqrt{T}} \bigg) +\frac{R \|\mathbf{g}_t\| \sqrt{T}}{2}
+\end{align*}
+
+Then using
+
+\begin{align*}
+	f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + \nabla f(\mathbf{x})^\top (\mathbf{x^*-\mathbf{x}}_t)\\
+	f(\mathbf{x}^*) - f(\mathbf{x}_t) &\ge  \nabla f(\mathbf{x})^\top (\mathbf{x^*-\mathbf{x}}_t)\\
+	-( f(\mathbf{x}^*) - f(\mathbf{x}_t)) &\le  - \nabla f(\mathbf{x})^\top (\mathbf{x^*-\mathbf{x}}_t)\\
+	-( f(\mathbf{x}^*) - f(\mathbf{x}_t)) &\le  - \nabla f(\mathbf{x})^\top (\mathbf{x^*-\mathbf{x}}_t)\\
+	f(\mathbf{x}_t) - f(\mathbf{x}^*)&\le  \nabla f(\mathbf{x})^\top (\mathbf{x}_t - \mathbf{x^*}_t)\\
+	f(\mathbf{x}_t) - f(\mathbf{x}^*)&\le  \mathbf{g}^\top (\mathbf{x}_t - \mathbf{x^*}_t)\\
+\end{align*}
+
+We can say
+
+\begin{align*}
+	\sum^{T-1}_{t=0} \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg( \frac{R \|\mathbf{g}_t\| }{2 \sqrt{T}} \bigg) +\frac{R \|\mathbf{g}_t\| \sqrt{T}}{2}\\
+	\sum^{T-1}_{t=0} f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg( \frac{R \|\mathbf{g}_t\| }{2 \sqrt{T}} \bigg) +\frac{R \|\mathbf{g}_t\| \sqrt{T}}{2}		
+\end{align*}
+
+And this is as far as We go - this is our result given our choice of stepsize. This is what will happen when We actually run gradient descent with out choice of $\gamma_t$.
+
+Now the question is, can We bound this? And We can! I think. Simply let
+
+\[ B' = \max_{t\in \{1\ldots T \}} \|\mathbf{g}_t\| \]
+
+This  $B'$ is certainly less than the Lipschitz $B$ and We are just using it for the purposes of analysis here anyway. Of course We have
+
+\[ B' \ge \|\mathbf{g}_t\|\; t\in\{1\ldots T\} \]	
+
+So, back to the bound:
+
+\begin{align*}
+	\sum^{T-1}_{t=0} f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \sum^{T-1}_{t=0} \bigg( \frac{R \|\mathbf{g}_t\| }{2 \sqrt{T}} \bigg) +\frac{R \|\mathbf{g}_t\| \sqrt{T}}{2}	\\
+	&\le \sum^{T-1}_{t=0} \bigg( \frac{R B' }{2 \sqrt{T}} \bigg) +\frac{R B' \sqrt{T}}{2}	\\
+	&\le \frac{T R B' }{2 \sqrt{T}}+\frac{R B' \sqrt{T}}{2}	\\
+	&\le R B' \sqrt{T}\\
+	\frac{\sum^{T-1}_{t=0} f(\mathbf{x}_t) - f(\mathbf{x}^*)}{T} &\le \frac{R B'}{\sqrt{T}}
+\end{align*}
+
+And since We know $B\ge B'$ We can use that to get back to our "original" Lipchitz result of $\mathcal{O}\big(\frac{R B}{\sqrt{T}} \big)$.
+
+So We took our runtime performance, which is quite unwieldy and non-telescopable, and We showed that it can be bounded.
+
+Apologies again for the above, I'm sure it's wrong somehow.
+		
+		
+		
+	
 \end{document} 
+

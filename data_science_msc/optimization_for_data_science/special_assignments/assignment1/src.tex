@@ -1,0 +1,1583 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\setlength{\parindent}{0pt}
+
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+                     \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+                     =}
+
+\begin{document}
+
+
+\title{Special Assignment \#1}
+\author{Andrius Buinovskij - 18-940-270}
+\date{}
+
+\maketitle
+
+\textbf{Assignment 1.} \textit{Suppose that f is smooth with parameter L, i.e. for all $\mathbf{x, y}\in\mathbb{R}^d,\; f(\mathbf{y})\le f(\mathbf{x}) + \nabla  f(\mathbf{x})^\top (\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y-x}\|^2_2$. Show that}
+
+\[ d^2_{t+1} - d^2_t \le -\frac{h_t}{2L}\qquad and\qquad \frac{1}{T}\sum^{T-1}_{t=0}h_t \le \frac{2Ld^2_0}{T}. \]
+
+\begin{proof}
+	First of all $d_{t} = \|\mathbf{x}_t-\mathbf{x}^*\|_2,\; h_t = f(\mathbf{x}_t) - f(\mathbf{x^*})$, so our first goal is 
+	
+	\begin{align}
+		 d^2_{t+1} - d^2_t &\le - \frac{h_t}{2L}\\
+		 \|\mathbf{x}_{t+1} - \mathbf{x}^*\|_2^2 - \|\mathbf{x}_t-\mathbf{x}^*\|_2^2 &\le - \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{2L}\\
+		 \|\mathbf{x}_{t+1} - \mathbf{x}^*\|_2^2 - \|\mathbf{x}_t-\mathbf{x}^*\|_2^2 &\le \frac{ f(\mathbf{x}^*) - f(\mathbf{x}_t)}{2L}
+	\end{align}
+	
+	Well, I suppose a thing to try is to just plug stuff into smoothness. We need terms involving $\mathbf{x}_t$ and $\mathbf{x}_{t+1}$, so We'll use smoothness twice to get:
+	
+	\begin{align}
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_t) + \nabla  f(\mathbf{x}_t)^\top (\mathbf{x}^*-\mathbf{x}) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2
+	\end{align}
+	
+	and
+	
+	\begin{align}
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_{t+1}) + \nabla  f(\mathbf{x}_{t+1})^\top (\mathbf{x}^*-\mathbf{x}) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_{t+1}\|^2_2
+	\end{align}
+	
+	Hmm well when We subtract the two above terms We will lose the left hand side. We are trying to get rid of $f(\mathbf{x}_{t+1}$, so We should go for something more like
+	
+	\begin{align}
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \nabla  f(\mathbf{x}^*)^\top (\mathbf{x}^* - \mathbf{x}_{t+1}) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	and
+	
+	\begin{align}
+		f(\mathbf{x}_{t}) &\le f(\mathbf{x}^*) + \nabla  f(\mathbf{x}^*)^\top (\mathbf{x}^* - \mathbf{x}_{t}) + \frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	Since We are given that $\mathbf{x}^*$ exists and We are not restricted to any subset of $\mathbb{R}^d$, We know that
+	
+	\[ \nabla f(\mathbf{x}^*) = 0 \]
+	
+	This changes our previous equations to 
+	
+	\begin{align}
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	and
+	
+	\begin{align}
+		f(\mathbf{x}_{t}) &\le f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	Subtracting them yields
+	
+	\begin{align}
+		f(\mathbf{x}_{t}) &\le f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	Alright this will not work.  I know that 3.6 in the notes seems pretty close to what I want. 
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &= \| \mathbf{x}_t - \gamma_t \mathbf{g}_t - \mathbf{x}^*\|_2^2\\
+		&= (\mathbf{x}_t - \gamma_t \mathbf{g}_t - \mathbf{x}^*)^\top (\mathbf{x}_t - \gamma_t \mathbf{g}_t - \mathbf{x}^*) \\
+		&= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \|\gamma_t\mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t) \\
+		&= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t) \label{basic_breakdown}
+	\end{align}
+	
+	Cool. By convexity of $f$ We also have 
+	
+	\begin{align}
+		f(\mathbf{y}) &\ge f(\mathbf{x}) + g(\mathbf{x})^\top(\mathbf{y}-\mathbf{x})\implies\\
+		f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + g(\mathbf{x}_t)^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) &\ge  g(\mathbf{x}_t)^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)   &\le  g(\mathbf{x}_t)^\top(\mathbf{x}_t - \mathbf{x}^*)\\
+		\gamma_t(f(\mathbf{x}_t) - f(\mathbf{x}^*))   &\le  \gamma_tg(\mathbf{x}_t)^\top(\mathbf{x}_t - \mathbf{x}^*)\\
+		 \gamma_tg(\mathbf{x}_t)^\top(\mathbf{x}_t - \mathbf{x}^*) &\ge   \gamma_t(f(\mathbf{x}_t) - f(\mathbf{x}^*)) \\
+		  \gamma_tg(\mathbf{x}_t)^\top(\mathbf{x}_t - \mathbf{x}^*) &\ge   \gamma_t(f(\mathbf{x}_t) - f^*) 
+	\end{align}
+	
+	Where $f^* = f(\mathbf{x}^*)$. Using the above in \ref{basic_breakdown} We get
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t)\\
+		&\le \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2\gamma_t(f(\mathbf{x}_t) - f^*)
+	\end{align}
+	
+	Now We use substitute in Polyak stepsize:
+	
+	\begin{align}
+		&\|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2\gamma_t(f(\mathbf{x}_t) - f^*)\\
+		&\|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \bigg(\frac{ f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}\bigg)^2\| \mathbf{g}_t\|^2_2 - 2\frac{ f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}(f(\mathbf{x}_t) - f^*)\\
+		&\|\mathbf{x}_t-\mathbf{x}^*\|^2_2 +\frac{ (f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2} - 2\frac{ (f(\mathbf{x}_t) - f(\mathbf{x}^*)^2)}{\|\mathbf{g}_t\|^2_2}\\
+		&\|\mathbf{x}_t-\mathbf{x}^*\|^2_2 - \frac{ (f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2} 
+	\end{align}
+	
+	Therefore:
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &\le \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2\gamma_t(f(\mathbf{x}_t) - f^*)\\
+		 &\le \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 - \frac{ (f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}\\
+		 \| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 &\le  - \frac{ (f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	So, again, no good. I mean it's actually pretty close, but the terms are squared. Furthermore the denominator is a squared gradient, which is cool and all, but We want our bound in terms of $L$, and $L$ is more concerned with the second order gradient. We don't have the fact that $f$ is twice differentiable, so We can't, like, bound it either. 
+	
+	So, maybe We could try with smoothness again? 
+	
+	So! We have
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t) 
+	\end{align}
+	
+	And We want to mess around with that last term. Now that squared step size seems to be a problem now that I think of it - it'll always have some annoying squared stuff. Maybe there is some way to get rid of it. 
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y}-\mathbf{x}\|^2_2\\
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top(\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2\\
+		- \mathbf{g}^\top(\mathbf{x}^*-\mathbf{x}_t) &\le f(\mathbf{x}_t) -  f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2\\
+		\mathbf{g}^\top(\mathbf{x}^*-\mathbf{x}_t) &\ge f(\mathbf{x}_t) -  f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2
+	\end{align}
+	
+	Okay okay okay. None of this seems to be working out. This is a fact:
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t) \\
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2\gamma_t \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*)\\
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t)
+	\end{align}
+	
+	Then We go back to smoothness:
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y}-\mathbf{x}\|^2_2\\
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top(\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2\\
+		- \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t) &\le f(\mathbf{x}_t) -  f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2\\
+		\mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t) &\ge f(\mathbf{x}_t) -  f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2
+	\end{align}
+	
+	Okay then We use the above:
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t)\\
+		& \ge \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t (f(\mathbf{x}_t) -  f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2)
+	\end{align}
+	
+	None of that seems right. Expanding these those terms You'll get some nightmare term on the far right. 
+	
+	I guess it's back to smoothness? 
+	
+	Recall our goal is
+	
+	\begin{align}
+		 d^2_{t+1} - d^2_t &\le \frac{h_t}{2L}\\
+		 \|\mathbf{x}_{t+1} - \mathbf{x}^*\|_2^2 - \|\mathbf{x}_t-\mathbf{x}^*\|_2^2 &\le \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{2L}
+	\end{align}
+	
+	\textbf{Start again}
+	
+	So, the idea is that equation 3.6 is just too close to the solution to not be a key for it. The second idea is that 3.6 was arrived to through just straight convexity, and maybe that can be improved. 
+	
+	So We start with the fact that 
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t) \\
+		&= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2\gamma_t \mathbf{g}_t^\top (\mathbf{x}_t-\mathbf{x}^*)\\
+		&= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \mathbf{g}_t^\top (\mathbf{x}^* - \mathbf{x}_t)
+	\end{align}
+	
+	And that is plain true. Then by smoothness We get
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y}-\mathbf{x}\|^2_2\\
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top (\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2\\
+		- \nabla f(\mathbf{x}_t)^\top (\mathbf{x}^*-\mathbf{x}_t) &\le f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2\\
+		\nabla f(\mathbf{x}_t)^\top (\mathbf{x}_t - \mathbf{x}^*) &\le f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2\\
+		\nabla f(\mathbf{x}_t)^\top (\mathbf{x}^* - \mathbf{x}_t) &\ge  f(\mathbf{x}^*) - f(\mathbf{x}_t)  - \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2
+	\end{align}
+	
+	So We just gained that rightmost term, which tightens the bound I think - well doesn't it loosen it? The term of left is smaller than the term on right. The smaller the term on right the closer it gets to the term. Well wait a second, what the hell. 
+	
+	Okay so the original derivation from the lecture slides used a bound from below by convexity. A bound from above here does us fuck all. This approach is wrong. Or is it lol.
+	
+	I mean, the original approach is using some property of $f$ to replace the cross term in the cosine law. We're doing the same just with a "stronger" condition I suppose. 
+	
+	Anyway, We do know that the term on the right is strictly positive. 
+	
+	I wanna know if  the right side is strictly positive actually. 
+	
+	Well, I mean, We know 
+	
+	\begin{align}
+		\nabla f(\mathbf{x}_t)^\top (\mathbf{x}_t - \mathbf{x}^*) &\le f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2\\
+		-\nabla f(\mathbf{x}_t)^\top (\mathbf{x}_t - \mathbf{x}^*) &\ge -\big( f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 \big)\\
+		\nabla f(\mathbf{x}_t)^\top ( \mathbf{x}^* - \mathbf{x}_t ) &\ge  f(\mathbf{x}^*)- f(\mathbf{x}_t)   - \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 
+	\end{align}
+	
+	Which doesn't tell me shit, really. Both of those are negative terms, and We know that the left side is greater, but that does not guarantee that the left side is positive. Just above some negative term. Maybe instead We can do by convexity
+	
+	\begin{align}
+		f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) &\ge   \nabla f(\mathbf{x}_t)(\mathbf{x}^*-\mathbf{x}_t)
+	\end{align}
+	
+	Oh so it's strictly negative? The right hand side is negative or 0, and the left hand side is smaller. Oooookay.
+	
+	So We have
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \mathbf{g}_t^\top (\mathbf{x}^* - \mathbf{x}_t)\\
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &\ge \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \big(f(\mathbf{x}^*)- f(\mathbf{x}_t)   - \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 \big)
+	\end{align}
+	
+	Cool so now We have to try to simplify
+	
+	\begin{align}
+		&\gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \big(f(\mathbf{x}^*)- f(\mathbf{x}_t)   - \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 \big)\\
+		&\bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg)^2\| \mathbf{g}_t\|^2_2 + 2\bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg) \big(f(\mathbf{x}^*)- f(\mathbf{x}_t)   - \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 \big)\\
+		&\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}  + 2\bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg) \big(f(\mathbf{x}^*)- f(\mathbf{x}_t)   - \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 \big)\\
+		&\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}  + 2\bigg(\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2} \bigg)   - L\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 \cdot \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}\\
+		&3\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}    - L\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 \cdot \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	Plugging that back in gives 
+		
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &\ge \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \big(f(\mathbf{x}^*)- f(\mathbf{x}_t)   - \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 \big)\\
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &\ge \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + 3\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}    - L\|\mathbf{x}^*-\mathbf{x}_t\|^2_2 \cdot \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	Then You could drop the strictly positive term and maybe try to prove that one quantity is less than another. No way this is the correct way of going about it. 
+	
+	\textbf{Start again}
+	
+	So now what. Using smoothness may work. What the hell, give it a shot:
+	
+	\begin{align}
+		f(\mathbf{y})\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y}-\mathbf{x}\|^2_2
+	\end{align}
+	
+	Cool. Now We have choices. Any time We invoke smoothness, it will need to have $\mathbf{x}^*$ as one of the endpoints. Hmm, or will it? We can split up $\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2$ into it's components. Yeah go on then:
+	
+	\begin{align}
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_{t+1}-\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}^*\|^2_2
+	\end{align}
+	
+	Aight, now We use 
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2  &= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \mathbf{g}_t^\top (\mathbf{x}^* - \mathbf{x}_t)
+	\end{align}
+	
+	To get
+	
+	\begin{align}
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*)  + \frac{L}{2}\big(\|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \mathbf{g}_t^\top (\mathbf{x}^* - \mathbf{x}_t)\big)
+	\end{align}
+	
+	Which does not look promising. I feel like wherever gamma shows up We get screwed.
+	
+	\textbf{Start again}
+	
+	Okay so this involves smoothness. It is the only expression We have that involves $L$. Is there any other way to involve $L$? 
+	
+	Well, a difference between two gradient terms can be upper bounded by it. Oh hey maybe that can be used...
+	
+	I guess let's just try smoothness. 
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y}-\mathbf{x}\|^2_2
+	\end{align}
+	
+	Then We can do
+	
+	\begin{align}
+		f(\mathbf{x}_t) &\le f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_t-\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_t) &\le f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2
+	\end{align}
+	
+	and
+	
+	\begin{align}
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_{t+1}-\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}^*\|^2_2
+	\end{align}
+	
+	Subtracting We get
+	
+	\begin{align}
+		f(\mathbf{x}_t) - f(\mathbf{x}_{t+1}) &\le  \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2  - \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_t) - f(\mathbf{x}_{t+1}) &\le  \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2  - \frac{L}{2}\big( \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \mathbf{g}_t^\top (\mathbf{x}^* - \mathbf{x}_t) \big)
+	\end{align}
+	
+	I don't think so. 
+	
+	\textbf{Start again}
+	
+	\begin{align}
+		 &\|\mathbf{x}_{t+1} - \mathbf{x}^*\|_2^2 - \|\mathbf{x}_t-\mathbf{x}^*\|_2^2 =\\
+		 &\|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 + 2\gamma_t \mathbf{g}_t^\top (\mathbf{x}^* - \mathbf{x}_t) 
+	\end{align}
+	
+	\textbf{Start again}
+	
+	Man the exercise solution is so close. Maybe I can just bound it somehow? Let's rederive it.
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &= \|\mathbf{x}_t - \gamma\mathbf{g}_t - \mathbf{x}^* \|^2_2\\
+		&= \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \|\gamma_t\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) \\
+		&= \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) 
+	\end{align}
+	
+	Cool. Then to mess with that We establish by convexity that
+	
+	\begin{align}
+		f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t)  &\ge  \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)   &\le  \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	So $\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)$ is more than or equal to a non-negative quantity on the right, and so $- 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)$ is negative.
+	
+	However We have that $\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)$ is a larger positive quantity, so We \textit{can} say:
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &= \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) \\
+		&\le \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2\gamma_t\big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big)
+	\end{align}
+	
+	Then You stick in Polyak's step size and out comes 3.6. 
+	
+	So, not messing about with smoothness We simplify
+	
+	\begin{align}
+		&\|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\big(f(\mathbf{x}_t) - f(\mathbf{x}^*)\big) \\
+		&\ \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 +\bigg(\frac{f(\mathbf{x}_t)-f(\mathbf{x}^*}{\|\mathbf{g}_t\|^2_2} \bigg)^2\|\mathbf{g}_t\|^2_2 - 2\bigg(\frac{f(\mathbf{x}_t)-f(\mathbf{x}^*}{\|\mathbf{g}_t\|^2_2} \bigg)\big( f(\mathbf{x}_t) - f(\mathbf{x}^*)\big) \\
+		&\ \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 +\frac{(f(\mathbf{x}_t)-f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}  - 2\cdot\frac{f((\mathbf{x}_t)-f(\mathbf{x}^*)^2}{\|\mathbf{g}_t\|^2_2} \\
+		&\ \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 - \frac{(f(\mathbf{x}_t)-f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}  
+	\end{align}
+	
+	Plugging the above simplified expression back into the original context yields:
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &\le \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2\gamma_t\big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big)\\
+		&\le \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 - \frac{(f(\mathbf{x}_t)-f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}  
+	\end{align}
+	
+	I guess We can try to work with that last term?
+	
+	The numerator is involved in a bunch of equations. Not sure what to do. Just dick around I suppose.
+	
+	\begin{align}
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_{t}) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_{t}\|^2_2\\
+		f(\mathbf{x}^*) -  f(\mathbf{x}_t) & \le  \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_{t}) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_{t}\|^2_2
+	\end{align}
+	
+	Well working with the term is not going anywhere. 
+	
+	\textbf{Start again}
+	
+	Could use smoothness to get expressions for distances?
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y}-\mathbf{x}\|^2_2
+	\end{align}
+	
+	Then We can do
+	
+	\begin{align}
+		f(\mathbf{x}_t) &\le f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_t-\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_t) &\le f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2\\
+		\frac{2(f(\mathbf{x}_t) -  f(\mathbf{x}^*))}{L} &\le \|\mathbf{x}_t-\mathbf{x}^*\|^2_2
+	\end{align}
+	
+	and
+	
+	\begin{align}
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_{t+1}-\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}^*\|^2_2\\
+		\frac{2(f(\mathbf{x}_{t+1}) - f(\mathbf{x}^*))}{L} &\le  \|\mathbf{x}_{t+1}-\mathbf{x}^*\|^2_2
+	\end{align}
+	
+	subtracting yields
+	
+	\begin{align}
+		\frac{2(f(\mathbf{x}_{t+1}) - f(\mathbf{x}^*))}{L} - \frac{2(f(\mathbf{x}_t) -  f(\mathbf{x}^*))}{L} &\le  \|\mathbf{x}_{t+1}-\mathbf{x}^*\|^2_2 - \|\mathbf{x}_t-\mathbf{x}^*\|^2_2
+	\end{align}
+	
+	and ya don't get an $f(\mathbf{x}^*)$ in there so no bueno. 
+	
+	\textbf{start again}
+	
+	So
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y}-\mathbf{x}\|^2_2
+	\end{align}
+	
+	Plugging stuff in We get
+	
+	\begin{align}
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top(\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2
+	\end{align}
+	
+	and
+	
+	\begin{align}
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_{t+1}) + \nabla f(\mathbf{x}_{t+1})^\top(\mathbf{x}^*-\mathbf{x}_{t+1}) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_{t+1}\|^2_2
+	\end{align}
+	
+	Well those gradient terms ain't going nowhere. And We still lose $f(\mathbf{x}^*)$.  Maybe something like 
+	
+	\begin{align}
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_{t+1} - \mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2\\
+	\end{align}
+	
+	Subtracting yields
+	
+	\begin{align}
+		&f(\mathbf{x}_{t+1}) - f(\mathbf{x}^*) \le \\
+		&f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 -  f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top(\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2
+	\end{align}
+	
+	Which does not look promising
+	
+	\textbf{Start again}
+	
+	It must be the original formulation. 
+	
+	\begin{align}
+		\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &= \| \mathbf{x}_t - \gamma_t \mathbf{g}_t - \mathbf{x}^*\|_2^2\\
+		&= (\mathbf{x}_t - \gamma_t \mathbf{g}_t - \mathbf{x}^*)^\top (\mathbf{x}_t - \gamma_t \mathbf{g}_t - \mathbf{x}^*) \\
+		&= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \|\gamma_t\mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t) \\
+		&= \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t)\\
+			\| \mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 -  \|\mathbf{x}_t-\mathbf{x}^*\|^2_2  &= \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t)
+	\end{align}
+	
+	So, what can We do with that. Plug in stepsize is one thing:
+	
+	\begin{align}
+		&\gamma_t^2\| \mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t)\\
+		& \bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg)^2 \| \mathbf{g}_t\|^2_2 - 2 \bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg) \mathbf{g}_t ^\top  (\mathbf{x}_t-\mathbf{x}^*)\\
+		&\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}  - 2 \bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg) \mathbf{g}_t ^\top  (\mathbf{x}_t-\mathbf{x}^*)
+	\end{align}
+	
+	What does smoothness give me? It gives me a bound on the rate of change of the gradient.  That would point toward taking the difference of gradients. 
+	
+	Okay so the original bound consists of breaking down the vector into components, substituting the gradient term and plugging in the stepsize. 
+	
+	First step is unambiguous.
+	
+	Second step may allow us to leverage smoothness but probably not
+	
+	Third step unambiguous.
+	
+	So two possible avenues are using smoothness instead of convexity yeah I don't see it.
+	
+	
+	\textbf{start again}
+	
+	Back to convexity ah fuck okay
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y} - \mathbf{x}\|^2_2
+	\end{align}
+	
+	Alright so We can try
+	
+	\begin{align}
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top (\mathbf{x}_{t+1}-\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^2\|^2_2\\
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_{t+1}) - f(\mathbf{x}^*) &\le \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2\\
+		\frac{2(f(\mathbf{x}_{t+1}) - f(\mathbf{x}^*))}{L} &\le \|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	Okay cool. We can split up the right side?
+	
+	\begin{align}
+		\frac{2(f(\mathbf{x}_{t+1}) - f(\mathbf{x}^*))}{L} &\le \|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2\\
+		\frac{2(f(\mathbf{x}_{t+1}) - f(\mathbf{x}^*))}{L} &\le \|\mathbf{x}_t-\mathbf{x}^*\|^2_2 + \gamma_t^2\| \mathbf{g}_t\|^2_2 - 2(\mathbf{x}_t-\mathbf{x}^*)^\top(\gamma_t \mathbf{g}_t)
+	\end{align}
+	
+	Nah doesn't work. 
+	
+	Back to combining smoothness terms? 
+	
+	\begin{align}
+		f(\mathbf{x}_{t}) &\le f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top (\mathbf{x}_{t}-\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^2\|^2_2\\
+		f(\mathbf{x}_{t}) &\le f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_{t}) - f(\mathbf{x}^*) &\le \frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2\\
+		\frac{2(f(\mathbf{x}_{t}) - f(\mathbf{x}^*))}{L} &\le \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	Also doesn't seem to work.
+	
+	\textbf{start again}
+	
+	Brute force perhaps. Useful note yet again:
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &= \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) \\
+		&\le \|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2\gamma_t\big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big)
+	\end{align}
+	
+	We start with
+	
+	\begin{align}
+		&\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2= \\
+		&\|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) -  \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 \\
+		&\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2= \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) 
+	\end{align}
+	
+	Okay, now We need to show that 
+	
+	\begin{align}
+		\gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) \le - \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{2L}
+	\end{align}
+	
+	So,  first We have:
+	
+	\begin{align}
+		f(\mathbf{x}^*) \ge f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t)\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) \ge \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  \le \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	So that dot product is positive. Cool. Alright smoothness on the other hand gets us
+	
+	\begin{align}
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t\|^2_2\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) - \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t\|^2_2 &\le  \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t) \\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t\|^2_2 &\ge  \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) \\
+		-2\gamma_t\bigg( f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t\|^2_2 \bigg) &\le  -2\gamma_t \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) 
+	\end{align}
+	
+	We are allowed to use this substitution in the following inequality since We are making a negative term larger, therefore making the left side smaller, therefore loosening the bound:
+	
+		\begin{align}
+		\gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) &\ge \gamma_t^2\|\mathbf{g}_t\|^2_2  -2\gamma_t\bigg( f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t\|^2_2 \bigg) 
+	\end{align}
+	
+	This doesn't seem to be working out. Let's look again at our options:
+	
+	\begin{align}
+		\gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	This is what We've got. There is a simplification which can take place if We use convexity:
+	
+	\begin{align}
+		&\bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg)^2\|\mathbf{g}_t\|^2_2 - 2\bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg)\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)\\
+		&\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2} - 2\bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg)\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)\\
+		& \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg(f(\mathbf{x}_t) - f(\mathbf{x}^*) - 2\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)\bigg)
+	\end{align}
+	
+	I mean, not super inclined to fuck with the first term in the bracket since of the form We want.
+	
+	Well, the coefficient is positive, so We have that. We also have
+	
+	\begin{align}
+		f(\mathbf{x}^*) \ge f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t)\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) \ge \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  \le \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	And We also have
+	
+	\begin{align}
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)   &\ge  \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) - \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t\|^2_2 
+	\end{align}
+	
+	
+	\textbf{Quick aside to satisfy my curiosity}
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y} - \mathbf{x}\|^2_2\\
+		-\frac{L}{2}\|\mathbf{y} - \mathbf{x}\|^2_2 &\le f(\mathbf{x}) - f(\mathbf{y}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x})\\
+		\frac{L}{2}\|\mathbf{y} - \mathbf{x}\|^2_2 &\ge f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x})
+	\end{align}
+	
+	Now We plug in our values:
+	
+	\begin{align}
+		\frac{L}{2}\|\mathbf{y} - \mathbf{x}\|^2_2 &\ge f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x})\\
+		\frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &\ge f(\mathbf{x}_{t+1}) - f(\mathbf{x}^*) - \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_{t+1}-\mathbf{x}^*)\\
+		\frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &\ge f(\mathbf{x}_{t+1}) - f(\mathbf{x}^*) 
+	\end{align}
+	
+	Similarly
+	
+	\begin{align}
+		\frac{L}{2}\|\mathbf{y} - \mathbf{x}\|^2_2 &\ge f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x})\\
+		\frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 &\ge f(\mathbf{x}_{t}) - f(\mathbf{x}^*) - \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_{t}-\mathbf{x}^*)\\
+		\frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 &\ge f(\mathbf{x}_{t}) - f(\mathbf{x}^*) \\
+		-\frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 &\le f(\mathbf{x}^*) -  f(\mathbf{x}_{t})
+	\end{align}
+	
+	Can't subtract though. 
+	
+	\textbf{start again}
+	
+	We start with
+	
+	\begin{align}
+		&\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2= \\
+		&\|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) -  \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 \\
+		&\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2= \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) 
+	\end{align}
+	
+	Well. We could do something like 
+	
+	\begin{align}
+		\frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}_t\|^2_2 &= \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}_t\|^2_2\\
+		\frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}_t\|^2_2 -\frac{L}{2}\|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2  & \le  \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}_t\|^2_2 +  f(\mathbf{x}^*) -  f(\mathbf{x}_{t}) \\
+		\|\mathbf{x}_{t+1}-\mathbf{x}_t\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2  & \le  \|\mathbf{x}_{t+1}-\mathbf{x}_t\|^2_2 +  \frac{2}{L}\big(f(\mathbf{x}^*) -  f(\mathbf{x}_{t})\big) \\
+	\end{align}
+	
+	Nah.
+	
+	\textbf{Start again}
+	
+	We start with
+	
+	\begin{align}
+		&\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2= \\
+		&\|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) -  \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 \\
+		&\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2= \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) 
+	\end{align}
+	
+	We have a positive part and a negative part, and the negative part is negative due to the minus sign. 
+	
+	Polyak decrease:
+	
+	\begin{align}
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}_{t+1} - \mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}_t\|^2\\
+		&\le f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}_{t} - \gamma_t \mathbf{g}_t - \mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}_t\|^2\\
+	&\le f(\mathbf{x}_t) + \gamma_t\mathbf{g}_t^\top( \mathbf{g}_t) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}_t\|^2	\\
+	&\le f(\mathbf{x}_t) + \gamma_t \|\mathbf{g}_t\|^2_2 + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}_t\|^2	\\
+	&\le f(\mathbf{x}_t) + \bigg( \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg) \|\mathbf{g}_t\|^2_2 + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}_t\|^2	\\
+	&\le f(\mathbf{x}_t) +f(\mathbf{x}_t) - f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}_t\|^2	\\
+	&\le 2f(\mathbf{x}_t) - f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}_t\|^2
+	\end{align}
+	
+	
+	\textbf{Start again}
+	
+	So We really just have convexity, differentiability and smoothness. There really is not much to be played around with. 
+	
+	\begin{align}
+		&\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2= \\
+		&\|\mathbf{x}_t  - \mathbf{x}^* \|^2_2 + \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) -  \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 \\
+		&\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2= \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) 
+	\end{align}
+	
+	A positive term that We can replace with larger positive terms, and a negative term whose coefficient We can make smaller.
+	
+	Now, the goal is:
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^* \|^2_2 -  \| \mathbf{x}_t - \mathbf{x}^*\|^2_2 \le \frac{f(\mathbf{x}^*) - f(\mathbf{x}_t)}{2L}
+	\end{align}
+	
+	And so the goal can be rephrased as:
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 &= \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)  \le \frac{f(\mathbf{x}^*) - f(\mathbf{x}_t)}{2L}\\
+		\gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)  &\le \frac{f(\mathbf{x}^*) - f(\mathbf{x}_t)}{2L}
+	\end{align}
+	
+	By smoothness We have
+	
+	\begin{align}
+		\|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \|_2 &\le L\|\mathbf{x} - \mathbf{y}\|_2 \\
+		\|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \|^2_2 &\le L^2\|\mathbf{x} - \mathbf{y}\|^2_2
+	\end{align}
+	
+	Simplify stuff first
+	
+	\begin{align}
+		&\bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}\bigg)^2 \|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)\\
+		&\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2} - 2 \bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}\bigg)\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	And this is it. We can either expand positive terms or shrink negative terms. 
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y} - \mathbf{x}) + \frac{L}{2}\|\mathbf{y} - \mathbf{x}\|^2_2\\
+		f(\mathbf{x}_t) &\le f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top (\mathbf{x}_t - \mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_t) &\le f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_t) -  f(\mathbf{x}^*) &\le \frac{L}{2}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2
+	\end{align}
+
+
+	Well, maybe to guide our journey We should write:
+	
+	\begin{align}
+		&\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2} - 2 \bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}\bigg)\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) \le -\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{2L}\\
+		&\frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2} - 2 \bigg(\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}\bigg)\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{2L} \le 0\\
+		&\frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} - 2 \frac{\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} +\frac{1}{2L} \le 0\\
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0
+	\end{align}
+	
+	Okay! We can expand the positive terms or shrink the negative terms and still show this inequality. I suppose We can do the simple
+	
+	\begin{align}
+		f(\mathbf{y}) &\ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x})\\
+		f(\mathbf{x^*}) &\ge f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x^*}) - f(\mathbf{x}_t) &\ge  \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		 f(\mathbf{x}_t) - f(\mathbf{x^*}) &\le  \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)\\
+		 -2(f(\mathbf{x}_t) - f(\mathbf{x^*})) &\ge  -2\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	Yeah We can't use that because it would make the coefficient of the negative term smaller oh wait - it would make the coefficient of the negative terms smaller therefore making it easier for us okay
+	
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  -2(f(\mathbf{x}_t) - f(\mathbf{x^*})) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+		&  f(\mathbf{x^*}) - f(\mathbf{x}_t) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0
+	\end{align}
+	
+	We can loosen the positive term again? 
+	
+	\begin{align}
+		&  f(\mathbf{x^*}) - f(\mathbf{x}_t) +\frac{ L^2\|\mathbf{x}_t - \mathbf{x}^*\|^2_2}{2L} \le 0\\
+		&  -(f(\mathbf{x}_t) - f(\mathbf{x^*})) +\frac{ L\|\mathbf{x}_t - \mathbf{x}^*\|^2_2}{2} \le 0
+	\end{align}
+	
+	Recall We also had
+	
+	\begin{align}
+		f(\mathbf{x}_t) -  f(\mathbf{x}^*) &\le \frac{L}{2}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2\\
+		-(f(\mathbf{x}_t) -  f(\mathbf{x}^*)) &\ge -\frac{L}{2}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	No good. The bound has been relaxed too much. Close though. \textbf{Second attempt}.
+	
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0
+	\end{align}
+	
+	Smoothness perhaps
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y}- \mathbf{x} \|^2_2\\
+		f(\mathbf{x}^*) &\le f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^\top (\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t \|^2_2\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) &\le  \nabla f(\mathbf{x}_t)^\top (\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t \|^2_2
+	\end{align}
+	
+	Not that way. 
+	
+	\begin{align}
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) - \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t \|^2_2 &\le  \nabla f(\mathbf{x}_t)^\top (\mathbf{x}^*-\mathbf{x}_t) \\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t \|^2_2 &\ge \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) \\
+		2f(\mathbf{x}^*) - 2f(\mathbf{x}_t)   - L\|\mathbf{x}^* - \mathbf{x}_t \|^2_2 &\ge -2\mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) \\
+	\end{align}
+	
+	So
+	
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2f(\mathbf{x}^*) - 2f(\mathbf{x}_t)   - L\|\mathbf{x}^* - \mathbf{x}_t \|^2_2 +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+		& -3f(\mathbf{x}^*) - f(\mathbf{x}_t)   - L\|\mathbf{x}^* - \mathbf{x}_t \|^2_2 +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0	
+	\end{align}
+	
+	Nah I don't think so. \textbf{Third attempt:}
+	
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  -\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) -\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+	\end{align}
+	
+	Smoothness again
+	
+	\begin{align}
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) &\le \mathbf{g}_t^\top (\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t \|^2_2\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) - \mathbf{g}_t^\top (\mathbf{x}^*-\mathbf{x}_t) &\le  \frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t \|^2_2\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \mathbf{g}_t^\top (\mathbf{x}^*-\mathbf{x}_t) &\ge  -\frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t \|^2_2\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  - \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\ge  -\frac{L}{2}\|\mathbf{x}^* - \mathbf{x}_t \|^2_2
+	\end{align}
+	
+	Nope. Can't replace with a smaller term.
+	
+	\begin{align}
+		f(\mathbf{y}) &\ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y}-\mathbf{x})\\
+		f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) +\mathbf{g}_t^\top (\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) -\mathbf{g}_t^\top (\mathbf{x}^*-\mathbf{x}_t) &\ge 0\\	 
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  + \mathbf{g}_t^\top (\mathbf{x}^*-\mathbf{x}_t) &\le 0\\	 
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  - \mathbf{g}_t^\top (\mathbf{x}_t - \mathbf{x}^*) &\le 0
+	\end{align}	 
+	
+	And We can use that
+	
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  -\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) -\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+		& -\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+		&- \cos(\theta)\|\mathbf{g}_t\|_2 \|\mathbf{x}_t-\mathbf{x}^*\|_2 +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+		&- \cos(\theta) \|\mathbf{x}_t-\mathbf{x}^*\|_2 +\frac{\|\mathbf{g}_t\|_2}{2L} \le 0\\
+		&- \cos(\theta) \|\mathbf{x}_t-\mathbf{x}^*\|_2 +\frac{L\|\mathbf{x}_t-\mathbf{x}^*\|_2}{2L} \le 0\\
+		&- \cos(\theta) +\frac{1}{2} \le 0\\
+	\end{align}
+	
+	Close but no cigar. \textbf{Fourth attempt}
+	
+	I can try to bound $\theta$? lol
+	
+	\begin{align}
+		f(\mathbf{x}^*) \ge f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t)\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t)  \ge \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t)\\
+		f(\mathbf{x}_t) -f(\mathbf{x}^*) \le \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^* )\\
+		f(\mathbf{x}_t) -f(\mathbf{x}^*) \le \cos(\theta)\|\mathbf{g}_t\|_2\|\mathbf{x}_t - \mathbf{x}^*\|_2\\
+		\frac{f(\mathbf{x}_t) -f(\mathbf{x}^*)}{\|\mathbf{g}_t\|_2\|\mathbf{x}_t - \mathbf{x}^*\|_2} \le \cos(\theta)
+	\end{align}
+	
+	
+	Aight. Any approximation We introduce seems to fuck things up. 
+
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0
+	\end{align}
+	
+	What can We even do with this? One idea was to involve as many terms  together as possible to get tighter stuff. I feel like there must be a way  to use smoothness here that is not just bounding the gradient
+	
+	\begin{align}
+		f(\mathbf{x}_t) -  f(\mathbf{x}^*) \le \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2
+	\end{align}
+	
+	And so this gives us a lower bound on the smooth term. Haha, maybe We can bound L. 
+
+	\begin{align}
+		\|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \|_2 &\le L\|\mathbf{x} - \mathbf{y}\|_2 \\
+		\frac{\|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \|_2}{\|\mathbf{x} - \mathbf{y}\|_2} &\le L \\
+		\frac{\|\nabla f(\mathbf{x}_t) - \nabla f(\mathbf{x}^*) \|_2}{\|\mathbf{x}_t - \mathbf{x}^*\|_2} &\le L \\
+	\end{align}
+	
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2}\cdot \frac{\|\mathbf{x}_t - \mathbf{x}^*\|_2}{\|\mathbf{g}_t - \nabla f(\mathbf{x}^*) \|_2} \le 0\\
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2}\cdot \frac{\|\mathbf{x}_t - \mathbf{x}^*\|_2}{\|\mathbf{g}_t \|_2} \le 0\\
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2\cdot \|\mathbf{x}_t - \mathbf{x}^*\|_2}{2}\le 0
+	\end{align}
+	
+	\begin{align}
+		f(\mathbf{x}^*) \ge f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}^*) -  f(\mathbf{x}_t) - \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t) \ge 0 \\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*) + \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t) \le 0 \\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*) - \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) \le 0 \\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*) -2 \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) \le - \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+
+	\begin{align}
+		& - \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2\cdot \|\mathbf{x}_t - \mathbf{x}^*\|_2}{2}\le 0\\
+		& - 2\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) + \|\mathbf{g}_t\|^2_2\cdot \|\mathbf{x}_t - \mathbf{x}^*\|_2\le 0\\
+		& - 2\frac{\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)}{\|\mathbf{g}_t\|_2\cdot \|\mathbf{x}_t - \mathbf{x}^*\|_2} + \|\mathbf{g}_t\|_2 \le 0\\
+		& - 2\frac{\cos(\theta)\|\mathbf{g}_t\|\cdot \|\mathbf{x}_t - \mathbf{x}^*\|)}{\|\mathbf{g}_t\|_2\cdot \|\mathbf{x}_t - \mathbf{x}^*\|_2} + \|\mathbf{g}_t\|_2 \le 0\\
+		& - 2\cos(\theta) + \|\mathbf{g}_t\|_2 \le 0
+	\end{align}
+
+
+	\textbf{Start again}
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*)  - 2 \mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) +\frac{\|\mathbf{g}_t\|^2_2}{2L} \le 0\\
+	\end{align}
+	
+	Smoothness:
+	
+	\begin{align}
+		f(\mathbf{y}) &\le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{L}{2}\|\mathbf{y}-\mathbf{x}\|^2_2\\
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}_t) +\mathbf{g}_t^\top(\mathbf{x}_{t+1}-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}_{t+1}-\mathbf{x}_t\|^2_2\\
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}_t) +\mathbf{g}_t^\top(\mathbf{x}_t - \gamma\mathbf{g}_t-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}_t - \gamma\mathbf{g}_t-\mathbf{x}_t\|^2_2\\
+		f(\mathbf{x}_{t+1}) &\le f(\mathbf{x}_t) +\mathbf{g}_t^\top(-\gamma\mathbf{g}_t) + \frac{L}{2}\|\gamma\mathbf{g}_t\|^2_2\\
+		f(\mathbf{x}_{t+1})- f(\mathbf{x}_t) &\le  - \gamma_t \|\mathbf{g}_t\|^2_2 + \frac{L\gamma_t^2}{2}\|\mathbf{g}_t\|^2_2\\\\
+		f(\mathbf{x}_{t+1})- f(\mathbf{x}_t) &\le  - \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \|\mathbf{g}_t\|^2_2 + \bigg( \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \bigg)^2 \frac{L}{2}\|\mathbf{g}_t\|^2_2\\
+		f(\mathbf{x}_{t+1})- f(\mathbf{x}_t) &\le  - \big( f(\mathbf{x}_t) - f(\mathbf{x}^*)\big) + \frac{\big(f(\mathbf{x}_t) - f(\mathbf{x}^*)\big)^2}{\mathbf{g}_t\|^2_2} \frac{L}{2}\\
+		f(\mathbf{x}_{t+1})- f(\mathbf{x}_t) &\le f(\mathbf{x}^*) - f(\mathbf{x}_t)  + \frac{\big(f(\mathbf{x}_t) - f(\mathbf{x}^*)\big)^2}{\|\mathbf{g}_t\|^2_2} \frac{L}{2}\\
+	\end{align} 
+	
+	\textbf{Back to the roots}
+	
+	\begin{align}
+		\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) = \frac{1}{\gamma_t}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	No problems there. Oh and We have
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &= \|\mathbf{x}_t - \gamma_t\mathbf{g}_t - \mathbf{x}^*\|^2_2\\
+		&= \|(\mathbf{x}_t - \mathbf{x}^*) - \gamma_t\mathbf{g}_t \|^2_2\\
+		&= \|\mathbf{x}_t - \mathbf{x}^*\|^2_2 + \|\gamma_t\mathbf{g}_t \|^2_2 - 2 \gamma_t\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) 
+	\end{align}
+	
+	And of course as a consequence We have 
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 &= \|\mathbf{x}_t - \mathbf{x}^*\|^2_2 + \|\gamma_t\mathbf{g}_t \|^2_2 - 2 \gamma_t\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) \\
+		2 \gamma_t\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)  &= \|\mathbf{x}_t - \mathbf{x}^*\|^2_2 + \|\gamma_t\mathbf{g}_t \|^2_2 - \|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2\\
+		\gamma_t\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)  &= \frac{1}{2} \big( \|\mathbf{x}_t - \mathbf{x}^*\|^2_2 + \gamma_t^2\|\mathbf{g}_t \|^2_2 - \|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 \big)
+	\end{align}
+	
+	That seems to be most of the roots. 
+	
+	Our goal:
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 &= \gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)  \le \frac{f(\mathbf{x}^*) - f(\mathbf{x}_t)}{2L}\\
+		\gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)  &\le \frac{f(\mathbf{x}^*) - f(\mathbf{x}_t)}{2L}\\
+		\gamma_t^2\|\mathbf{g}_t\|^2_2 - 2 \gamma_t\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) &+ \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*) }{2L}  \le 0
+	\end{align}
+	
+	And then We can do a little simplification:
+	
+	\begin{align}
+		&\frac{\big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big)^2}{\|\mathbf{g}_t\|^2_2} - 2 \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*) }{\|\mathbf{g}_t\|^2_2}\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) + \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*) }{2L}  \le 0\\
+		&\frac{ f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} - \frac{2}{\|\mathbf{g}_t\|^2_2}\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) + \frac{1}{2L}  \le 0\\
+		 &f(\mathbf{x}_t) - f(\mathbf{x}^*) - 2\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) + \frac{\|\mathbf{g}_t\|^2_2}{2L}  \le 0
+	\end{align}
+	
+	Cool.
+	
+	\textbf{First attempt}
+	
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*) - 2\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) + \frac{\|\mathbf{g}_t\|^2_2}{2L}  \le 0
+	\end{align}
+	
+	\begin{align}
+		\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) = \frac{1}{\gamma_t}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*) - 2\frac{1}{\gamma_t}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) + \frac{\|\mathbf{g}_t\|^2_2}{2L}  \le 0\\
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*) - 2\frac{\|\mathbf{g}_t\|^2_2}{f(\mathbf{x}_t) - f(\mathbf{x}^*)}(\mathbf{x}_t - \mathbf{x}_{t+1})^\top (\mathbf{x}_t - \mathbf{x}^*) + \frac{\|\mathbf{g}_t\|^2_2}{2L}  \le 0
+	\end{align}
+	
+	\textbf{aside}
+
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2 - \|\mathbf{x}_t - \mathbf{x}^*\|^2_2 &\le - \frac{(f(\mathbf{x}_t) - f(\mathbf{x}^*))^2}{\|\mathbf{g}_t\|^2_2}\\
+		&\le - \big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big) \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	What can I do? I can make the right side larger, and if it is true in the larger case, it is true in the smaller case. To make the right side larger, I would need to reduce the coefficient of the negative term. That means I can reduce the nominator or increase  the denominator. 
+
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2 - \|\mathbf{x}_t - \mathbf{x}^*\|^2_2 &\le - \big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big) \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2}
+	\end{align}
+
+	Or rather, maybe, the goal can be phrased as
+	
+	\begin{align}
+		&- \big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big) \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} \le - \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{2L}\\
+		&- \big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big) \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} + \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{2L}\le 0
+	\end{align}
+	
+	Alright. \textbf{First attempt}
+	
+	\begin{align}
+		&- \big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big) \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} + \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{2L}\le 0\\
+		&-   \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} + \frac{1}{2L}\le 0\\
+		&-  \big(f(\mathbf{x}_t) - f(\mathbf{x}^*)\big) + \frac{\|\mathbf{g}_t\|^2_2}{2L}\le 0\\
+		& f(\mathbf{x}^*) - f(\mathbf{x}_t) + \frac{\|\mathbf{g}_t\|^2_2}{2L}\le 0\\
+	& f(\mathbf{x}^*) - f(\mathbf{x}_t) + \frac{L^2\|\mathbf{x}_t-\mathbf{x}^*\|^2_2}{2L}\le 0	\\
+	& f(\mathbf{x}^*) - f(\mathbf{x}_t) + \frac{L\|\mathbf{x}_t-\mathbf{x}^*\|^2_2}{2}\le 0	\\
+	& f(\mathbf{x}^*) - f(\mathbf{x}_t) \le - \frac{L\|\mathbf{x}_t-\mathbf{x}^*\|^2_2}{2}	
+	\end{align}
+	
+	\begin{align}
+		f(\mathbf{x}_t) \le f(\mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}_t) -  f(\mathbf{x}^*) \le  \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) \ge - \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2
+	\end{align}
+
+	\textbf{Second attempt}
+
+	\begin{align}
+		&- \big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big) \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} + \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{2L}\le 0\\
+		&-   \frac{f(\mathbf{x}_t) - f(\mathbf{x}^*)}{\|\mathbf{g}_t\|^2_2} + \frac{1}{2L}\le 0\\
+		&-  \big(f(\mathbf{x}_t) - f(\mathbf{x}^*)\big) + \frac{\|\mathbf{g}_t\|^2_2}{2L}\le 0\\
+		& f(\mathbf{x}^*) - f(\mathbf{x}_t) + \frac{\|\mathbf{g}_t\|^2_2}{2L}\le 0
+	\end{align}
+	
+	\begin{align}
+		f(\mathbf{x}^*) \le f(\mathbf{x}_t) + \mathbf{g}_t^\top (\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2\\
+		f(\mathbf{x}^*) -  f(\mathbf{x}_t) \le  \mathbf{g}_t^\top (\mathbf{x}^*-\mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}^*-\mathbf{x}_t\|^2_2
+	\end{align}
+
+	\begin{align}
+		f(\mathbf{x}^*) \le f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}^*) - f(\mathbf{x}_t) \le  \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)
+	\end{align}
+	
+	\textbf{God knows what anymore}
+
+	\begin{align}
+		&f(\mathbf{x}_t) - f(\mathbf{x}^*) - 2\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*) + \frac{\|\mathbf{g}_t\|^2_2}{2L}  \le 0
+	\end{align}
+	
+	Not a lot of things left to try, really. I suppose We can try Polyak decrease one last time
+	
+	\begin{align}
+		&f(\mathbf{x}_{t+1}) \le f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}_{t+1} - \mathbf{x}_t) + \frac{L}{2}\| \mathbf{x}_{t+1} - \mathbf{x}_t \|^2_2\\
+		&f(\mathbf{x}_{t+1}) \le f(\mathbf{x}_t) + \mathbf{g}_t^\top(-\gamma_t\mathbf{g}_t) + \frac{L}{2}\| \mathbf{x}_{t+1} - \mathbf{x}_t \|^2_2\\
+		&f(\mathbf{x}_{t+1}) \le f(\mathbf{x}_t) -\gamma_t\|\mathbf{g}_t\|^2_2 + \frac{L}{2}\| \mathbf{x}_{t+1} - \mathbf{x}_t \|^2_2
+	\end{align}
+	
+	\textbf{Thievin}
+
+	Lemma 4:
+	
+	Claim 1:
+	
+	\begin{align}
+		f(\mathbf{x}_t) - f(\mathbf{x}^*) \le \frac{L}{2}\|\mathbf{x}_t-\mathbf{x}^*\|^2_2
+	\end{align}
+	
+	\begin{proof}
+		\begin{align}
+			&f(\mathbf{x}_t) \le f(\mathbf{x}^*)  + \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_t - \mathbf{x}^*) + \frac{L}{2}\|\mathbf{x}_t - \mathbf{x}^* \|^2_2\\
+			&f(\mathbf{x}_t) \le f(\mathbf{x}^*)  + \frac{L}{2}\|\mathbf{x}_t - \mathbf{x}^* \|^2_2
+		\end{align}
+	\end{proof}
+	
+	Claim 2:
+	
+	\begin{align}
+		f(\mathbf{x}_t) - f(\mathbf{x}^*) \ge \frac{1}{L}\|\mathbf{g}_t\|^2_2
+	\end{align}
+	
+	\begin{proof}
+		\begin{align}
+			f(\mathbf{x}_t) - f(\mathbf{x}^*) \ge f(\mathbf{x}_t) - f(\mathbf{x}_{t+1})
+		\end{align}
+		
+		Using smoothness We have
+		
+		\begin{align}
+			&f(\mathbf{x}_{t+1}) \le f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}_{t+1} - \mathbf{x}_t) + \frac{L}{2}\|\mathbf{x}_{t+1} - \mathbf{x}_t \|^2_2\\
+			&f(\mathbf{x}_{t+1}) \le f(\mathbf{x}_t) + \mathbf{g}_t^\top(-\gamma_t\mathbf{g}_t) + \frac{L}{2}\|-\gamma_t\mathbf{g}_t \|^2_2\\
+			&f(\mathbf{x}_{t+1}) \le f(\mathbf{x}_t) -\gamma_t\|\mathbf{g}_t\|^2_2 + \gamma_t^2 \frac{L}{2}\|\mathbf{g}_t \|^2_2\\
+			&f(\mathbf{x}_{t+1}) - f(\mathbf{x}_t) \le  -\gamma_t\|\mathbf{g}_t\|^2_2 + \gamma_t^2 \frac{L}{2}\|\mathbf{g}_t \|^2_2\\
+			& f(\mathbf{x}_t) - f(\mathbf{x}_{t+1}) \ge  \gamma_t\|\mathbf{g}_t\|^2_2 - \gamma_t^2 \frac{L}{2}\|\mathbf{g}_t \|^2_2\\
+			& f(\mathbf{x}_t) - f(\mathbf{x}_{t+1}) \ge  \bigg( \frac{1}{2L} \|\mathbf{g}_t \|^2_2 \bigg) \big(\gamma_t\cdot 2L - L^2\gamma_t^2) \big)\\
+			& f(\mathbf{x}_t) - f(\mathbf{x}_{t+1}) \ge  \bigg( \frac{1}{2L} \|\mathbf{g}_t \|^2_2 \bigg) \big(\gamma_t\cdot L(2 - L\gamma_t)  \big)
+		\end{align}
+		
+		So We have the restriction that both $\gamma_t$ and $L$ are strictly positive. 
+		
+		\begin{align}
+			&\frac{d}{d \gamma_t} 2L\gamma_t - L^2\gamma_t^2 = 2L - 2L^2\gamma_t\\
+			&\frac{d^2}{d \gamma_t^2}  2L\gamma_t - L^2\gamma_t^2 = -2L^2
+		\end{align}
+		
+		\begin{align}
+			&\frac{d}{d L} 2L\gamma_t - L^2\gamma_t^2 = 2\gamma_t - 2L\gamma_t^2\\
+			&\frac{d^2}{d L^2} 2L\gamma_t - L^2\gamma_t^2 = -2\gamma_t^2
+		\end{align}
+		
+		So at (0, 0) the derivative is 0,  the second derivative is strictly negative, and the coefficient itself is 0 at (0, 0), so it's only going down from here, so We can replace it with a positive number. 
+		
+		Well fuck it let's find a max
+		
+		\begin{align}
+			2L - 2L^2\gamma_t = 0\\
+			- 2L^2\gamma_t = -2L\\
+			\gamma_t = \frac{1}{L}\\
+		\end{align}
+		
+		\begin{align}
+			2\gamma_t - 2L\gamma_t^2 = 0\\
+			2\frac{1}{L}- 2L\frac{1}{L^2} = 0\\
+			2\frac{1}{L}- 2\frac{1}{L} = 0
+		\end{align}
+		
+		So the maximum is 1 and it is obtain when $L$ is the reciprocal of $\gamma_t$ and vice versa. 
+		
+		Basically We have
+		
+		\begin{align}
+			1 \ge \big(\gamma_t\cdot L(2 - L\gamma_t)  \big)
+		\end{align}
+		
+		
+		So You can't fucking replace it with 1 can You. 
+		
+		\begin{align}
+			f(\mathbf{x}) \le f(\mathbf{y}) + \nabla f(\mathbf{y})^\top (\mathbf{x}-\mathbf{y}) + \frac{L}{2}\|\mathbf{x} - \mathbf{y}\|^2
+		\end{align} 
+		
+		Okay We are just going to assume all of these
+		
+		\begin{align}
+			&\|\nabla f(\mathbf{y}) - \nabla f(\mathbf{x})\| \le L\|\mathbf{y} - \mathbf{x}\|\\
+			&f(\mathbf{y}) \le f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y} - \mathbf{x}) + \frac{L}{2}\|^2_2\\
+			&f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{1}{2L} \|\nabla f(\mathbf{y}) - \nabla f(\mathbf{x})\|^2_2\\
+		& (\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})^\top (\mathbf{x}-\mathbf{y}) \ge \frac{1}{L}\|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\|^2	
+		\end{align}
+		
+		
+		Paper:		
+		\url{https://arxiv.org/pdf/1903.08688.pdf}
+		textbook: First order methods, chapter 5, page 110
+		
+		Anyway, using 
+		
+		\begin{align}
+			&f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top(\mathbf{y}-\mathbf{x}) + \frac{1}{2L} \|\nabla f(\mathbf{y}) - \nabla f(\mathbf{x})\|^2_2\\
+			&f(\mathbf{x}_t) \ge f(\mathbf{x}^*) + \nabla f(\mathbf{x}^*)^\top(\mathbf{x}_t-\mathbf{x}^*) +  \frac{1}{2L} \|\nabla f(\mathbf{x}_t) - \nabla f(\mathbf{x}^*)\|^2_2\\
+			&f(\mathbf{x}_t) \ge f(\mathbf{x}^*)  +  \frac{1}{2L} \|\nabla f(\mathbf{x}_t)\|^2_2\\
+			&f(\mathbf{x}_t) -  f(\mathbf{x}^*)\ge    \frac{1}{2L} \|\nabla f(\mathbf{x}_t)\|^2_2\\
+		\end{align}
+		
+	\end{proof}
+
+
+	Recall We had 
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 \le -\frac{\big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big)^2}{\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	So then We take our new result
+	
+	\begin{align}
+		&f(\mathbf{x}_t) -  f(\mathbf{x}^*)\ge    \frac{1}{2L} \|\nabla f(\mathbf{x}_t)\|^2_2\\
+		&\big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big) \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big) \ge    \frac{1}{2L} \|\nabla f(\mathbf{x}_t)\|^2_2 \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big)\\
+		&-\big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big) \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big) \le    -\frac{1}{2L} \|\nabla f(\mathbf{x}_t)\|^2_2 \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big)\\
+		&-\frac{\big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big)}{\|\nabla f(\mathbf{x}_t)\|^2_2} \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big) \le    -\frac{1}{2L}  \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big)\\
+	\end{align}
+		
+	Therefore
+	
+	\begin{align}
+		\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 \le -\frac{1}{2L}  \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big)
+	\end{align}
+	
+	Next We want to show that
+	
+	\begin{align}
+		\frac{1}{T} \sum^{T-1} _{t=0} h_t \ge \frac{2L d_0^2}{T}
+	\end{align}
+	
+	Rewriting our previous result
+	
+	\begin{align}
+		&\|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 \le -\frac{1}{2L}  \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big)\\
+		 & 2L\big( \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2\big)  \ge  f(\mathbf{x}_t) -  f(\mathbf{x}^*)
+	\end{align}
+	
+	Taking the sum yields
+	
+	\begin{align}
+		& \sum ^{T-1}_{t=0} f(\mathbf{x}_t) -  f(\mathbf{x}^*) \le 2L \sum^{T-1}_{t=0}  \|\mathbf{x}_{t} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{t+1} - \mathbf{x}^*\|^2_2 \\
+		& \sum ^{T-1}_{t=0} f(\mathbf{x}_t) -  f(\mathbf{x}^*) \le 2L \big( \|\mathbf{x}_{0} - \mathbf{x}^*\|^2_2 - \|\mathbf{x}_{T} - \mathbf{x}^*\|^2_2\big) \\
+		& \sum ^{T-1}_{t=0} f(\mathbf{x}_t) -  f(\mathbf{x}^*) \le 2L \|\mathbf{x}_{0} - \mathbf{x}^*\|^2_2 \\
+		& \frac{1}{T}\sum ^{T-1}_{t=0} f(\mathbf{x}_t) -  f(\mathbf{x}^*) \le \frac{2L \|\mathbf{x}_{0} - \mathbf{x}^*\|^2_2}{T}
+	\end{align}
+	
+	Where the second step used telescoping and the third step dropped a strictly negative term to loosen the bound. 
+\end{proof}
+
+\textbf{Assignment 2.} \textit{Now suppose that f is both smooth with parameter $L$ and strongly convex with parameter $\mu$, i.e. for all $\mathbf{x, y}\in\mathbb{R}^d$ We have $\frac{\mu}{2}\|\mathbf{x}-\mathbf{y}\|^2_2 \le f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^\top(\mathbf{y-x}) \le \frac{L}{2} \|\mathbf{x-y}\|^2_2$. Show that}
+
+\[ d^2_{t+1} - d^2_t \le -\frac{\mu}{4L}d^2_t\qquad and\qquad h_T \le \frac{L}{2}d^2_0 \bigg(1 - \frac{\mu}{4L} \bigg)^\top. \]
+
+\begin{proof}
+
+	Start with convexity I suppose. 
+	
+	Recall We had
+	
+	\begin{align}
+		&d_{t+1}^2 - d_t^2 \le    -\frac{f(\mathbf{x}_t) -  f(\mathbf{x}^*)}{2L} 
+	\end{align}
+	
+	\begin{align}
+		&f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y}-\mathbf{x}) + \frac{\mu}{2}\|\mathbf{y} - \mathbf{x}\|^2_2\\
+		&f(\mathbf{x}_t) -  f(\mathbf{x}^*) \ge   \frac{\mu}{2}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2\\
+		& -\big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big) \le   -\frac{\mu}{2}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2\\
+		& -\frac{f(\mathbf{x}_t) -  f(\mathbf{x}^*)}{2L} \le  - \frac{\mu}{4L}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	So We then have 
+	
+	\begin{align}
+		&d_{t+1}^2 - d_t^2 \le    -\frac{f(\mathbf{x}_t) -  f(\mathbf{x}^*)}{2L} \le - \frac{\mu}{4L}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2 \\
+		&d_{t+1}^2 - d_t^2  \le - \frac{\mu}{4L}d_t^2
+	\end{align}
+	
+	Brilliant.
+	
+	Now the observation here is that We have shown a relation between $d_{t+1}$ and $d_t$:
+	
+	\begin{align}
+		&d_{t+1}^2 - d_t^2  \le - \frac{\mu}{4L}d_t^2\\
+		&d_{t+1}^2  \le - \frac{\mu}{4L}d_t^2 + d_t^2 \\
+		&d_{t+1}^2  \le d_t^2\bigg( 1 -\frac{\mu}{4L} \bigg)
+	\end{align}
+	
+	Using smoothness We have
+
+	\begin{align}
+		f(\mathbf{x}_T) - f(\mathbf{x}^*) \le \frac{L}{2}d_T\\
+		f(\mathbf{x}_T) - f(\mathbf{x}^*) \le \frac{L}{2}d_0^2\bigg( 1 -\frac{\mu}{4L} \bigg)^T
+	\end{align}
+	
+	Where the second line is arrived at by recursively replacing $d_{t+1}$ with $d_t^2\big( 1 -\frac{\mu}{4L} \big)$ until We reach $d_0$.
+
+\end{proof}
+
+
+\textbf{Assignment 3.} \textit{Next, We consider the setting in which We only know a lower bound $\tilde{f}\le f(\mathbf{x}^*)$ and thus adopt a step size $\tilde{\gamma}_t \defeq \frac{f(\mathbf{x}_t) - \tilde{f}}{2\|\mathbf{g}_t\|^2_2} $. Let $\bar{x} = \argmin_{\mathbf{x}_t: 0\le t\le T} f(\mathbf{x}_t)$, show that if $f$ is both smooth with parameter $L$ and strongly convex with parameter $\mu$, then one of the following holds: }
+
+\[ f(\bar{\mathbf{x}}) - f(\mathbf{x}^*) \le \min \bigg\{ \frac{4Ld^2_0}{T}, \frac{L}{2}d^2_0\bigg(1-\frac{\mu}{8L}\bigg)^T\bigg\} \]
+
+\textit{or}
+
+\[ 0 \le f(\mathbf{x}^*) - \frac{f(\bar{\mathbf{x}})+\tilde{f}}{2} \le \frac{f(\mathbf{x}^*) - \tilde{f}}{2} \]
+
+\begin{proof}
+	
+	Well We have adjusted the stepsize, so our analysis needs to be redone. 
+	
+	\begin{align}
+		d_{t+1} - d_t &= \gamma_t^2 \|\mathbf{g}_t\|^2_2 - 2\gamma_t\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)\\
+		&= \bigg( \frac{f(\mathbf{x}_t) - \tilde{f}}{2\|\mathbf{g}_t\|^2_2} \bigg)^2 \|\mathbf{g}_t\|^2_2 - 2\frac{f(\mathbf{x}_t) - \tilde{f}}{2\|\mathbf{g}_t\|^2_2}\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	Then We use convexity:
+	
+	\begin{align}
+		f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}^*) &\ge f(\mathbf{x}_t) + \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}^*) -  f(\mathbf{x}_t) &\ge \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}^*) -  f(\mathbf{x}_t) &\ge \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*) &\le \mathbf{g}_t^\top(\mathbf{x}^* - \mathbf{x}_t)
+	\end{align}
+	
+	Well, We can't use convexity. 
+	
+	There's a problem here - 
+	
+	\begin{align}
+		\tilde{f} &\le f^*\\
+		-\tilde{f} &\ge -f^*\\
+		f(\mathbf{x}_t)-\tilde{f} &\ge f(\mathbf{x}_t)-f^*\\
+		\big(f(\mathbf{x}_t)-\tilde{f}\big)^2 &\ge \big(f(\mathbf{x}_t)-f^*\big)^2\\
+		\frac{\big(f(\mathbf{x}_t)-\tilde{f}\big)^2 }{2 \|\mathbf{g}_t\|^2_2} &\ge \frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2\|\mathbf{g}_t\|^2_2}\\
+		-\frac{\big(f(\mathbf{x}_t)-\tilde{f}\big)^2 }{2 \|\mathbf{g}_t\|^2_2} &\le -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	Where We are allowed to square both sides since We know that both sides are positive terms. 
+	
+	The results of previous exercises can be summed up as:
+	
+	\begin{align}
+		&-\frac{\big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big)^2}{\|\mathbf{g}_t\|^2_2} \le -\frac{1}{2L}  \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big)  \le  - \frac{\mu}{4L}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2\\
+		&-\frac{\big( f(\mathbf{x}_t) - f(\mathbf{x}^*) \big)^2}{2\|\mathbf{g}_t\|^2_2} \le -\frac{1}{4L}  \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big)  \le  - \frac{\mu}{8L}\|\mathbf{x}_t - \mathbf{x}^*\|^2_2
+	\end{align}
+	
+	Ah okay so the above holds if $\tilde{f} = f^*$. In particular We then have
+	
+	\begin{align}
+		d_{t+1}^2 - d_t^2 &\le -\frac{1}{4L}  \big(f(\mathbf{x}_t) -  f(\mathbf{x}^*)\big)\\
+		f(\mathbf{x}_t) -  f(\mathbf{x}^*)  &\le  4L\big(d_t^2 - d_{t+1}^2 \big)\\
+		\sum^{T-1}_{t=0} f(\mathbf{x}_t) -  f(\mathbf{x}^*)  &\le  4L \sum^{T-1}_{t=0}  \big(d_t^2 - d_{t+1}^2 \big)\\
+		\frac{\sum^{T-1}_{t=0} f(\mathbf{x}_t) -  f(\mathbf{x}^*)}{T}  &\le  \frac{4Ld_0^2}{T}
+	\end{align}
+	
+	Where We skipped a few steps but it was just telescoping and dropping the negative $-d_T^2$. 
+	
+	Similarly, We can also establish the following relationship:
+	
+	\begin{align}
+		d_{t+1}^2 - d_t^2 \le - \frac{\mu}{8L}d_t^2\\
+		d_{t+1}^2  \le d_t^2\bigg( 1-\frac{\mu}{8L}\bigg)
+	\end{align}
+	
+	And then by smoothness We can do
+	
+	\begin{align}
+		f(\mathbf{x}_T) - f(\mathbf{x}^*) &\le \frac{L}{2}\|\mathbf{x}_T - \mathbf{x}^* \|^2_2\\
+		&\le \frac{L}{2}d_0^2\bigg( 1-\frac{\mu}{8L}\bigg)^T
+	\end{align}
+	
+	With the same logic as before of recursively replacing $d_{t+1}$ with $\big(1 - \frac{\mu}{8L}\big)d_t$.
+	
+	Well, it's more like so long as Your choice of $\tilde{f}$ preserves 
+	
+	Now in the case of $\tilde{f} < f^*$.
+	
+	So, here is the idea. In the original case We had:
+
+	\begin{align}
+		d_{t+1} - d_t &= \gamma_t^2 \|\mathbf{g}_t\|^2_2 - 2\gamma_t \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*)\\
+		&= \bigg(\frac{f(\mathbf{x}_t)-\tilde{f} }{2 \|\mathbf{g}_t\|^2_2} \bigg)^2 \|\mathbf{g}_t\|^2_2 - 2\frac{f(\mathbf{x}_t)-\tilde{f} }{2 \|\mathbf{g}_t\|^2_2} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*)\\
+		&= \frac{\big(f(\mathbf{x}_t)-\tilde{f} \big)^2}{4\|\mathbf{g}_t\|^2_2}   - \frac{f(\mathbf{x}_t)-\tilde{f} }{ \|\mathbf{g}_t\|^2_2} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*)
+	\end{align}
+	
+	And now We need to perform a substitution, previously established via convexity, to move forward. Convexity won't save us now unfortunately.
+	
+	\begin{align}
+		f(\mathbf{x}^*) -  f(\mathbf{x}_t) \ge \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  \le \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align} 
+	
+	So strictly positive quantity. This will end up being wedged from below by the equality and from above by the convexity or whatever. Well the maximal bound mai
+	
+	Look lad for this analysis to hold We need
+	
+	\begin{align}
+		d_{t+1}^2-d_t^2 = \frac{\big(f(\mathbf{x}_t)-\tilde{f} \big)^2}{4\|\mathbf{g}_t\|^2_2}   - \frac{f(\mathbf{x}_t)-\tilde{f} }{ \|\mathbf{g}_t\|^2_2} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) \le ? \le   -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	Where the question mark is our substitution. When $\tilde{f} = f^*$ We can use convexity. So
+
+	Okay so this is all very confused, and I think I am looking at the wrong quantities. 
+	
+	\textbf{Redo}
+	
+	So We restart our analysis with a new stepsize:
+
+	\begin{align}
+		d_{t+1} - d_t &= \gamma_t^2 \|\mathbf{g}_t\|^2_2 - 2\gamma_t\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)\\
+		&= \bigg( \frac{f(\mathbf{x}_t) - \tilde{f}}{2\|\mathbf{g}_t\|^2_2} \bigg)^2 \|\mathbf{g}_t\|^2_2 - 2\frac{f(\mathbf{x}_t) - \tilde{f}}{2\|\mathbf{g}_t\|^2_2}\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)\\
+		&= \frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4\|\mathbf{g}_t\|^2_2}  - \frac{f(\mathbf{x}_t) - \tilde{f}}{\|\mathbf{g}_t\|^2_2}\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	And so now what. 
+
+	\begin{align}
+		f(\mathbf{x}^*) -  f(\mathbf{x}_t) &\ge \mathbf{g}_t^\top(\mathbf{x}^*-\mathbf{x}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*)  &\le \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)\\
+		f(\mathbf{x}^*) -  f(\mathbf{x}_t)  &\ge -\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*)
+	\end{align}
+	
+	Well so long as We have 
+	
+	\begin{align}
+		\frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4\|\mathbf{g}_t\|^2_2}  - \frac{f(\mathbf{x}_t) - \tilde{f}}{\|\mathbf{g}_t\|^2_2}\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) \le -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	We're good
+
+	\begin{align}
+		\frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4}  - \big(f(\mathbf{x}_t) - \tilde{f}\big)\mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) &\le -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2}\\
+		\frac{f(\mathbf{x}_t) - \tilde{f}}{4}  - \mathbf{g}_t^\top(\mathbf{x}_t - \mathbf{x}^*) &\le -\frac{f(\mathbf{x}_t)-f^*}{2} \frac{f(\mathbf{x}_t)-f^*}{f(\mathbf{x}_t) - \tilde{f}} \\
+	\end{align}
+	
+	I guess the problem is that ultimately I don't know the relation between $\mathbf{g}^\top_t(\mathbf{x}_t - \mathbf{x}^*)$ and $f(\mathbf{x}_t) - \tilde{f}$
+	
+	Ah what the fuck
+	
+	\begin{align}
+		&0 \le f(\mathbf{x}^*) - \frac{f(\bar{\mathbf{x}}) + \tilde{f}}{2} \le \frac{f(\mathbf{x}^*) - \tilde{f}}{2}\\
+		&0 \le2 f(\mathbf{x}^*) - f(\bar{\mathbf{x}}) + \tilde{f} \le f(\mathbf{x}^*) - \tilde{f}\\
+		& \tilde{f} \le2 f(\mathbf{x}^*) - f(\bar{\mathbf{x}}) + 2\tilde{f} \le f(\mathbf{x}^*) \\
+		& \tilde{f} \le 2 (f(\mathbf{x}^*) - \tilde{f}) - f(\bar{\mathbf{x}}) + \le f(\mathbf{x}^*) 
+	\end{align}
+	
+	Comparing values:
+	
+	\begin{align}
+		\frac{f(\mathbf{x}_t) - \tilde{f}}{\|\mathbf{g}_t\|^2}\ge \frac{f(\mathbf{x}_t) - f^*}{\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	So that's true, but We don't know if 
+	
+	\begin{align}
+		\frac{f(\mathbf{x}_t) - \tilde{f}}{2\|\mathbf{g}_t\|^2}\ge \frac{f(\mathbf{x}_t) - f^*}{\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	And for the above to hold We would need
+	
+	\begin{align}
+		f(\mathbf{x}_t) - \tilde{f}\ge 2f(\mathbf{x}_t) - 2f^*\\
+		\tilde{f} - f(\mathbf{x}_t)\le  2f^* - 2f(\mathbf{x}_t) 
+	\end{align}
+
+
+	Alright alright alright fuck.
+	
+	There are two parts to this analysis - forward and backward. The "forward" bit We showed holds just fine without any difficulty. 
+	
+	The "backward" bit is the tricky one.  Christ alive We need
+	
+	\begin{align}
+		d_{t+1}^2-d_t^2 = \frac{\big(f(\mathbf{x}_t)-\tilde{f} \big)^2}{4\|\mathbf{g}_t\|^2_2}   - \frac{f(\mathbf{x}_t)-\tilde{f} }{ \|\mathbf{g}_t\|^2_2} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) \le ? \le   -\frac{\big(f(\mathbf{x}_t)-\tilde{f}\big)^2}{2\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	Okay so that means 
+
+	\begin{align}
+		&\frac{\big(f(\mathbf{x}_t)-\tilde{f} \big)^2}{4\|\mathbf{g}_t\|^2_2}   - \frac{f(\mathbf{x}_t)-\tilde{f} }{ \|\mathbf{g}_t\|^2_2} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) \stackrel{?}{\le}  -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2\|\mathbf{g}_t\|^2_2}\\
+		&\frac{\big(f(\mathbf{x}_t)-\tilde{f} \big)^2}{4\|\mathbf{g}_t\|^2_2}   - \frac{f(\mathbf{x}_t)-\tilde{f} }{ \|\mathbf{g}_t\|^2_2} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) \stackrel{?}{\le} -\frac{2\big(f(\mathbf{x}_t)-f^*\big)^2}{4\|\mathbf{g}_t\|^2_2}\\
+		&\frac{3\big(f(\mathbf{x}_t)-\tilde{f} \big)^2}{4\|\mathbf{g}_t\|^2_2}   - \frac{f(\mathbf{x}_t)-\tilde{f} }{ \|\mathbf{g}_t\|^2_2} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) \stackrel{?}{\le}  0\\
+		&\frac{3}{4}\big(f(\mathbf{x}_t)-\tilde{f} \big)^2  - \big(f(\mathbf{x}_t)-\tilde{f}\big)  \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) \le  0\\
+		&\frac{3}{4}\big(f(\mathbf{x}_t)-\tilde{f} \big)  -  \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) \stackrel{?}{\le}  0
+	\end{align}
+	
+	Well fuck. Strong convexity? No. 
+	
+	Okay the only moving part in here is $\tilde{f}$. The question is is there a choice for $\tilde{f}$ that fucks the inequalities. 
+	
+	And I don't really know if there is TBH. 
+	
+	Maybe compare the gammas. 
+	
+	\begin{align}
+		d_{t+1} - d_t &= \gamma_t^2 \|\mathbf{g}_t\|^2_2 - 2\gamma_t \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*)\\
+		d_{t+1} - d_t &= \gamma_t^2 \|\mathbf{g}_t\|^2_2 - 2\gamma_t \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*)
+	\end{align}
+
+	\begin{align}
+		& \tilde{\gamma_t}^2 \|\mathbf{g}_t\|^2_2 - 2\tilde{\gamma_t} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*)  \stackrel{?}{\le} \gamma_t^2 \|\mathbf{g}_t\|^2_2 - 2\gamma_t \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*)\\
+		& \big( \tilde{\gamma_t}^2 - \gamma_t^2 \big) \|\mathbf{g}_t\|^2_2 - \big(\tilde{\gamma_t} - \gamma_t \big) 2\mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*)  \stackrel{?}{\le} 0\\
+		& \big( \tilde{\gamma_t}^2 - \gamma_t^2 \big) \|\mathbf{g}_t\|^2_2 - \big(\tilde{\gamma_t} - \gamma_t \big) 2(f(\mathbf{x}_t) - f^*)  \stackrel{?}{\le} 0\\
+		& \bigg( \frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4\|g_t\|^4_2} -\frac{\big(f(\mathbf{x}_t) - f^*\big)^2}{\|g_t\|^4_2} \bigg) \|\mathbf{g}_t\|^2_2 - \big(\tilde{\gamma_t} - \gamma_t \big) 2(f(\mathbf{x}_t) - f^*)  \stackrel{?}{\le} 0\\
+		& \frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4\|g_t\|^2_2} -\frac{\big(f(\mathbf{x}_t) - f^*\big)^2}{\|g_t\|^2_2}  - \big(\tilde{\gamma_t} - \gamma_t \big) 2(f(\mathbf{x}_t) - f^*)  \stackrel{?}{\le} 0\\
+		& \frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4\|g_t\|^2_2} -\frac{\big(f(\mathbf{x}_t) - f^*\big)^2}{\|g_t\|^2_2}  - \frac{f(\mathbf{x}_t) - \tilde{f} - 2f(\mathbf{x}_t) + 2f^*}{2\|g_t\|^2_2} 2(f(\mathbf{x}_t) - f^*)  \stackrel{?}{\le} 0
+	\end{align}
+	
+	\begin{align}
+		\tilde{\gamma_t^2} \|\mathbf{g}_t\|^2_2 - 2\tilde{\gamma_t} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) \stackrel{?}{\le} -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2\|\mathbf{g}_t\|^2_2}\\
+		 \frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4\|g_t\|^2_2} - 2 \frac{f(\mathbf{x}_t) - \tilde{f}}{2\|g_t\|^2_2} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) \stackrel{?}{\le} -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2\|\mathbf{g}_t\|^2_2}
+	\end{align}
+	
+	Now We can do
+	
+	\begin{align}
+		f(\mathbf{x}^*) -  f(\mathbf{x}_t) \ge  g_t^\top (\mathbf{x}^* - \mathbf{x}_t)\\
+		f(\mathbf{x}_t) - f(\mathbf{x}^*) \le  g_t^\top ( \mathbf{x}_t - \mathbf{x}^* )
+	\end{align}
+	
+	And We also have
+	
+	\begin{align}
+		\tilde{f} &\le f^*\\		
+		-\tilde{f} &\ge -f^*\\		
+		f(\mathbf{x}_t) -\tilde{f} &\ge f(\mathbf{x}_t) -f^*\\	
+		f(\mathbf{x}_t) -f^* &\le f(\mathbf{x}_t) -\tilde{f} 	
+	\end{align}
+	
+	So We can do 
+	
+	\begin{align}
+		\frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4\|g_t\|^2_2} - 2 \frac{f(\mathbf{x}_t) - \tilde{f}}{2\|g_t\|^2_2} \mathbf{g}_t^\top(\mathbf{x}_t-\mathbf{x}^*) &\stackrel{?}{\le} -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2\|\mathbf{g}_t\|^2_2}\\
+		\frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4\|g_t\|^2_2} - 2 \frac{\big(f(\mathbf{x}_t) - f^*\big)^2}{2\|g_t\|^2_2} &\stackrel{?}{\le} -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2\|\mathbf{g}_t\|^2_2}\\
+		\frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4} -  \big(f(\mathbf{x}_t) - f^*\big)^2 &\stackrel{?}{\le} -\frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2}\\
+		\frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4}  &\stackrel{?}{\le} \frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2}\\
+		\frac{\big(f(\mathbf{x}_t) - \tilde{f}\big)^2}{4}  &\stackrel{?}{\le} \frac{\big(f(\mathbf{x}_t)-f^*\big)^2}{2}\\
+		\big(f(\mathbf{x}_t) - \tilde{f}\big)^2  &\stackrel{?}{\le} 2\big(f(\mathbf{x}_t)-f^*\big)^2\\
+		f(\mathbf{x}_t) - \tilde{f}  &\stackrel{?}{\le} \sqrt{2}f(\mathbf{x}_t)-\sqrt{2}f^*\\
+		- \tilde{f}  &\stackrel{?}{\le} \sqrt{2}f(\mathbf{x}_t) - f(\mathbf{x}_t) - \sqrt{2}f^* \\
+		\tilde{f}  &\stackrel{?}{\ge} -\sqrt{2}f(\mathbf{x}_t) + f(\mathbf{x}_t) + \sqrt{2}f^* 
+	\end{align}
+
+\end{proof}
+
+
+\textbf{Assignment 5.} \textit{Prove that f is convex}.
+
+\begin{proof}
+	\begin{align}
+		f(\mathbf{x}) \defeq \frac{1}{K}\log\bigg( \sum^m_{i=1}\exp\big(K\big( \mathbf{a}_i^\top\mathbf{x} - \mathbf{b}_i\big) \big) \bigg)
+	\end{align}
+	
+	We know that
+	
+	\begin{align}
+		K\big( \mathbf{a}_i^\top\mathbf{x} - \mathbf{b}_i\big) 
+	\end{align}
+	
+	Is convex, since it is a linear function.
+	
+	Furthermore, by exercise set 1, exercise 8, We know that log-sum-exp is a convex function. Lastly, by lemma 1.18 part ii), the composition of a convex function and a linear function is itself convex. Therefore the composition of of our linear function and log-sum-exp is also convex.
+	
+\textbf{Assignment 6.} \textit{Prove that f is smooth with parameter $\|A\|$.}
+
+\begin{proof}
+	Alright well the most promising definition seems to be
+	
+	\begin{align}
+		\|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\| \le L\|\mathbf{x}-\mathbf{y}\|
+	\end{align}
+	
+	So We need a derivative of log-sum-exp. If We can show that the spectral norm of it is equal to the spectral norm of $A$, then We're good. 
+	
+	Let $w = \sum^m_{i=1}\exp\big(K\big( \mathbf{a}_i^\top\mathbf{x} - \mathbf{b}_i\big) \big)$
+	
+	\begin{align}
+		&\frac{d}{d\mathbf{x}_i}  \frac{1}{K}\log\bigg( \sum^m_{i=1}\exp\big(K\big( \mathbf{a}_i^\top\mathbf{x} - \mathbf{b}_i\big) \big) \bigg)\\
+		&= \frac{1}{K} \frac{1}{w}\frac{d}{d\mathbf{x}_i} \sum^m_{i=1}\exp\big(K\big( \mathbf{a}_i^\top\mathbf{x} - \mathbf{b}_i\big) \big)
+	\end{align}
+\end{proof}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+\end{document} 
+

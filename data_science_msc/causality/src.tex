@@ -1,0 +1,220 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\usepackage[makeroom]{cancel}
+
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\begin{document}
+
+
+\title{Causality}
+\author{	Christina Heinze-Deml}
+\date{}
+
+\maketitle
+
+\section{Lecture 1}
+
+	\subsection{Different types of experiments}
+	
+		Can be viewed in a tree-like structure.
+		
+		First differentiation is whether a study has controls, or not. Without controls, one can't say very much.
+		
+		Next, if We do decide to go with controls, what kind of controls are they? They can be contemporary, i.e. happening now, or in the past, i.e. historical data. One has to be wary of confounders in historical data. 
+		
+		If it's contemporary, i.e. a study is being performed in the present, controls may be chosen. If they are not chosen at random, one once again needs to be very careful about confounders.
+		
+		If the control is randomly chosen, one ought to do double blind trials, where neither the person receiving nor the doctor administering the treatment knows whether the treatment is true or a placebo. This leads us to randomized double-blind trials, the gold standard.
+		
+	\subsection{Internal v.s. External Validity}
+		
+		This is with respect to statements within studies.
+		
+		For example, in the Salk vaccine trial, in the case where the trial group were people who consented to the vaccine, and the control was randomly drawn from that same group, it is internally correct to make statements about the trial - given that the findings are significant, they are significant for that group.
+		
+		What may not hold is external validity - is the vaccine equally effective for groups that are different from the treatment group in the trial? External validity, to me, can be thought of as generalization error - do the statements that are true within the study generalize to the broader population etc.
+		
+	\subsection{Simpson's Paradox}
+	
+		Be careful when averaging over groups - sometimes it may be wise to do so, other times not so. 
+		
+		Essentially there may be lurking fixed effects between groups which would change the direction of the association. More on this later I suppose.
+		
+\section{Lecture 2}
+
+	\subsection{DAG models}
+	
+		Parents of a node are immediate ancestors. 
+		
+		Children are immediate descents.
+		
+		In general, a DAG decomposes probabilities such that
+		
+		\[ P(X_1, X_2, X_3\ldots X_n) = \prod^n_{i=0} P(X_i | X_{\text{parents}(i)}) \]
+
+		Recall Markov chains - these have that old chestnut, the \textbf{Markov property}:
+		
+		\[ X_{i+1}, X_{i+2}\ldots \independent  X_{i-1}\ldots X_1 | X_i\]
+		
+		In case of DAGs, We have a generalization of this is the \textbf{directed graph Markov Property}, which states that
+		
+		\[ X_i \independent X_{\text{Non-descendants of }X_i} | X_{\text{Parents}(X_i)} \]
+		
+		Since parents insulate the child.
+		
+		Now, there's also the \textbf{Markov blanket}. The idea is that if You condition on the parents of a node, the children of a node, and the children's parents, then the node is independent of everything else no matter what. I think D-separation shows up here.
+		
+		We need to think a little more about the descendants case, however.
+		
+		
+	\subsection{\textit{d}-Separation}
+	
+		So we have four types of connections (for illustration see page 407 of advanced data analysis from an elementary point of view):
+		
+		Forward chain, backward chain, fork, collider
+		
+		The first thing to observe is that \textit{statistical} information flows both ways in a DAG. Observing a parent by definition gives information about the child, but observing the child also gives clues about the parent.
+		
+		Now We think about the case where $Z$, the inbetween variable, is not known.
+		
+		In the forward chain case, $X$ gives information about $Z$, and knowing stuff about $Z$ tells us information about $Y$, so $X \cancel{\independent} Y$.
+		
+		In the backward chain case, knowing $X$ makes it's parent $Z$ more likely, and knowing $Z$ is more likely tells us stuff about $Y$.
+		
+		In the fork case, where $Z$ is a parent of both $X, Y$, knowing $X$ still makes $Z$ more likely, which makes $Y$ more likely.
+		
+		 Finally, let's think about the collider. 
+		 
+		 I can see why knowing something about the collider explains away the other parents of the collider. This I buy.
+		 
+		 Yeah I buy the black hole perspective - a thing has two causes, and We observe one and the thing maybe happened, maybe not. Therefore the two causes are still independent. If We observe the cause and effect, this explains away the other cause. 
+		 
+		 Now for the case where the middle variable is known - chains block information flow by Markov property, as do forks, but colliders explain away. 
+		 
+		 So! We are interested in deciding whether variables $X, Y$ are independent given some set of variables $S$. We say that $X, Y$ are independent given $S$ if every path from $X$ to $Y$ is blocked. A path is called \textbf{blocked} if it is not active. A path is \textbf{active} if every variable along the path is active. A variable $Z$ is active if, as before:
+		 
+		 $Z$ is a collider and in $S$,
+		 
+		 $Z$ is a collider and a descendant of $Z$ is in $S$,
+		 
+		 $Z$ is not a collider and not in $Z$.
+		 
+		 All of which should make sense given the reasoning about chains, forks and colliders. 
+		 
+		 Conversely then, a variable $Z$ is blocked if
+		 
+		 $Z$ is in $S$ and not a collider,
+		 
+		 $Z$ is a collider and neither it nor any of it's descendants is in $S$.
+		 
+		 if $S$ blocks all paths between $X, Y$, then We say that $X, Y$ are \textbf{d-separated} by $S$.
+		 
+	\section{Lecture 3}
+	
+		\subsection{Do-Calculus}
+		
+			So We have
+			
+			\[ p(y;\text{see}(X=\tilde{x}) = p(y|\tilde{x}) \]
+		 
+		 	Which is just classical stats. To get do calculus We have
+		 
+			\[ p(y;\text{do}(X=\tilde{x})\]
+		 
+		 	That there refers to the distribution of $Y$ given that $X$ has been forced to take a certain value - some sort of intervention has taken place.
+		 	
+		\subsection{Regime indicator}
+		
+			Is basically do calculus. We introduce some regime variable $\sigma$ and do 
+			
+			\[ p(y;\sigma=\text{whatever}) \]
+		 
+		 	Where whatever is whatever You want. If it's the null symbol, You get back to standard stats. You can say regime $a$ is where You forced $X$ to be some value, and then $p(y;\sigma=a)$ You are talking about the distribution of $Y$ given an intervention on $X$ as specified by $\sigma$. The set of regime indicators is $S$.
+		 
+		 	Another important bit is what stays the same given different regimes. Distributions that don't change given different regimes are called \textit{stable} or \textit{invariant}.
+		 	
+		\subsection{Potential Outcomes}
+		
+			Just seem like regime indicators to me. 
+			
+		\subsection{Causal Effects}
+		
+			Are formalized by
+			
+			\[ p(y;\sigma= a) \neq p(y;\sigma = b) \]
+		 
+		 	For different regimes $a, b$ which change some $X$. 
+		 	
+		 	There is also \textbf{Average Causal Effect}:
+		 	
+			\[ E(Y;\text{do}(X = \tilde{x})) - E(Y;\text{do}(X = x')) \]
+		 
+		 	There are also individual casual effects and their interpretation is unclear to me. They are also cross-world, so. This is all cross-world actually.
+		 	
+		\subsection{Intervention Graphs}
+		
+			One way of going about it is just to add a regime node. The DAG is called an intervention DAG if the regime node is a source node (i.e. no incoming edges), the original DAG is a valid DAG (and We're just adding a regime node to the original valid DAG) and d-separation between regime node and any node in the DAG implies lack of causation - changes in regime node won't affect d-separated stuff. 
+			
+			Sidenote: \textbf{markov equivalence} of two DAGS is: suppose You have some DAG. Any old DAG. Now You can write down the conditional independence equations for that DAG, basically d-separation. Now switch the directions of the edges around a bit. If You switched the edge directions but the conditional independence equation is the same, then You have two DAGs which are markov equivalent.
+			
+		\subsection{Causal DAGs}
+		
+			Just change the interpretation of edges to be causal. So d-separated things are causally independent, and do-calculus forces probabilities to be one. 
+			
+			Faithfulness means that 
+		 
+		 
+		 
+		 
+\newpage
+\section{Exercises}
+	
+	\subsection{Series 1}
+	
+		\textbf{Q1}
+		
+			a) Maybe. Can't do a causal association since maybe choosing to do screening explains away breast cancer due to healthy habits/economic status etc.
+			
+			b) Due to randomly chosen groups. 
+	
+\end{document} 
