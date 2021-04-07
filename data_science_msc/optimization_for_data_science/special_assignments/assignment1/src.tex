@@ -1533,6 +1533,8 @@
 	
 	Furthermore, by exercise set 1, exercise 8, We know that log-sum-exp is a convex function. Lastly, by lemma 1.18 part ii), the composition of a convex function and a linear function is itself convex. Therefore the composition of of our linear function and log-sum-exp is also convex.
 	
+\end{proof}
+	
 \textbf{Assignment 6.} \textit{Prove that f is smooth with parameter $\|A\|$.}
 
 \begin{proof}
@@ -1544,12 +1546,32 @@
 	
 	So We need a derivative of log-sum-exp. If We can show that the spectral norm of it is equal to the spectral norm of $A$, then We're good. 
 	
-	Let $w = \sum^m_{i=1}\exp\big(K\big( \mathbf{a}_i^\top\mathbf{x} - \mathbf{b}_i\big) \big)$
+	Let $w = \sum^m_{j=1}\exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big)\;v_j=\exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big)$
 	
 	\begin{align}
-		&\frac{d}{d\mathbf{x}_i}  \frac{1}{K}\log\bigg( \sum^m_{i=1}\exp\big(K\big( \mathbf{a}_i^\top\mathbf{x} - \mathbf{b}_i\big) \big) \bigg)\\
-		&= \frac{1}{K} \frac{1}{w}\frac{d}{d\mathbf{x}_i} \sum^m_{i=1}\exp\big(K\big( \mathbf{a}_i^\top\mathbf{x} - \mathbf{b}_i\big) \big)
+		&\frac{d}{d\mathbf{x}_i}  \frac{1}{K}\log\bigg( \sum^m_{j=1}\exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big) \bigg)\\
+		&= \frac{1}{K} \frac{1}{w}\frac{d}{d\mathbf{x}_i} \sum^m_{j=1}\exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big)\\
+		&= \frac{1}{K} \frac{1}{w} \sum^m_{j=1} \frac{d}{d\mathbf{x}_i} \exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big)\\
+		&= \frac{1}{K} \frac{1}{w} \sum^m_{j=1}  \exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big)\frac{d}{d\mathbf{x}_i} K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big)\\
+	&= \frac{1}{K} \frac{1}{w} \sum^m_{j=1} v_j \frac{d}{d\mathbf{x}_i}K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big)\\
+	&= \frac{1}{K} \frac{1}{w} \sum^m_{j=1} v_j K\mathbf{a}_{j,i}\\
+	&=  \frac{1}{w} \sum^m_{j=1} v_j \mathbf{a}_{j,i}\\
+	&=  \frac{1}{\sum^m_{j=1} v_j} \sum^m_{j=1} v_j \mathbf{a}_{j,i}
 	\end{align}
+	
+	Well there it is, as far as I can tell. We essentially sum over column $i$ such that the summation overall well it's weird. It's not just summation, You scaled it. 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 \end{proof}
 	
 	
@@ -1561,9 +1583,6 @@
 	
 	
 	
-	
-\end{proof}
-
 
 
 
