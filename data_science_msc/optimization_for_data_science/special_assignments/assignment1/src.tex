@@ -1561,18 +1561,72 @@
 	
 	Well there it is, as far as I can tell. We essentially sum over column $i$ such that the summation overall well it's weird. It's not just summation, You scaled it. 
 	
+	Well I think that that is the correct derivative. 
+	
+	We can probably write it in terms of $A$ - We are summing over columns of $A$.
+	
+	Let $\mathbf{v}^\mathbf{x}$ be a vector such that 
+	
+	\begin{align}
+		\mathbf{v}^\mathbf{x}_j &= \frac{\exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big)}{\sum^m_{j=1}\exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big)}\\
+		\mathbf{v}^\mathbf{x}_j &= \frac{v_j}{w} 
+	\end{align}
+	
+	Let's explain this notation a little bit - the $\mathbf{x}$ in $\mathbf{v}^\mathbf{x}$ specifies the underlying vector used in calculations of $\mathbf{v}$. So, for example, as opposed $\mathbf{v}^\mathbf{x}$ defined above, $\mathbf{v}^\mathbf{y}$ would look like:
+	
+	\begin{align}
+		\mathbf{v}^\mathbf{y}_j &= \frac{\exp\big(K\big( \mathbf{a}_j^\top\mathbf{y} - \mathbf{b}_j\big) \big)}{\sum^m_{j=1}\exp\big(K\big( \mathbf{a}_j^\top\mathbf{y} - \mathbf{b}_j\big) \big)}
+	\end{align}
+	
+	Anyway the derivative can then be written as:
+	
+	\begin{align}
+		\nabla f(\mathbf{x}) = A^\top\mathbf{v}^\mathbf{x}
+	\end{align}
+	
+	Cool so then
+	
+	\begin{align}
+		\|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \| &= \|A^\top\mathbf{v}^\mathbf{x} - A^\top\mathbf{v}^\mathbf{y} \|\\
+		&= \|A^\top(\mathbf{v}^\mathbf{x} - \mathbf{v}^\mathbf{y}) \|\\
+		&= \|A^\top\|(\mathbf{v}^\mathbf{x} - \mathbf{v}^\mathbf{y}) \|\\
+		&\le \|A^\top\|\cdot \|\mathbf{v}^\mathbf{x} - \mathbf{v}^\mathbf{y} \|\\
+		&\le \|A\|\cdot \|\mathbf{v}^\mathbf{x} - \mathbf{v}^\mathbf{y} \|	
+	\end{align}
+	
+	Now if We can show that
+	
+	\begin{align}
+		 \|\mathbf{v}^\mathbf{x} - \mathbf{v}^\mathbf{y} \|	\le \|\mathbf{x} - \mathbf{y}\|
+	\end{align}
+	
+	We're good. 
+	
+	\begin{align}
+		(\mathbf{v}^\mathbf{x} - \mathbf{v}^\mathbf{y})_i &= \mathbf{v}_i^\mathbf{x} - \mathbf{v}_i^\mathbf{y}\\
+		&=\frac{\exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big)}{\sum^m_{j=1}\exp\big(K\big( \mathbf{a}_j^\top\mathbf{x} - \mathbf{b}_j\big) \big)} - \frac{\exp\big(K\big( \mathbf{a}_j^\top\mathbf{y} - \mathbf{b}_j\big) \big)}{\sum^m_{j=1}\exp\big(K\big( \mathbf{a}_j^\top\mathbf{y} - \mathbf{b}_j\big) \big)}
+	\end{align}
+	
+	Okay so that approach is dead. We can even look at the second derivative and that is even more of a fucking nightmare than the first.
+	
+	Function composition I suppose. 
+	
+	Well logsumexp is 1-smooth for Euclidian norm.
+	
+	\url{https://math.stackexchange.com/questions/2418554/why-is-log-of-sum-of-exponentials-fx-log-left-sum-i-1n-e-x-i-right} 
 	
 	
+	Alright so We fucking need to do this by construction, otherwise it's fucked.
 	
+	A problem is that the input vector is being multiplied by $m$ different vectors, so any construction thing You might want to do is going to get a bit fucked. 
 	
+	Decomposing the problem is very tricky because everything is wrapped in this shitty log thing - no way to get into it. 
 	
-	
-	
-	
-	
-	
+	No idea.
 	
 \end{proof}
+
+\textbf{Asignment I would really rather like to cry. It's like some perpetual nightmare. Who the fuck thought this was acceptable. }
 	
 	
 	

@@ -1,0 +1,292 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\parindent}{0pt}
+
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+                     \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+                     =}
+
+\begin{document}
+
+
+\title{NLP assignment \#1}
+\author{Andrius Buinovskij - 18-940-270}
+\date{}
+
+\maketitle
+
+\textbf{Q1 b) i)}
+	
+	Well since all inputs are 1 and all weights are 1 then
+	
+	\begin{align}
+		\mathbf{s}^1_1 &= \sum^3_{i=1} \mathbf{x}_i\cdot \mathbf{w}^1_{i, 1} = 3\\
+		\mathbf{s}^1_2 &= \sum^3_{i=1} \mathbf{x}_i\cdot \mathbf{w}^1_{i, 2} = 3
+	\end{align}
+	
+	Where $\mathbf{s}^i_j$ is the sum input to the $j$'th neuron in the $i$'th layer, and $\mathbf{s}^i$ is a vector whose length is equal to the number of neurons in the $i$'th layer, with the input being the $0$'th layer. So $\mathbf{s}^1$ is of length 2 since $1$'st layer has 2 neurons. 
+	
+	Let $\mathbf{n}^i_j$ be the output of the $j$'th neuron in the $i$'th layer, then of course $\mathbf{n}^i$ is a vector of length equal to the number of neurons in the $i$'th layer:
+	
+	\begin{align}
+		n^i_j &= ReLU\big(\mathbf{s}^i_j\big)
+	\end{align}
+	
+	So in our case We get
+	
+	\begin{align}
+		\mathbf{n}^1_1 &= ReLU\big(\mathbf{s}^1_1\big) =  ReLU\big( 3 \big) = 3\\
+	\mathbf{n}^1_2 &= ReLU\big(\mathbf{s}^1_2\big) =  ReLU\big( 3 \big) = 3	
+	\end{align}
+	
+	Same steps in the next layer:
+	
+	\begin{align}
+		\mathbf{s}^2_1 = 3\cdot 1 + 3\cdot 1 = 6
+	\end{align}
+	
+	And now We pass this through a sigmoid for our output instead of a $ReLU$ so We get
+	
+	\begin{align}
+		out = \sigma\big(\mathbf{s}^2_1)\big) = \frac{1}{1+e^{-6}} = 0.99752737684
+	\end{align}
+
+\textbf{Q1 b) ii)}
+
+	\begin{align}
+		\frac{d }{d \mathbf{w}^1_{j, k}} \mathbf{x}_i\cdot\mathbf{w}^1_{j, k} = \mathbf{x}_i
+	\end{align}
+	
+	Since the inputs are all 1 this simplifies to 
+
+	\begin{align}
+		\frac{d }{d \mathbf{w}^1_{j, k}} \mathbf{x}_i\cdot\mathbf{w}^1_{j, k} = \frac{d }{d \mathbf{w}^1_{j, k}} 1\cdot\mathbf{w}^1_{j, k} = 1
+	\end{align}
+	
+	Now for the second layer:
+	
+	\begin{align}
+		\frac{d}{d \mathbf{w}^2_{1, 1}} f = \frac{d}{d \mathbf{w}^2_{1, 1}} \mathbf{n}_{1, 1}\cdot\mathbf{w}^2_{1, 1} = \frac{d}{d \mathbf{w}^2_{1, 1}} ReLU\big(\mathbf{s}_{1, 1}\big)\cdot\mathbf{w}^2_{1, 1} = ReLU\big(\mathbf{s}_{1, 1}\big)
+	\end{align}
+	
+	Since $ReLU\big(\mathbf{s}_{1, 1}\big)$ is just a constant w.r.t. $\mathbf{w}^2_{1, 1}$. In this case We simply get
+	
+	\begin{align}
+		\frac{d}{d \mathbf{w}^2_{1, 1}} f = ReLU\big(\mathbf{s}_{1, 1}\big) = 3
+	\end{align}
+	
+	And likewise for the other weight.
+	
+\textbf{Q1 b) iii)}
+
+	\begin{align}
+		L_{BCE} &= -(y\log(\hat{y}) + (1-y)\log(1-\hat{y}))\\
+		&= -(0\cdot\log(0.99752737684) + (1-0)\log(1-0.99752737684))\\
+		&= -(\log(0.00247262316))\\
+		&= 2.60684206722
+	\end{align}
+	
+\textbf{redone}
+
+	Alright let's just roll all of these questions into one and do an iteration of backprop.
+	
+	The forward pass is trivial.
+	
+	Let $\mathbf{x}^{l}_i$ be the output of the $i$'th neuron in the $l$'th layer. 
+	
+	Let $\mathbf{w}^l_{i, j}$ be the weight belonging to $j$'th neuron multiplying the $i$'th input in the $l$'th layer.  $\mathbf{w}^l_{.,j}$ is then simply the weight vector associated with the $j$'th neuron in the $l$'th layer.
+	
+	Let $\mathbf{s}^l_{j}$ be $(\mathbf{x}^{l-1})^\top\mathbf{w}^l_{.,j}$, the weighted sum of inputs to the $j$'th neuron in the $l$'th layer.
+	
+	We can then say that $x^l_i = \sigma(\mathbf{s}^l_j)$, where $\sigma$ is the nonlinearity of choice.
+	
+	Then define
+	
+	\begin{align}
+		\delta^l_j = \frac{\partial L_{BCE}}{\partial \mathbf{s}^l_j}
+	\end{align}
+	
+	And finally 
+	
+	\begin{align}
+		\delta^{l-1}_j &= \sum^{d^l}_{i=1}\frac{\partial L_{BCE}}{\partial \mathbf{s}^l_i} \frac{\partial \mathbf{s}^l_i}{\partial \mathbf{x}^{l-1}_j}\frac{\partial \mathbf{x}^{l-1}_j}{\partial \mathbf{s}^{l-1}_j}\\
+		&= \sum^{d^l}_{i=1}  \delta^l_i \frac{\partial \mathbf{s}^l_i}{\partial \mathbf{x}^{l-1}_j}\frac{\partial \mathbf{x}^{l-1}_j}{\partial \mathbf{s}^{l-1}_j}
+	\end{align}
+	
+	Where $d^l$ is the number of neurons in layer $l$. So now We have a recursive definition which uses dynamic programming. This could be further nuanced by expressing things in matrix notation, but it's good enough for present purposes.
+	
+	 Here is also a picture since just looking at symbols is a nightmare.
+	 
+	 So now
+	 
+	 \begin{align}
+	 	\frac{\partial L_{BCE}}{\partial \mathbf{s}^2_1} = \frac{\partial L_{BCE}}{\partial \hat{y}} \frac{\partial \hat{y}}{\mathbf{s}^2_1} 
+	 \end{align}
+	 
+	 \begin{align}
+	 	\frac{\partial L_{BCE}}{\partial \hat{y}} &= \frac{\partial }{\partial \hat{y}}-\big(y\log(\hat{y}) + (1-y)\log(1-\hat{y}) \big)\\
+	 	&=-y\frac{1}{\hat{y}}  - (1-y)\frac{\partial }{\partial \hat{y}} \log(1-\hat{y}) \\
+	 	&=-y\frac{1}{\hat{y}}  - (1-y)\frac{-1}{1-\hat{y}}\\
+	 	&=-y\frac{1}{\hat{y}}  + \frac{1-y}{1-\hat{y}}
+	 \end{align}
+	 
+	 \begin{align}
+	 	\frac{\partial \hat{y}}{\mathbf{s}^2_1}  &= \frac{\partial }{\mathbf{s}^2_1} \sigma(\mathbf{s}^2_1)\\
+	 	&= \sigma(\mathbf{s}^2_1)\cdot(1-\sigma(\mathbf{s}^2_1))
+	 \end{align}
+	 
+	 So then We have 
+	
+	\begin{align}
+	 	\delta^2_1 = \frac{\partial L_{BCE}}{\partial \mathbf{s}^2_1} &= \frac{\partial L_{BCE}}{\partial \hat{y}} \frac{\partial \hat{y}}{\mathbf{s}^2_1} \\
+	 	&= \bigg( -y\frac{1}{\hat{y}}  + \frac{1-y}{1-\hat{y}} \bigg) \bigg( \sigma(\mathbf{s}^2_1)\cdot(1-\sigma(\mathbf{s}^2_1)) \bigg)
+	 \end{align}
+	 
+	 Alright. We only have one more of these to figure out:
+	 
+	 \begin{align}
+	 	\delta^1_j &= \sum^{d^2}_{i=1}  \delta^2_i \frac{\partial \mathbf{s}^2_i}{\partial \mathbf{x}^{1}_j}\frac{\partial \mathbf{x}^{1}_j}{\partial \mathbf{s}^{1}_j}
+	 \end{align}
+	 
+	 
+	 But since $d^2 = 1$, i.e. there is only one neuron in the output layer, We have
+
+	\begin{align}
+	 	\delta^1_j &= \sum^{d^2}_{i=1}  \delta^2_i \frac{\partial \mathbf{s}^2_i}{\partial \mathbf{x}^{1}_j}\frac{\partial \mathbf{x}^{1}_j}{\partial \mathbf{s}^{1}_j}\\
+	 	&=   \delta^2_1 \frac{\partial \mathbf{s}^2_1}{\partial \mathbf{x}^{1}_j}\frac{\partial \mathbf{x}^{1}_j}{\partial \mathbf{s}^{1}_j}\\
+	 	&=   \delta^2_1 \mathbf{w}^2_j \sigma(\mathbf{s}^{1}_j)(1-\sigma(\mathbf{s}^{1}_j))
+	 \end{align}
+	 
+	 Now for the gradient update We will of course need
+	 
+	 \begin{align}
+	 	\frac{\partial L_{BCE}}{\partial \mathbf{w}^l_{i, j}}
+	 \end{align}
+	 
+	 But this can be easily derived since
+	 
+	 \begin{align}
+	 	\frac{\partial L_{BCE}}{\partial \mathbf{w}^l_{i, j}} &= \frac{\partial L_{BCE}}{\partial \mathbf{s}^l_j}\frac{\partial \mathbf{s}^l_j}{\partial \mathbf{w}^l_{i, j}}\\
+	 	&= \delta^l_j\mathbf{x}^{l-1}_i
+	 \end{align}
+	 
+	 Now We do a forward pass and We know that $\mathbf{s}^1_i = 3$ and $\mathbf{s}^2_1 = 6$. Plugging in values We then get
+
+	\begin{align}
+	 	\delta^2_1 &= \bigg( -y\frac{1}{\hat{y}}  + \frac{1-y}{1-\hat{y}} \bigg) \bigg( \sigma(\mathbf{s}^2_1)\cdot(1-\sigma(\mathbf{s}^2_1)) \bigg)\\
+	 	&= \bigg( \frac{1}{1-0.99752737684} \bigg) \bigg( \sigma(6)\cdot(1-\sigma(6)) \bigg)\\
+	 	&= \bigg( \frac{1}{1-0.99752737684} \bigg) \bigg( 0.99752737684\cdot(1-0.99752737684) \bigg)\\
+	 	&= 404.428792942\cdot 0.00246650929\\
+	 	&= 0.99752737493
+	 \end{align}
+	 
+	 Similarly We have
+	 
+	 \begin{align}
+	 	\delta^1_j &=   \delta^2_1 \mathbf{w}^2_j \sigma(\mathbf{s}^{1}_j)(1-\sigma(\mathbf{s}^{1}_j))\\
+	 	\delta^1_1 &=   \delta^2_1 \mathbf{w}^2_1 \sigma(\mathbf{s}^{1}_1)(1-\sigma(\mathbf{s}^{1}_1))\\
+	 	&=   0.997527374931\cdot  \sigma(3)(1-\sigma(3))\\
+	 	&=   0.997527374931\cdot  0.95257412682 \cdot 0.04742587317\\
+	 	&= 0.04506495478
+	 \end{align}
+	 
+	 $\delta^1_2$ is equal to $\delta^1_1$. 
+	 
+	 Now that We have the deltas We can use
+
+	\begin{align}
+	 	\frac{\partial L_{BCE}}{\partial \mathbf{w}^l_{i, j}} &= \delta^l_j\mathbf{x}^{l-1}_i
+	 \end{align}
+	 
+	 For weights in the first layer this means
+
+	\begin{align}
+	 	\frac{\partial L_{BCE}}{\partial \mathbf{w}^1_{i, j}} &= \delta^1_j\mathbf{x}^{0}_i\\
+	 	&= 0.04506495478\cdot 1\\
+	 	&= 0.04506495478
+	 \end{align}
+	 
+	 Where the 0'th layer is the input layer. 
+
+	\begin{align}
+	 	\frac{\partial L_{BCE}}{\partial \mathbf{w}^2_{i, j}} &= \delta^2_j\mathbf{x}^{1}_i\\
+	 	&= 0.99752737493\cdot 3\\
+	 	&= 2.99258212479
+	 \end{align}
+	 
+	 All that is left is to perform a step for each weight. All weights in the first layer simplify to 
+	 
+	 \begin{align}
+	 	w^1_{i, j} &= 1 - 0.1\cdot 0.04506495478\\
+	 	&= 0.99549350452
+	 \end{align}
+	 
+	 \textbf{Sidenote}
+	 
+	 So when actually implementing this, for the next assignemnt, We get 
+
+	\begin{align}
+	 	\delta^2_1 = \frac{\partial L_{BCE}}{\partial \mathbf{s}^2_1} &= \frac{\partial L_{BCE}}{\partial \hat{y}} \frac{\partial \hat{y}}{\mathbf{s}^2_1} \\
+	 	&= \bigg( -y\frac{1}{\hat{y}}  + \frac{1-y}{1-\hat{y}} \bigg) \bigg( \sigma(\mathbf{s}^2_1)\cdot(1-\sigma(\mathbf{s}^2_1)) \bigg)\\
+	 	&= \bigg( -y\frac{1}{\hat{y}}  + \frac{1-y}{1-\hat{y}} \bigg) \bigg(\hat{y}\cdot(1-\hat{y}) \bigg)\\
+	 	&=  - \hat{y}\cdot(1-\hat{y})  \cdot \frac{y}{\hat{y}}  + \hat{y}\cdot(1-\hat{y}) \cdot \frac{1-y}{1-\hat{y}} \\
+	 	&=  - (1-\hat{y})  \cdot y + \hat{y} \cdot (1-y)
+	 \end{align}
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+\end{document} 

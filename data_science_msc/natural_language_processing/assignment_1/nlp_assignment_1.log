@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.2.22)  8 APR 2021 08:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.2.22)  20 APR 2021 08:53
 entering extended mode
-**./src.tex
-(src.tex
+**./nlp_assignment_1.tex
+(nlp_assignment_1.tex
 LaTeX2e <2020-10-01> patch level 4
 L3 programming layer <2021-02-18> xparse <2020-03-03>
 (C:\Users\abom\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
@@ -423,8 +423,8 @@ ex.def
 File: l3backend-pdftex.def 2021-02-18 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count291
 \l__pdf_internal_box=\box60
-) (src.aux)
-\openout1 = `src.aux'.
+) (nlp_assignment_1.aux)
+\openout1 = `nlp_assignment_1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
 LaTeX Font Info:    ... okay on input line 50.
@@ -483,9 +483,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 50.
 LaTeX Info: Redefining \pageref on input line 50.
 LaTeX Info: Redefining \nameref on input line 50.
- (src.out) (src.out)
+ (nlp_assignment_1.out) (nlp_assignment_1.out)
 \@outlinefile=\write3
-\openout3 = `src.out'.
+\openout3 = `nlp_assignment_1.out'.
 
 LaTeX Font Info:    Trying to load font information for U+msa on input line 58.
 
@@ -502,42 +502,35 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 [1
 
 {C:/Users/abom/AppData/Local/MiKTeX/pdftex/config/pdftex.map}] [2] [3]
-[4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19]
-[20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34]
-[35] [36] [37] [38] (src.aux)
-Package rerunfilecheck Info: File `src.out' has not changed.
+[4] [5] (nlp_assignment_1.aux)
+Package rerunfilecheck Info: File `nlp_assignment_1.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 12460 strings out of 479334
- 178216 string characters out of 2857559
- 524081 words of memory out of 3000000
- 29197 multiletter control sequences out of 15000+200000
- 416462 words of font info for 75 fonts, out of 3000000 for 9000
+ 11994 strings out of 479334
+ 172075 string characters out of 2857559
+ 513116 words of memory out of 3000000
+ 29192 multiletter control sequences out of 15000+200000
+ 415599 words of font info for 72 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 71i,13n,74p,477b,456s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 71i,12n,74p,318b,349s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
 mbx10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmbx7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmex10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/amsfonts/cm/cmmi10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/abom/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/abom/AppData/Local/Pro
-grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/abom/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/abom/App
-Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/a
-bom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/U
-sers/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb
-><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-sy10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmsy7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public
-/amsfonts/cm/cmti10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type
-1/public/amsfonts/cm/cmti7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fon
-ts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/abom/AppData/Local/Programs/Mi
-KTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on src.pdf (38 pages, 349739 bytes).
+nts/cm/cmex10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmmi10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/ty
+pe1/public/amsfonts/cm/cmmi5.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/abom/AppData/Local/Programs/M
+iKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/abom/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/abom/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/abom/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/ab
+om/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Us
+ers/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pf
+b><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
+msy7.pfb>
+Output written on nlp_assignment_1.pdf (5 pages, 146026 bytes).
 PDF statistics:
- 826 PDF objects out of 1000 (max. 8388607)
- 522 named destinations out of 1000 (max. 500000)
+ 146 PDF objects out of 1000 (max. 8388607)
+ 64 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
