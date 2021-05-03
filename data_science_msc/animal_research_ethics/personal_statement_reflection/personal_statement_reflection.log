@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.2.22)  3 MAY 2021 12:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.2.22)  28 APR 2021 13:11
 entering extended mode
-**./nlp_assignment_1.tex
-(nlp_assignment_1.tex
+**./personal_statement_reflection.tex
+(personal_statement_reflection.tex
 LaTeX2e <2020-10-01> patch level 4
 L3 programming layer <2021-02-18> xparse <2020-03-03>
 (C:\Users\abom\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
@@ -423,8 +423,8 @@ ex.def
 File: l3backend-pdftex.def 2021-02-18 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count291
 \l__pdf_internal_box=\box60
-) (nlp_assignment_1.aux)
-\openout1 = `nlp_assignment_1.aux'.
+) (personal_statement_reflection.aux)
+\openout1 = `personal_statement_reflection.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
 LaTeX Font Info:    ... okay on input line 50.
@@ -483,62 +483,40 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 50.
 LaTeX Info: Redefining \pageref on input line 50.
 LaTeX Info: Redefining \nameref on input line 50.
- (nlp_assignment_1.out) (nlp_assignment_1.out)
+ (personal_statement_reflection.out)
+(personal_statement_reflection.out)
 \@outlinefile=\write3
-\openout3 = `nlp_assignment_1.out'.
+\openout3 = `personal_statement_reflection.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 58.
+ [1
 
-
-(C:\Users\abom\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 58.
-
-
-(C:\Users\abom\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-[1
-
-{C:/Users/abom/AppData/Local/MiKTeX/pdftex/config/pdftex.map}] [2] [3]
-[4] [5] [6] [7] [8] [9] [10]
-Overfull \hbox (6.24942pt too wide) detected at line 491
-[]
+{C:/Users/abom/AppData/Local/MiKTeX/pdftex/config/pdftex.map}]
+Overfull \hbox (4.56865pt too wide) in paragraph at lines 107--108
+\OT1/cmr/m/it/10 According to your per-sonal stand-point, are the macaques to b
+e con-sid-ered morally?
  []
 
-[11] (nlp_assignment_1.aux)
-Package rerunfilecheck Info: File `nlp_assignment_1.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+[2] [3] (personal_statement_reflection.aux)
+Package rerunfilecheck Info: File `personal_statement_reflection.out' has not c
+hanged.
+(rerunfilecheck)             Checksum: 95D54384E90170C5067421AFC5A70A78;1314.
  ) 
 Here is how much of TeX's memory you used:
- 12042 strings out of 479334
- 172654 string characters out of 2857559
- 513118 words of memory out of 3000000
- 29193 multiletter control sequences out of 15000+200000
- 415945 words of font info for 73 fonts, out of 3000000 for 9000
+ 11871 strings out of 479334
+ 170757 string characters out of 2857559
+ 499198 words of memory out of 3000000
+ 29156 multiletter control sequences out of 15000+200000
+ 405294 words of font info for 33 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 71i,13n,74p,425b,349s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 71i,5n,74p,463b,342s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
 mbx10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmbx7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmex10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/amsfonts/cm/cmmi10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/abom/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/abom/AppData/Local/Pro
-grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/abom/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/abom/App
-Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/a
-bom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/U
-sers/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb
-><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-sy10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmsy5.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public
-/amsfonts/cm/cmsy7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/amsfonts/cm/cmti10.pfb>
-Output written on nlp_assignment_1.pdf (11 pages, 203675 bytes).
+nts/cm/cmbx12.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmr10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/cm/cmti10.pfb>
+Output written on personal_statement_reflection.pdf (3 pages, 74195 bytes).
 PDF statistics:
- 234 PDF objects out of 1000 (max. 8388607)
- 110 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 70 PDF objects out of 1000 (max. 8388607)
+ 12 named destinations out of 1000 (max. 500000)
+ 65 words of extra memory for PDF output out of 10000 (max. 10000000)
 

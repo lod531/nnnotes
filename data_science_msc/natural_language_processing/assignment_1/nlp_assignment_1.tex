@@ -273,15 +273,229 @@
 	 	&=  - \hat{y}\cdot(1-\hat{y})  \cdot \frac{y}{\hat{y}}  + \hat{y}\cdot(1-\hat{y}) \cdot \frac{1-y}{1-\hat{y}} \\
 	 	&=  - (1-\hat{y})  \cdot y + \hat{y} \cdot (1-y)
 	 \end{align}
+	 
+\newpage
 
+\textbf{Q4 a) i)}
 
+	We're going to use linearity of expectation.
+	
+	Let $I_i, i\in \{1\ldots |V|\}$ be the indicator variable for whether or not the word $i$ appears in Mary's sampling.
+	
+	Since draws are with replacement and the distribution is uniform, for a token \textit{not} to appear, all $n$ draws must have chosen another token. 
+	
+	The probability of not choosing token $i$ in a particular draw is of course $(|V|-1)/|V|$. The probability of not choosing token $i$ over $n$ samples is then
+	
+	\begin{align}
+		\bigg(\frac{|V|-1}{|V|}\bigg)^n
+	\end{align}
+	
+	However, We are interested in the opposite event - We want to know the probability of \textit{not} not choosing token $i$, which is given by
+	
+	\begin{align}
+		1 - \bigg(\frac{|V|-1}{|V|}\bigg)^n
+	\end{align}
+	
+	By linearity of expectation and the fact that the expected value of an indicator is simply the probability of it being 1, We get
+	
+	\begin{align}
+		E\bigg(\sum^{|V|}_{i=1} = I_i \bigg) = \sum^{|V|}_{i=1} E(I_i) =  \sum^{|V|}_{i=1} P(I_i = 1) = |V|\cdot \bigg( 1 - \bigg(\frac{|V|-1}{|V|}\bigg)^n\bigg)
+	\end{align}
+	
+\textbf{Q4 a) ii)}
 
+	Given $n$ draws, what is the probability that all the words will appear in the sample? 
+	
+	All of my attempts have failed, and a whole lot of searching leads me to conclude that the probability is:
+	
+	\begin{align}
+		\frac{|V|!}{|V|^n}S_2(n-1, |V|-1)
+	\end{align}
+	
+	Where $S_2(n-1, |V|-1)$ is the Stirling number of the second kind. 
+	
+\textbf{Q4 b) i)}
 
+	Alright, so, let $X$ be the number of samples before "work" and "hard" bigram appears.
+	
+	Let $ps$ (partial success) mean that the word "work" has been sampled. Then by law of total expectation We can say
+	
+	\begin{align}
+		E(X) = (1+E(X|ps))\cdot P(ps) + (1+E(X|ps'))\cdot P(ps')
+	\end{align}
+	
+	Where We the 1's in there come from the fact that a single sample has been taken.
+	
+	Now, given partial success We either fully succeed $(fs)$ or fail and go back to the beginning, so:
+	
+	\begin{align}
+		E(X|ps) &= (1+E(X|ps, fs))\cdot P(fs|ps) + (1+E(X|ps, fs'))\cdot P(fs'|ps)\\
+		&= (1)\cdot \frac{1}{|V|} + (1+E(X))\cdot \frac{|V|-1}{|V|}
+	\end{align}
+	
+	Where given full success, expected number of draws to get a success is zero.  Given a failure We're back to $E(X)$.
+	
+	Of course, given $ps'$, the compliment of partial success i.e. partial failure, $E(X|ps') = E(X)$.
+	
+	Putting it all together We get:
+	
+	\begin{align}
+		E(X) &= (1+E(X|ps))\cdot P(ps) + (1+E(X|ps'))\cdot P(ps')\\
+		&= \bigg(1+\frac{1}{|V|} + (1+E(X))\cdot \frac{|V|-1}{|V|}\bigg)\cdot \frac{1}{|V|} + (1+E(X))\cdot \frac{|V| - 1}{|V|}\\
+		&= \frac{1}{|V|}+\frac{1}{|V|^2} + (1+E(X))\cdot \frac{|V|-1}{|V|^2} + (1+E(X))\cdot \frac{|V|-1}{|V|}\\
+		&= \frac{1}{|V|}+\frac{1}{|V|^2} + \frac{|V|-1}{|V|^2} + \frac{(|V|-1)E(X)}{|V|^2} + \frac{|V|-1}{|V|}+\frac{E(X)(|V|-1)}{|V|}
+	\end{align}
+	
+	Now We just need to simplify this mess.
+	
+	\begin{align}
+		&E(X) = \frac{1}{|V|}+\frac{1}{|V|^2} + \frac{|V|-1}{|V|^2} + \frac{(|V|-1)E(X)}{|V|^2} + \frac{|V|-1}{|V|}+\frac{E(X)(|V|-1)}{|V|}\\
+		&E(X) - \frac{(|V|-1)E(X)}{|V|^2}-\frac{E(X)(|V|-1)}{|V|} = \frac{1}{|V|}+\frac{1}{|V|^2} + \frac{|V|-1}{|V|^2}  + \frac{|V|-1}{|V|}\\
+		&E(X)\bigg(1 - \frac{(|V|-1)}{|V|^2}-\frac{(|V|-1)}{|V|}\bigg) = \frac{1}{|V|}+\frac{1}{|V|^2} + \frac{|V|-1}{|V|^2}  + \frac{|V|-1}{|V|}\\
+		&E(X) = \frac{\frac{1}{|V|}+\frac{1}{|V|^2} + \frac{|V|-1}{|V|^2}  + \frac{|V|-1}{|V|}}{1 - \frac{(|V|-1)}{|V|^2}-\frac{(|V|-1)}{|V|}}
+	\end{align}
+	
+	Beautiful. If You plug $|V|=2$ in there You get 6, which is the well known result of expected number of tosses to get 2 heads in a row. 
+	
+\textbf{Q4 b) ii)}
 
+	Well, the probability of "work" not appearing in $n$ draws is
+	
+	\begin{align}
+		\bigg( \frac{|V|-1}{|V|}\bigg)^n
+	\end{align}
+	
+	And of course the probability of it appearing is
+	
+	\begin{align}
+		1 - \bigg( \frac{|V|-1}{|V|}\bigg)^n
+	\end{align}
+	
+	And Mary wants this probability to be above 0.95:
 
+	\begin{align}
+		1 - \bigg( \frac{|V|-1}{|V|}\bigg)^n &\ge 0.95\\
+		- \bigg( \frac{|V|-1}{|V|}\bigg)^n &\ge -0.05\\
+		\bigg( \frac{|V|-1}{|V|}\bigg)^n &\le 0.05\\
+		\log\bigg(\bigg( \frac{|V|-1}{|V|}\bigg)^n\bigg) &\le \log(0.05)\\
+		n\cdot\log\bigg( \frac{|V|-1}{|V|}\bigg) &\le \log(0.05)\\
+		n &\ge \frac{\log(0.05)}{\log\big( \frac{|V|-1}{|V|}\big)}\\
+	\end{align}
+	
+	Where the last sign flips since log of a quantity less than 1 is negative. 
 
+\textbf{Q4 c) i)}
 
+	The answer here is identical to the answer to question \textbf{b)i)}, by the fact that the tokens are all equally likely.
+	
+	
+\textbf{Q4 c) ii)}
 
+	Okay so We have
+	
+	\begin{align}
+		h^0_t = f(w_0x_{t-1} + w_1 x_t + w_2h^0_{t-1} + b_0)
+	\end{align}
+	
+	So, that's our first hidden state. $f$ is some arbitrary non-linearity (or maybe linearity, whatever, a function).
+	
+	$w_0$ multiplies previous input, $w_1$ multiplies current input, $w_2$ multiplies the previous hidden state and We have a bias term. 
+	
+	The output then is
+	
+	\begin{align}
+		y_t = g(w_3h^0_t + b_1)
+	\end{align}
+	
+	So $w_3$ is multiplying the hidden state, there's a bias  term and another function. 
+	
+	The goal is to output $x_{t-1}$ and $x_t$ are the same word.
+	
+	Okay so assume that  the two words are equal and the bias is 0:
+	
+	\begin{align}
+		h^0_t &= f(w_0x_{t-1} + w_1 x_t + w_2h^0_{t-1} + b_0)\\
+		&= f(w_0x_{t-1} + w_1 x_{t-1})\\
+		&= f(x_{t-1}(w_0+w_1))
+	\end{align}
+	
+	So clearly one way to go is to let $w_0$ be -1 and $w_1$ be 1, so that when they are added, We get zero in the case of equality. Then $f$ can just be like a check as to whether the input is 0, and if it is output 1, otherwise output 0.
+	
+	$g$ is then simply the identity function and $b_1$ is also 0.
+	
+	So, $w_0 = -1$, $w_1 = 1$, $w_2 = 0$, $w_3=1$, all biases are zero, $f$ is a boolean check for whether the input is $0$ and $g$ is the identity function.
+	
+\textbf{Q4 c) iii)}	
+
+	So We simply use the second hidden layer as a counter. $w_4, w_5=1$, $b_1, b_2 = 0$ and $g$ and $h$ are still the identity function, and $f$ is the boolean 0 check.	
+
+\textbf{Q4 c) iv)}		
+	
+	I think the non-uniform unigram language model has the greater probability of drawing two of the same token in a row. 
+	
+	This isn't a proof, but the reasoning is as follows: let $p_i$ be the probability of drawing the $i$'th token. Now suppose We alter the distribution such that $p_i' = p_i - x$. Now, We'll have to add that $x$ to some other $p_j$ to preserve a distribution, and since the sample are identical, sampling $p_j$ twice in a row will be more likely than if We had just left the probabilities alone.
+	
+	
+\newpage
+
+\textbf{Q5 a)}
+
+	Well first let's re-derive this mess.
+	
+	\begin{align}
+		\sum_{\mathbf{t}\in\mathcal{T}^N} \exp\bigg\{ \sum^N_{n=1} \text{score}\big( \langle t_{n-1}, t_n \rangle, \mathbf{w} \big) \bigg\}
+	\end{align}	
+	
+	So let's start with inside the bracket comes from
+	
+	\begin{align}
+		\text{score}\big(\mathbf{t}, \mathbf{w} \big) = \sum^N_{n=1} \text{score}\big( \langle t_{n-1}, t_n \rangle, \mathbf{w} \big)
+	\end{align}
+	
+	So this is our simplifying assumption, and I suppose it's also what makes this a "Conditional Random Field". $\mathbf{t}$ stands for "tag" and it's the, well, tagging of the word sequence $\mathbf{w}$. So We're saying that the score for  the tag does not have to be calculated all in one go, but rather can be done in parts, where each part only depends on it's predecessor. Aight. Markov yay.
+	
+	$N$ is the length of the sentence by the way, so the length of both $\mathbf{t}$ and $\mathbf{w}$. 
+	
+	$\mathcal{T}$ is the set of all possible tags for any particular word. Since there are $N$ words, the total number of possible tags for $\mathbf{w}$ is then $\mathcal{T}^N$.
+	
+	So then the expression is simply calculating the normalizing constant, since it's summing over all possible tags $\mathbf{t}\in\mathcal{T}^N$.
+	
+	So, up next We get
+	
+	\begin{align}
+		&\sum_{\mathbf{t}\in\mathcal{T}^N} \exp\bigg\{ \sum^N_{n=1} \text{score}\big( \langle t_{n-1}, t_n \rangle, \mathbf{w} \big) \bigg\}\\
+		&= \sum_{\mathbf{t}_{1:n}\in\mathcal{T}^N} \prod^N_{n=1} \exp \big\{ \text{score}(\langle \mathbf{t}_{n-1}, \mathbf{t}_n \rangle, \mathbf{w}) \big\}
+	\end{align}	
+	
+	Okay so what have We done here. For one, $\mathbf{t}$ now has a subscript. Sure.
+	
+	We've converted the inner sum to a product, which is fine - before We were taking the exponent of a sum, but product of a bunch of exponents will sum the exponents so no worries there. We then still sum over every possible tag. Sure. 
+	
+	\begin{align}
+		&\sum_{\mathbf{t}\in\mathcal{T}^N} \exp\bigg\{ \sum^N_{n=1} \text{score}\big( \langle t_{n-1}, t_n \rangle, \mathbf{w} \big) \bigg\}\\
+		&= \sum_{\mathbf{t}_{1:n}\in\mathcal{T}^N} \prod^N_{n=1} \exp \big\{ \text{score}(\langle \mathbf{t}_{n-1}, \mathbf{t}_n \rangle, \mathbf{w}) \big\}\\
+		&= \sum_{\mathbf{t}_{1:N-1}\in\mathcal{T}^{N-1}} \sum_{t_N\in \mathcal{T}} \prod^N_{n=1} \exp \big\{ \text{score}(\langle \mathbf{t}_{n-1}, \mathbf{t}_n \rangle, \mathbf{w}) \big\}
+	\end{align}	
+	
+	So, the first change is that the subscript for $\mathbf{t}$ now goes to $N-1$. So We're just taking out the last tag in the sequence of tags $\mathbf{t}_N$.
+	
+	Since that last tag could be anything, We sum over all the possible tags, so $t_N\in\mathcal{T}$. There are $|\mathcal{T}|$ choices.
+	
+	I mean really You could rewrite the first sum as $N$ sums each over $|\mathcal{T}|$ terms each. So We're just splitting one out. No worries.
+	
+	\begin{align}
+		&\sum_{\mathbf{t}\in\mathcal{T}^N} \exp\bigg\{ \sum^N_{n=1} \text{score}\big( \langle t_{n-1}, t_n \rangle, \mathbf{w} \big) \bigg\}\\
+		&= \sum_{\mathbf{t}_{1:n}\in\mathcal{T}^N} \prod^N_{n=1} \exp \big\{ \text{score}(\langle \mathbf{t}_{n-1}, \mathbf{t}_n \rangle, \mathbf{w}) \big\}\\
+		&= \sum_{\mathbf{t}_{1:N-1}\in\mathcal{T}^{N-1}} \sum_{t_N\in \mathcal{T}} \prod^N_{n=1} \exp \big\{ \text{score}(\langle \mathbf{t}_{n-1}, \mathbf{t}_n \rangle, \mathbf{w}) \big\}\\
+		&= \sum_{\mathbf{t}_{1:N-1}\in\mathcal{T}^{N-1}} \prod^{N-1}_{n=1} \exp \big\{ \text{score}(\langle \mathbf{t}_{n-1}, \mathbf{t}_n \rangle, \mathbf{w}) \big\} \times \sum_{t_N\in\mathcal{T}} \exp \big\{ \text{score}(\langle \mathbf{t}_{N-1}, \mathbf{t}_N \rangle, \mathbf{w}) \big\}
+	\end{align}	
+	
+	Okay so if I had to explain this in words, how would I do it?
+	
+	Well, everything hinges on two parts - the first being that the score can be decomposed into partial computations. If there is no substructure, no simplification is possible. 
+	
+	The second I suppose is the distributative property I suppose. The key bit is that You can take stuff out of the product and sum it, and if You take the product of the stuff and the sum it all still works. Or rather, You have some operator $B$. $B$ is iterating over all possible versions of the tags. Then You also have some operator $A$, and You can take stuff out of $B$, combine it with $A$ and take output of $A$ and stick it back into $B$ and it all still works. Now You're reducing the exponential number of things You had to deal with. Sure.
+	
 	
 	
 	
