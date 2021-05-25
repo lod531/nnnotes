@@ -1,0 +1,217 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{tikz}
+
+\newcommand{\shrug}[1][]{%
+\begin{tikzpicture}[baseline,x=0.8\ht\strutbox,y=0.8\ht\strutbox,line width=0.125ex,#1]
+\def\arm{(-2.5,0.95) to (-2,0.95) (-1.9,1) to (-1.5,0) (-1.35,0) to (-0.8,0)};
+\draw \arm;
+\draw[xscale=-1] \arm;
+\def\headpart{(0.6,0) arc[start angle=-40, end angle=40,x radius=0.6,y radius=0.8]};
+\draw \headpart;
+\draw[xscale=-1] \headpart;
+\def\eye{(-0.075,0.15) .. controls (0.02,0) .. (0.075,-0.15)};
+\draw[shift={(-0.3,0.8)}] \eye;
+\draw[shift={(0,0.85)}] \eye;
+% draw mouth
+\draw (-0.1,0.2) to [out=15,in=-100] (0.4,0.95); 
+\end{tikzpicture}}
+
+
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\parindent}{0pt}
+
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+                     \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+                     =}
+
+\usepackage[]{algorithm2e}
+
+\begin{document}
+
+
+\title{Recursive Optimization}
+\author{Andrius Buinovskij - 18-940-270}
+\date{}
+
+\maketitle
+
+\section{Kalman Filter}
+
+	Is modelled after Bayesian tracking. The main difference is that the state is now a continuous random variable.
+	
+	\subsection{Model}
+	
+		Behold 
+		
+		\begin{align}
+			x(k) &= A(k-1)x(k-1) + u(k-1) + v(k-1)\\
+			z(k) &= H(k)x(k) + w(k)
+		\end{align}
+		
+		So everything is nice and linear, and the only change is  that We've also added $u(k-1)$ in in this time, it's the user input. 
+		
+		Well, the other real change is that the state $x(k)$ is now continuous, so
+		
+		\begin{align}
+			p(x(k)|z(1:k-1)) &= \int_{\lambda\in\mathcal{X}} p(x(k)|\lambda,z(1:k-1)) p(\lambda|z(1:k-1) d\lambda\\
+			&= \int_{\lambda\in\mathcal{X}} p(x(k)|\lambda) p(\lambda|z(1:k-1) d\lambda\label{prior}
+		\end{align}
+		
+		So that's the prior update and then the measurement update is
+		
+		\begin{align}
+			p(x(k)|z(1:k) = \frac{p(z(k)|x(k)\cdot p(\bar{x}(k)|\bar{z}(1:k-1))}{\int_{\lambda\in\mathcal{X}} p(z(k)|\lambda) \cdot p(\lambda|\bar{z}(1:k-1))}
+		\end{align}
+	
+		where $b$ is the prior.
+	
+		Cool. 
+	
+		But We need to simplify this or it'll be computationally infeasible.
+	
+	\subsection{Auxiliary variables}
+	
+		\begin{align}
+			x_m(0) &= x(0)\\
+			x_p(k) &= A(k-1)x_m(k-1) + u(k-1) + v(k-1)\\
+			z_m(k) &= H(k)x_p(k) + w(k)
+		\end{align} 
+		
+		Cool. We have one more piece That We need to define, and We'll do so through, well, a definition:
+		
+		\begin{align}
+			p_{x_m(k)}(\xi) = p_{x_p(k)|z_m(k)}(\xi|\bar{z}(k))
+		\end{align}
+		
+		Where $x_m$ is supposed to represent the probability for state $x(k)$ given $z(1:k)$ of course, $x_p$ is the variable representing prior update, and $z_m$ is the measurement update.
+		
+		Now We need to prove stuff about this parametrization. The claim is that
+		
+		\begin{align}
+			\text{Fact 1: }p_{x_p(k)}(\xi) &= p_{x(k)|1(1:k-1)}(\xi|\bar{z}(1:k-1))\;\forall\xi\\
+			\text{Fact 2: }p_{x_m(k)}(\xi) &= p_{x(k)|z(1:k)}(\xi|\bar{z}(1:k))\;\forall\xi.
+		\end{align}
+	
+		Cool
+		
+		\begin{proof}
+			The proof is by induction.
+			
+			Okay so at step 0 the first condition does not make sense, since no $k-1$'th measurement exists, but the second condition holds by initialization.
+			
+			So then We assume the second fact for $k-1$ and try to prove it for step $k$.
+			
+			Fact 1:
+			
+			By the total probability theorem:
+			
+			\begin{align}
+				p_{x_p(k)}(\xi) = \int p_{x_p(k)|x_m(k-1)}(\xi|\lambda)p_{x_m(k-1)}(\lambda) d\lambda.
+			\end{align}
+			
+			So We're just conditioning on the prior state here using law of total probability, no big deal.
+			
+			Cool. We want to show that $p_{x_p(k)}$, so, the prior at time $k$, is equal to $p_{x(k)|z(1:k-1)}$, which, recall, We worked out in eq.\ref{prior}.
+			
+			\begin{align}
+			p(x(k)|z(1:k-1)) &= \int_{\lambda\in\mathcal{X}} p_{x(k)|x(k-1)}(\bar{x}(k)|\lambda) p_{x(k-1)|z(1:k-1)}(\lambda|\bar{z}(1:k-1) d\lambda
+		\end{align}
+			
+			Okay. So We have definitions for both our variables, now We just need to show that they are the same.
+			
+			So, the first bit - by our inductive assumption We have that $p_{x_m(k-1)}(\lambda) = p_{x(k-1)|z(1:k-1}(\lambda|\bar{z}(1:k-1))$, so that term checks out.
+			
+			So now for that second equation. The idea is to express both terms, that is $p_{x_p(k)|x_m(k-1)}(\xi|\lambda)$ and $p_{x(k)|x(k-1)}(\bar{x}(k)|\lambda)$ in terms of the same variable, and then see what's up. 
+			
+			The variable both of those terms share is $v(k-1)$. 
+			
+			Recall that the formula for change of variables in the multivariate case is
+			
+			\[ f_Y = f_X \cdot \text{abs}\bigg(\text{det}\bigg(\frac{\partial y}{\partial x} \bigg)\bigg)\]			
+			Of course $\partial x/\partial y$ also works. 
+			
+			So first, let's write down the change of variables I guess
+			
+			\begin{align}
+				&x_p(k) = A(k-1)x_m(k-1) + u(k-1) + v(k-1)\\
+				&x_p(k) - u(k-1) - A(k-1)x_m(k-1) =  v(k-1)\\
+				&\xi - u(k-1) - A(k-1)\lambda =  v(k-1)\\
+			\end{align} 
+			
+			Aight. And if We take the derivative of that with respect to $\xi$, We just get one, and that's how We arrive at
+			
+			\begin{align}
+				p_{x_p(k) | x_m(k-1)}(\xi|\lambda) = p_{v(k-1)} (\xi - u(k-1) - A(k-1)\lambda )
+			\end{align}
+			
+			Identical line of reasoning for $p_{x(k)|x(k-1)}(\bar{x}(k)|\lambda)$ leads to an identical pdf, therefore We have inductively proven fact 1.
+			
+			The reasoning is identical for the second fact (see course notes).
+			
+			Up next is actually calculating $x_p(k)$ and $x_m(k)$, since at the moment it is not defined how one would reach these values.
+			
+			
+			
+			
+			
+			
+			
+			
+		\end{proof}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+\end{document} 

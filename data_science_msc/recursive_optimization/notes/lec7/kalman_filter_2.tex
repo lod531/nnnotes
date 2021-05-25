@@ -1,0 +1,232 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{tikz}
+
+\newcommand{\shrug}[1][]{%
+\begin{tikzpicture}[baseline,x=0.8\ht\strutbox,y=0.8\ht\strutbox,line width=0.125ex,#1]
+\def\arm{(-2.5,0.95) to (-2,0.95) (-1.9,1) to (-1.5,0) (-1.35,0) to (-0.8,0)};
+\draw \arm;
+\draw[xscale=-1] \arm;
+\def\headpart{(0.6,0) arc[start angle=-40, end angle=40,x radius=0.6,y radius=0.8]};
+\draw \headpart;
+\draw[xscale=-1] \headpart;
+\def\eye{(-0.075,0.15) .. controls (0.02,0) .. (0.075,-0.15)};
+\draw[shift={(-0.3,0.8)}] \eye;
+\draw[shift={(0,0.85)}] \eye;
+% draw mouth
+\draw (-0.1,0.2) to [out=15,in=-100] (0.4,0.95); 
+\end{tikzpicture}}
+
+
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\parindent}{0pt}
+
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+                     \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+                     =}
+
+\usepackage[]{algorithm2e}
+
+\begin{document}
+
+
+\title{Recursive Optimization}
+\author{Andrius Buinovskij - 18-940-270}
+\date{}
+
+\maketitle
+
+\section{Kalman Filter Continued}
+
+	Recall We have
+	
+	\begin{align}
+		x_m(0) &= x(0)\\
+		x_p(k) &= A(k-1)x_m(k-1) + v(k-1) + u(k-1)\\
+		z_m(k) &= H(k-1)x_p(k) + w(k)\\
+		p_{x_m(k)} &= p_{x(k)|z(1:k)}(\xi|\bar{z}(k))
+	\end{align}
+	
+	And of course We had 
+	
+	\begin{align}
+		p_{x_p(k)}(\xi) &= p_{x(k)|z(1:k-1)}(\xi|\bar{z}(1:k-1)\\
+		p_{x_m(k)}(\xi) = &= p_{x(k)|z(1:k)}(\xi|\bar{z}(1:k)
+	\end{align}
+	
+	Wee. 
+	
+	Next We show that $x_p(k)$ and $x_m(k)$ are Gaussian random variables (GRVs), and find ways to compute their variance and mean. If We can do that, We have everything We need.
+	
+	\subsection{Auxiliary variables are GRVs}
+	
+		The proofs are by induction.
+		
+		Immediately, $x_p(k)$ is a function of independent Gaussians. If You assume that the previous state $x_m(k-1)$ is GRV, You're good to go, and of course that's fine since our starting point by definition is a GRV.
+		
+		The second one's trickier - $x_m(k)$. We drop the $(k)$ for convenience. 
+		
+		So, by the definition and then Bayes' rule We have
+		
+		\begin{align}
+			p_{x_m} = p_{x_p|z_m}(\xi|\bar{z}) = \frac{p_{z_m|x_p}(\bar{z}|\xi)\cdot p_{x_p}(\xi)}{p_{z_m}(\bar{z})}
+		\end{align}
+	
+		So nothing crazy there - We have $p_{x_m}(\xi)$, then We use the definition of $x_m$ which is just conditioning $x_p$ on $z_m$, and then use Bayes' rule to condition.
+		
+		Now then, We can immediately ignore the normalizing constant - does not depend on $\xi$. 
+		
+		The numerator is a product of two GRVs:
+		
+		\begin{align}
+			p_{x_p}(\xi) \propto \exp\bigg( -\frac{1}{2}(\xi - \hat{x}_p)^\top P^{-1}_p (\xi - \hat{x}_p) \bigg)
+		\end{align}
+		
+		Where of course $\hat{x}_p$ is the mean of the random variable $x_p$n and $P_p$ is the variance matrix of $x_p$.
+		
+		Similarly:
+		
+		\begin{align}
+			p_{z_m|x_p}(\bar{z}|\xi) \propto \exp\bigg( -\frac{1}{2}(\bar{z} - H\xi)^\top R^{-1} (\bar{z}-H\xi) \bigg)
+		\end{align}
+		
+		Where $\bar{z}$ is the mean of $z_m|x_p$ which is just the mean of the noise term with an offset since $x_p$ becomes a constant.
+		
+		And then of course when You multiply these two exponential terms together You add the exponents yielding:
+		
+		\begin{align}
+			p_{x_m} \propto \exp\bigg( -\frac{1}{2}\bigg( (\bar{z} - H\xi)^\top R^{-1} (\bar{z}-H\xi) + (\xi - \hat{x}_p)^\top P^{-1}_p (\xi - \hat{x}_p) \bigg) \bigg)
+		\end{align}
+		
+		The $R$ there is the variance matrix of the measurement noise $w$.
+		
+		And since it's just some quadratic mess up in that exponent, there must exist a $\mu$ and $\Sigma$ such that
+		
+		\begin{align}
+			p_{x_m} \propto \exp\bigg( -\frac{1}{2} (\xi - \mu)^\top \Sigma^{-1} (\xi - \mu)\bigg)
+		\end{align}
+		
+		And so We're done.
+		
+		Note that I think in general We could have just said: GRVs are closed under conditioning, but I suppose this is more rigorous.
+		
+	\subsection{Mean and variance of auxiliary variables}
+	
+		First the mean:
+		
+		\begin{align}
+			\hat{x}_p(k) &= E(x_p(k)) = A(k-1)E(x_m(k-1) + u(k-1) + E(v(k-1))\\
+			&= A(k-1) \hat{x}_m(k-1) + u(k-1)
+		\end{align}
+		
+		So no worries there, and We can assume that We have the previous mean.
+		
+		\begin{align}
+			&P_p(k) = Var(x_p(k)) = E((x_p(k) - \hat{x}_p(k))(x_p(k) - \hat{x}_p(k))^\top)\\
+			&= E(x_p(k)(x_p(k) - \hat{x}_p(k))^\top - \hat{x}_p(k)(x_p(k) - \hat{x}_p(k))^\top=)
+		\end{align}
+		
+		Alright I am just going to skip  the expansion here and stick with the notes. The main takeaway is to keep an eye out for independent things that cancel, since for independent $A, B$ We have $E(AB) = E(A)E(B)$, and recall that $Var(X) = E(X^2) - E(X)^2$.
+		
+		After simplification You get
+		
+		\begin{align}
+			P_p(k) = A(k-1) P_m(k-1) A^\top(k-1) + Q(k-1)
+		\end{align}
+		
+		Where $P_m(k-1)$ is of course the variance of $x_m(k-1)$, and $Q$ is the variance of the process noise.
+		
+		Honestly just write these down, it's just linear algebra.
+		
+		The formulas for $x_m$ are:
+		
+		\begin{align}
+			\Sigma^{-1} = P_p^{-1} + H^\top R^{-1} H
+		\end{align}
+		
+		So $P_p$ is the variance of the prior, $H$ is the linear matrix for transforming state to observation, and $R$ is the measurement noise variance matrix.
+		
+		The mean is given by:
+		
+		\begin{align}
+			\mu = \hat{x}_p + \Sigma H^\top R^{-1}(\bar{z} - H\hat{x}_p)
+		\end{align}
+		
+		Where $\bar{z}$ is just the mean of the wonky conditional variable as mentioned before.
+		
+	\subsection{Summary}
+	
+		Alright! So
+		
+		First We initialize $\hat{x}_m(0) = x_0$ and $P_m(0) = P_0$.
+		
+		\textbf{Prior update/Prediction Step:}
+		
+		\begin{align}
+			\hat{x}_p(k) &= A(k-1)\hat{x}_m(k-1) + u(k)\\
+			P_p(k) &= A(k-1)P_m(k-1)A^\top(k-1) + Q(k-1)
+		\end{align}
+		
+		So We're just calculating relevant parameters here. Strictly speaking We don't need to calculate any actual values, there's no propagation happening in that We're going to receive new information. 
+		
+		\textbf{A posteriori update/Measurement update step:}
+		
+		\begin{align}
+			P_m(k) &= (P^{-1}_p(k) + H^\top(k)R^{-1}(k)H(k))^{-1}\\
+			\hat{x}_m(k) &= \hat{x}_p(k) + P_m(k)H^\top(k)R^{-1}(k)(\bar{z}(k) - H(k)\hat{x}_p(k))
+		\end{align}
+		
+		There are alternative formulations, \textit{Kalman Filter gain} and all that, that should probably just be written down on a piece of paper for the exam.
+		
+		
+		
+		
+		
+		
+		
+	
+\end{document} 

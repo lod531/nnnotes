@@ -14,6 +14,28 @@
 \usepackage{hyperref}\usepackage{xcolor}
 %\graphicspath{ {./img/} }
 
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{tikz}
+
+\newcommand{\shrug}[1][]{%
+\begin{tikzpicture}[baseline,x=0.8\ht\strutbox,y=0.8\ht\strutbox,line width=0.125ex,#1]
+\def\arm{(-2.5,0.95) to (-2,0.95) (-1.9,1) to (-1.5,0) (-1.35,0) to (-0.8,0)};
+\draw \arm;
+\draw[xscale=-1] \arm;
+\def\headpart{(0.6,0) arc[start angle=-40, end angle=40,x radius=0.6,y radius=0.8]};
+\draw \headpart;
+\draw[xscale=-1] \headpart;
+\def\eye{(-0.075,0.15) .. controls (0.02,0) .. (0.075,-0.15)};
+\draw[shift={(-0.3,0.8)}] \eye;
+\draw[shift={(0,0.85)}] \eye;
+% draw mouth
+\draw (-0.1,0.2) to [out=15,in=-100] (0.4,0.95); 
+\end{tikzpicture}}
+
+
+
 
 \counterwithin*{equation}{section}
 
@@ -47,6 +69,8 @@
                      \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
                      =}
 
+\usepackage[]{algorithm2e}
+
 \begin{document}
 
 
@@ -55,6 +79,10 @@
 \date{}
 
 \maketitle
+
+\textbf{Q1 a)}
+
+	\includegraphics[angle=90,width=\textwidth]{comp_graph}
 
 \textbf{Q1 b) i)}
 	
@@ -92,33 +120,11 @@
 		out = \sigma\big(\mathbf{s}^2_1)\big) = \frac{1}{1+e^{-6}} = 0.99752737684
 	\end{align}
 
-\textbf{Q1 b) ii)}
 
-	\begin{align}
-		\frac{d }{d \mathbf{w}^1_{j, k}} \mathbf{x}_i\cdot\mathbf{w}^1_{j, k} = \mathbf{x}_i
-	\end{align}
 	
-	Since the inputs are all 1 this simplifies to 
+\textbf{Q1 b) ii-iv)}
 
-	\begin{align}
-		\frac{d }{d \mathbf{w}^1_{j, k}} \mathbf{x}_i\cdot\mathbf{w}^1_{j, k} = \frac{d }{d \mathbf{w}^1_{j, k}} 1\cdot\mathbf{w}^1_{j, k} = 1
-	\end{align}
-	
-	Now for the second layer:
-	
-	\begin{align}
-		\frac{d}{d \mathbf{w}^2_{1, 1}} f = \frac{d}{d \mathbf{w}^2_{1, 1}} \mathbf{n}_{1, 1}\cdot\mathbf{w}^2_{1, 1} = \frac{d}{d \mathbf{w}^2_{1, 1}} ReLU\big(\mathbf{s}_{1, 1}\big)\cdot\mathbf{w}^2_{1, 1} = ReLU\big(\mathbf{s}_{1, 1}\big)
-	\end{align}
-	
-	Since $ReLU\big(\mathbf{s}_{1, 1}\big)$ is just a constant w.r.t. $\mathbf{w}^2_{1, 1}$. In this case We simply get
-	
-	\begin{align}
-		\frac{d}{d \mathbf{w}^2_{1, 1}} f = ReLU\big(\mathbf{s}_{1, 1}\big) = 3
-	\end{align}
-	
-	And likewise for the other weight.
-	
-\textbf{Q1 b) iii)}
+	Alright let's just roll all of these questions into one and do an iteration of backprop.
 
 	\begin{align}
 		L_{BCE} &= -(y\log(\hat{y}) + (1-y)\log(1-\hat{y}))\\
@@ -127,11 +133,11 @@
 		&= 2.60684206722
 	\end{align}
 	
-\textbf{redone}
-
-	Alright let's just roll all of these questions into one and do an iteration of backprop.
-	
 	The forward pass is trivial.
+	
+	Here is a pictorial view of the terms about to be defined:
+	
+	\includegraphics[angle=90,width=\textwidth]{notation_diagram}
 	
 	Let $\mathbf{x}^{l}_i$ be the output of the $i$'th neuron in the $l$'th layer. 
 	
@@ -156,7 +162,7 @@
 	
 	Where $d^l$ is the number of neurons in layer $l$. So now We have a recursive definition which uses dynamic programming. This could be further nuanced by expressing things in matrix notation, but it's good enough for present purposes.
 	
-	 Here is also a picture since just looking at symbols is a nightmare.
+	
 	 
 	 So now
 	 
@@ -262,9 +268,16 @@
 	 	&= 0.99549350452
 	 \end{align}
 	 
+	 and similarly
+	 
+	  \begin{align}
+	 	w^2_{i, j} &= 1 - 0.1\cdot 2.99258212479\\
+	 	&= 0.70074178752
+	 \end{align}
+	 
 	 \textbf{Sidenote}
 	 
-	 So when actually implementing this, for the next assignemnt, We get 
+	 So when actually using this in the implementation of Q2, We get the following simplification:
 
 	\begin{align}
 	 	\delta^2_1 = \frac{\partial L_{BCE}}{\partial \mathbf{s}^2_1} &= \frac{\partial L_{BCE}}{\partial \hat{y}} \frac{\partial \hat{y}}{\mathbf{s}^2_1} \\
@@ -273,6 +286,26 @@
 	 	&=  - \hat{y}\cdot(1-\hat{y})  \cdot \frac{y}{\hat{y}}  + \hat{y}\cdot(1-\hat{y}) \cdot \frac{1-y}{1-\hat{y}} \\
 	 	&=  - (1-\hat{y})  \cdot y + \hat{y} \cdot (1-y)
 	 \end{align}
+	 
+\textbf{Q4 c) )}
+
+	Due to the fact that the weights were initialized as a uniform constant, I think that the second neuron in the hidden layer is redundant.
+	
+	I don't think We can get rid of the hidden layer all together due to the ReLU - if We simply passed the output of the sum to the sigmoid, the sigmoid could receive negative terms, which is not possible under the current architecture. As it is, the input to the sigmoid is bounded to be above zero regardless of the weights.
+	
+	As it stands, the below is certainly more efficient and has fewer parameters:
+	 
+	 \includegraphics[angle=90,width=\textwidth]{redesign}
+	 
+	 The reason the $\times 2$ is there is to make the computation identical regardless of what the weights are initialized to, since as it stands the source of the redundancy is that the two neurons in the first hidden layer would output identical values.
+	 
+	 As for other benefits, numerical stability maybe?
+	 
+	 I don't think that this is the intended solution haha, but I don't think You can get rid of the hidden layer all together due to the ReLU as mentioned above, so \shrug
+	 
+	 
+	 
+	 
 	 
 \newpage
 
@@ -355,7 +388,7 @@
 		&E(X) = \frac{\frac{1}{|V|}+\frac{1}{|V|^2} + \frac{|V|-1}{|V|^2}  + \frac{|V|-1}{|V|}}{1 - \frac{(|V|-1)}{|V|^2}-\frac{(|V|-1)}{|V|}}
 	\end{align}
 	
-	Beautiful. If You plug $|V|=2$ in there You get 6, which is the well known result of expected number of tosses to get 2 heads in a row. 
+	Beautiful. If You plug $|V|=2$ in there You get 6, which is the well known result of expected number of tosses to get 2 heads in a row when tossing a fair coin.
 	
 \textbf{Q4 b) ii)}
 
@@ -409,7 +442,7 @@
 	
 	So $w_3$ is multiplying the hidden state, there's a bias  term and another function. 
 	
-	The goal is to output $x_{t-1}$ and $x_t$ are the same word.
+	The goal is to output 1 if $x_{t-1}$ and $x_t$ are the same word.
 	
 	Okay so assume that  the two words are equal and the bias is 0:
 	
@@ -438,7 +471,7 @@
 	
 \newpage
 
-\textbf{Q5 a)}
+\textbf{Q5 a) i)}
 
 	Well first let's re-derive this mess.
 	
@@ -452,7 +485,7 @@
 		\text{score}\big(\mathbf{t}, \mathbf{w} \big) = \sum^N_{n=1} \text{score}\big( \langle t_{n-1}, t_n \rangle, \mathbf{w} \big)
 	\end{align}
 	
-	So this is our simplifying assumption, and I suppose it's also what makes this a "Conditional Random Field". $\mathbf{t}$ stands for "tag" and it's the, well, tagging of the word sequence $\mathbf{w}$. So We're saying that the score for  the tag does not have to be calculated all in one go, but rather can be done in parts, where each part only depends on it's predecessor. Aight. Markov yay.
+	So this is our simplifying assumption, and I suppose it's also what makes this a "Conditional Random Field". $\mathbf{t}$ stands for "tag" and it's the, well, tagging of the word sequence $\mathbf{w}$. So We're saying that the score for  the tag does not have to be calculated all in one go, but rather can be done in parts, where each part only depends on it's predecessor. 
 	
 	$N$ is the length of the sentence by the way, so the length of both $\mathbf{t}$ and $\mathbf{w}$. 
 	
@@ -496,10 +529,106 @@
 	
 	The second I suppose is the distributative property I suppose. The key bit is that You can take stuff out of the product and sum it, and if You take the product of the stuff and the sum it all still works. Or rather, You have some operator $B$. $B$ is iterating over all possible versions of the tags. Then You also have some operator $A$, and You can take stuff out of $B$, combine it with $A$ and take output of $A$ and stick it back into $B$ and it all still works. Now You're reducing the exponential number of things You had to deal with. Sure.
 	
+	Another way of saying it is that $A$ has to give You the ability to group and it has to work with $B$ via distributativity.
 	
+	The viterbi algorithm just keeps track of max possible value for each node going backwards using multiplication and max. 
 	
+	Vertices $V$ are the tags, edges $E$ are pairs of tags, and the weight on each tag would be score($a, b$). These should really be directed in our case but it ought to work regardless.
 	
+	\begin{algorithm}[H]
+		 \KwData{Graph, source node}
+		 \KwResult{Shortest path from source to all nodes}
+		 prq = initialize priority queue with source node with distance 0\;
+		 //scores is a dictionary of tuples such that \\
+	 	//scores[a] = (b, c) where c is  the cumulative score of a\\
+	 	//and c is the node We took to arrive at a with score c\\
+		 scores = empty dictionary\;
+		 //initialize scores to include source node
+		 scores[source] = (source, 1)\;
+		 \While{prq not empty}{
+		 	//popMin retrieves and removes minimum entry in prq\\
+		 	//the minimum is decided by the associated score\\
+		 	//see prq.add below\\
+		 	currentNode = prq.popMax() \;
+		 	\For{neighbour in neighbours(currentNode)}{
+		 		//scores[neighbour](1) accesses the tuple for\\
+		 		//neighbour and (1) accesses the cumulative score\\
+		 		tempScore = scores[neighbour](1) + score(neighbour, currentNode)\\
+		 		\If{tempScore $>$ score[neighbour]}{
+		 			scores[neighbour] = (currentNode, tempScore)\\
+		 			//tempScore is what is used to rank the options\\
+		 			//and prq returns the neighbour entry \\
+		 			//when popMax is called\\
+		 			//loops will not enter prq due to increasing score\\
+		 			//and anyway the graph We care about is acyclic\\
+		 			prq.add(neighbour, tempScore)
+		 		} 
+		 	}
+		}
+		 \caption{Dijsktra's algorithm using a priority queue.}
+	\end{algorithm}
 	
+	To get the best path, one simply picks the node they would like to find the path from, find the node in the scores list, look at it's predecessor, then look at the predecessor of the predecessor and so on.
+	
+\textbf{Q5 a) ii)}
+
+	Well the algorithm will visit every node once, so it's $\mathcal{O}(|V|)$ for that. 
+	
+	It'll also examine every edge twice - let $a, b,$ be nodes, then it will look at the edge $(a, b)$ first and sometime later at the edge $(b, a)$, so $2|E|$ there or $\mathcal{O}(|E|)$. In those cases it will also consult the priority queue $prq$, and the complexity of that in the best case\footnote{With Fibonacci heaps.}  is $\log(|V|)$, so in total We get $\mathcal{O}(|E|\cdot\log(|V|) + |V|)$.
+	
+	In contrast, Viterbi visits each edge and node once, so We have $\mathcal{O}(|V| + |E|)$ time complexity. This obviously compares favourably with Dijsktra.
+	
+	Now, since Dijsktra explores more promising venues first, it is possible to construct examples where, despite being worse asymptotically, Dijsktra will beat Viterbi. 
+	
+	Likewise one could construct examples where Viterbi will beat Dijsktra. Neither is strictly better than the other, but Viterbi is better on average.
+	
+\textbf{Q5 b) i)}
+
+	Well first let's identify the semiring.
+	
+	$A$ are strictly positive real numbers of course.
+	
+	$\bigoplus$ is the $\max$ operation. 
+	
+	$\bigotimes$ is the $\times$ operation, i.e. just simple multiplication. This works due to the fact that We're exponentiating, so taking the product leads to the sum in the exponent We want.
+	
+	$\hat{0}, \hat{1}$ are 0 and 1 respectively.
+	
+	In semiring notation We then get an algorithm that looks basically nothing like the first version:
+	
+	\begin{algorithm}[H]
+		 \KwData{Graph $G$, score function, source node s}
+		 \KwResult{Shortest path from source to all nodes}
+		prq = initialize max queue with source node and score of 1\;
+		scores = dictionary initialized with source node and value of 1\;
+		 \caption{Dijsktra's algorithm using a priority queue in semiring notation.}
+		 \While{Q not empty}{
+			currentNode = prq.popMax()\;
+			\For{each neighbour of currentNode}{
+				tempScore = score[neighbour] $\bigoplus \big($scores(currentNode) $\bigotimes$ score(neighbour) $\big)$\;
+				\If{scores[neighbour](1) $<$ tempScore}{
+					//scores[neighbour]= parent, new best score\\
+					scores[neighbour] =(currentNode, tempScore)\;
+					//priority decided based on score obviously\\
+					prq.add(neighbour, tempScore)\;
+				}
+			}
+		 }
+	\end{algorithm}
+	
+	It's a little different since I don't like initializing the queue with the entire graph at the beginning. Instead, the queue is initialized with just the source and entries are added as You go. This could be dicey in cyclic settings, but We don't have to worry about cycles in our case. Don't think I'd use this with a cyclic graph, since cycles would just continue increasing the score and get continuously added.
+	
+	To get the path one traverses the parents in scores, same as before - each node has a parent, and to get the path You take the parent of the goal node, then the parent of the parent and so on.
+	
+\textbf{Q5 b) ii)}
+	
+	I think just using $\bigoplus = \min$ operation should work, and of course the priority queue would now use popMin instead of popMax, and also the if condition changes to $>$. I think this would not work in general due to cycles, but our graph is acyclic. 
+	
+\textbf{Q5 b) iii)}
+
+	Well, I think the $\bigotimes = \min$, since given a path We'll want to take the minimum out of all the edge values.
+	
+	Could You use $\bigoplus = \max$? I think that's it. Across an entire path We want to take the minimum to find the minimal value, but when choosing amongst a number of possible edges to take, We'll choose the maximum. 
 	
 	
 	

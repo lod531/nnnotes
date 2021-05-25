@@ -1,0 +1,145 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{tikz}
+
+\newcommand{\shrug}[1][]{%
+\begin{tikzpicture}[baseline,x=0.8\ht\strutbox,y=0.8\ht\strutbox,line width=0.125ex,#1]
+\def\arm{(-2.5,0.95) to (-2,0.95) (-1.9,1) to (-1.5,0) (-1.35,0) to (-0.8,0)};
+\draw \arm;
+\draw[xscale=-1] \arm;
+\def\headpart{(0.6,0) arc[start angle=-40, end angle=40,x radius=0.6,y radius=0.8]};
+\draw \headpart;
+\draw[xscale=-1] \headpart;
+\def\eye{(-0.075,0.15) .. controls (0.02,0) .. (0.075,-0.15)};
+\draw[shift={(-0.3,0.8)}] \eye;
+\draw[shift={(0,0.85)}] \eye;
+% draw mouth
+\draw (-0.1,0.2) to [out=15,in=-100] (0.4,0.95); 
+\end{tikzpicture}}
+
+
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\parindent}{0pt}
+
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+                     \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+                     =}
+
+\usepackage[]{algorithm2e}
+
+\begin{document}
+
+
+\title{Recursive Optimization}
+\author{Andrius Buinovskij - 18-940-270}
+\date{}
+
+\maketitle
+
+\section{Kalman Filter as State Observer}
+
+	Okay so first of all We restrict ourselves to steady-state stuff, so no more $A(k)$, now We just have the same $A$ for all time. Same for $H$, same for $Q, R$.
+	
+	Let's skip to the interesting bits:
+	
+	\subsection{Detectability}
+	
+		Is defined as $\lim_{k\to\infty} z(k) = 0$ implies $\lim_{k\to\infty} x(k)=0$  for any initial condition $x_0\in\mathbb{R}^n$.
+		
+		So things are detectable is measurement going to zero also means that the state is going to zero. I suppose this implies that $z$ is capturing information about $x$.
+		
+		To formalize this, recall $x(k+1) = Ax(k), z(k) = Hx(k)$.
+		
+		The idea then is that the system is detectable if and only if $Hw\neq 0$ for any eigenvector $w$ corresponding to an eigenvalue of the matrix $A$ with magnitude greater or equal to one.
+		
+		So what this mean?
+		
+		Basically this just means that if there is some unstable direction for the system, which is characterized by the eigenvalue of $A$ being more  than one, We have to be able to detect it and keep track of it. If We can't, game over.
+		
+		More linear algebra-y way of saying this is  that no unstable bits of $A$ can be in the null-space of $H$.
+		
+		The formalization of this is as follows: subtract an eigenvalue of $A$ from $A$, and then stack the result with $H$. If We still have full... Well I think $A$ is a square matrix. 
+		
+		So how does that work? Well We are looking for full column rank. If We don't have full column rank, one of the columns must be a linear combination of the rest. According to this theorem, this must be true if one of the vectors from the top half is in the nullspace 
+		
+		This is known as the PBH test and actually it's pretty neat.
+		
+		So, first of all, think of $H$ in terms of eigenvectors of $A$. Just change the basis.
+		
+		Now, by subtracting eigenvalues, We're knocking one eigenvector out at a time. So, if $H$ does not have anything that goes in the direction of that eigenvector, We've just lost rank! And so the test will fail. Super neat.
+		
+	\subsection{Observability}
+	
+		Okay so detection was about being able to detect changes in the state, I think is something like a summary.
+		
+		So what's observability? Well here We are dealing with a completely deterministic system. No noise what so ever.
+		
+		The idea then is that given $n$ measurements, We are able to determine the initial state, so everything is reversible. You can see everything. I suppose in detectability We could detect stuff, but there may be a range of initial states that lead us to our converged variance.
+		
+		PBH test still applies, wee. Only difference is that We have to check all eigenvalues, not just poorly behaved ones.
+		
+		You can also get \textit{some} observability out of detection - after all if You've got detection that means You can "see" all non-stable parts of the system, so You have observability on those parts.
+		
+	\subsection{asd}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+\end{document} 

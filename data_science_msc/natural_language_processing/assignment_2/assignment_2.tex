@@ -1,0 +1,226 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{tikz}
+
+\newcommand{\shrug}[1][]{%
+\begin{tikzpicture}[baseline,x=0.8\ht\strutbox,y=0.8\ht\strutbox,line width=0.125ex,#1]
+\def\arm{(-2.5,0.95) to (-2,0.95) (-1.9,1) to (-1.5,0) (-1.35,0) to (-0.8,0)};
+\draw \arm;
+\draw[xscale=-1] \arm;
+\def\headpart{(0.6,0) arc[start angle=-40, end angle=40,x radius=0.6,y radius=0.8]};
+\draw \headpart;
+\draw[xscale=-1] \headpart;
+\def\eye{(-0.075,0.15) .. controls (0.02,0) .. (0.075,-0.15)};
+\draw[shift={(-0.3,0.8)}] \eye;
+\draw[shift={(0,0.85)}] \eye;
+% draw mouth
+\draw (-0.1,0.2) to [out=15,in=-100] (0.4,0.95); 
+\end{tikzpicture}}
+
+
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\parindent}{0pt}
+
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+                     \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+                     =}
+
+\usepackage[]{algorithm2e}
+
+
+\newcommand*\OR{\ |\ }
+
+\begin{document}
+
+
+\title{NLP assignment \#2}
+\author{Andrius Buinovskij - 18-940-270}
+\date{}
+
+\maketitle
+
+\textbf{Q1 a)}
+
+	\begin{align}
+		S &\to NP, VP\\
+		NP &\to Det, N \OR NP, PP \OR "I" \OR "glasses"\\
+		VP &\to VP, PP \OR V, NP\\		
+		Det &\to "a" \OR "an"\\
+		N &\to "man" \OR "pencil" \OR "ball" \OR "umbrella"\\
+		PP &\to P, NP\\
+		V &\to "draw" \OR "hit"\\
+		P &\to "with" 
+	\end{align}
+	
+\textbf{Q1 b)}
+
+	Warning: advanced calculations ahead (instead of probabilities We just do counts first):
+
+	\begin{align}
+		S &\to NP, VP (4)\\
+		NP (14) &\to Det, N (7) \OR NP, PP (2)\OR "I" (4)\OR "glasses" (1)\\
+		VP (6)&\to VP, PP (2)\OR V, NP (4)\\		
+		Det (7)&\to "a" (6) \OR "an"(1)\\
+		N (7)&\to "man" (4)\OR "pencil"(1) \OR "ball"(1) \OR "umbrella"(1)\\
+		PP (4)&\to P, NP (4)\\
+		V (4)&\to "draw" (2) \OR "hit"(2)\\
+		P (4)&\to "with" (4) 
+	\end{align}
+	
+	Convert to probabilities (rounded, for precise figures just divide counts on the right by total counts on the left):
+	
+	\begin{align}
+		S &\to NP, VP (1.0)\\
+		NP  &\to Det, N (0.5) \OR NP, PP (0.14)\OR "I" (0.29)\OR "glasses" (0.7)\\
+		VP (&\to VP, PP (2=0.33)\OR V, NP (0.66)\\		
+		Det &\to "a" (0.86( \OR "an"(0.14)\\
+		N &\to "man" (0.57)\OR "pencil"(0.14) \OR "ball"(0.14) \OR "umbrella"(0.14)\\
+		PP &\to P, NP (1)\\
+		V &\to "draw" (0.5) \OR "hit"(0.5)\\
+		P &\to "with" (1) 
+	\end{align}
+	
+\textbf{Q1 c)}
+
+	Our goal is to have different likelihood of expansions on noun phrase depending on whether the expansion is going to be an object or a subject.
+
+	I suppose a logical way of going about it would be to replace the noun phrase non-terminal with two other non terminals - object phrase ($OP$) and subject phrase ($SP$). 
+	
+	\begin{align}
+		S &\to NP, VP (1.0)\\
+		NP &\to SP \OR  OP\\
+		SP &\to Det, N (0.5) \OR NP, PP (0.14)\OR "I" (0.29)\OR "glasses" (0.7)\\
+		OP &\to Det, N (0.5) \OR NP, PP (0.14)\OR "I" (0.29)\OR "glasses" (0.7)\\
+		VP (&\to VP, PP (2=0.33)\OR V, NP (0.66)\\		
+		Det &\to "a" (0.86( \OR "an"(0.14)\\
+		N &\to "man" (0.57)\OR "pencil"(0.14) \OR "ball"(0.14) \OR "umbrella"(0.14)\\
+		PP &\to P, NP (1)\\
+		V &\to "draw" (0.5) \OR "hit"(0.5)\\
+		P &\to "with" (1) 
+	\end{align}
+	
+	Here are the counts as before:
+	
+	\begin{align}
+		S &\to NP, VP (1.0)\\
+		NP (14)&\to SP (4)\OR  OP (10)\\
+		SP (4) &\to Det, N (0) \OR NP, PP (0)\OR "I" (4) \OR "glasses" (0)\\
+		OP (10)&\to  Det, N (7) \OR NP, PP (2)\OR "I" (0)\OR "glasses" (1)\\
+		VP (&\to VP, PP (2=0.33)\OR V, NP (0.66)\\		
+		Det &\to "a" (0.86( \OR "an"(0.14)\\
+		N &\to "man" (0.57)\OR "pencil"(0.14) \OR "ball"(0.14) \OR "umbrella"(0.14)\\
+		PP &\to P, NP (1)\\
+		V &\to "draw" (0.5) \OR "hit"(0.5)\\
+		P &\to "with" (1) 
+	\end{align}
+	
+	Finally converting to probabilities:
+	
+	\begin{align}
+		S &\to NP, VP (1.0)\\
+		NP &\to SP (0.29)\OR  OP (0.71)\\
+		SP (4) &\to Det, N (0) \OR NP, PP (0)\OR "I" (1) \OR "glasses" (0)\\
+		OP (10)&\to  Det, N (0.7) \OR NP, PP (0.2)\OR "I" (0)\OR "glasses" (0.1)\\
+		VP (&\to VP, PP (2=0.33)\OR V, NP (0.66)\\		
+		Det &\to "a" (0.86( \OR "an"(0.14)\\
+		N &\to "man" (0.57)\OR "pencil"(0.14) \OR "ball"(0.14) \OR "umbrella"(0.14)\\
+		PP &\to P, NP (1)\\
+		V &\to "draw" (0.5) \OR "hit"(0.5)\\
+		P &\to "with" (1) 
+	\end{align}
+	
+	Well this at least shows that subject phrases are likely to be "I", and object phrases are unlikely to be "I", so it's capturing some of what We wanted to. 
+	
+\textbf{Q1 d)}
+	
+	\begin{align}
+		S &\to NP, VP^+\\
+		NP &\to Det, N^+ \OR NP^+, PP \OR "I" \OR "glasses"\\
+		VP &\to VP^+, PP \OR V^+, NP\\		
+		Det &\to "a" \OR "an"\\
+		N &\to "man" \OR "pencil" \OR "ball" \OR "umbrella"\\
+		PP &\to P, NP^+\\
+		V &\to "draw" \OR "hit"\\
+		P &\to "with" 
+	\end{align}
+	
+\textbf{Q2 a)}
+
+	So, it is my understanding that for the projective dependency tree, to obtain the score We would simply take all dependency pairs and multiply the scores corresponding to those dependencies (taking care to pay attention to the direction of the dependency etc.)
+	
+	To obtain the score of a lexicalized probabilistic context free grammar tree, one also simply multiplies the score for each "rule" applied, except this rule is also lexicalized so You have very many parameters indeed (page 15 from \href{http://www.cs.columbia.edu/~mcollins/courses/nlp2011/notes/lexpcfgs.pdf}{\_ click me\_}.)
+	
+	With all that out of the way, I would construct a weighted lexicalized CFG as follows: 
+	
+	1. Add root productions $R \to X_j$, $j\in 1\ldots M$.
+	
+	2. Add self-productions $X_j \to j$.
+	
+	3. For each production $\phi(i\to j)$, add bidirectional productions to the language as follows:
+	
+	\begin{align}
+		X_i \to X_i^+, X_j\\
+		X_i \to X_j, X_i^+
+	\end{align}
+	
+	And of course they weight for that transformation corresponds to the value of $\phi(i\to j)$.
+	
+	And that's all She wrote.
+	
+\textbf{Q1 b)}
+
+	So the dependency tree would simply be $ROOT\to fish$, $fish\to they$, and the score would be $\psi(ROOT, fish)\cdot \psi(fish, they)$.
+	
+	In our CFG We would end up with $ROOT\to S$, then $S\to NP$, 
+	
+	
+	
+	
+	
+	
+	
+\end{document} 

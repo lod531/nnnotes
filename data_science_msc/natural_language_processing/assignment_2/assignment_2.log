@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.2.22)  6 MAY 2021 14:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.2.22)  24 MAY 2021 17:16
 entering extended mode
-**./nlp_assignment_1.tex
-(nlp_assignment_1.tex
+**./assignment_2.tex
+(assignment_2.tex
 LaTeX2e <2020-10-01> patch level 4
 L3 programming layer <2021-02-18> xparse <2020-03-03>
 (C:\Users\abom\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
@@ -783,27 +783,27 @@ ex.def
 File: l3backend-pdftex.def 2021-02-18 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count317
 \l__pdf_internal_box=\box79
-) (nlp_assignment_1.aux)
-\openout1 = `nlp_assignment_1.aux'.
+) (assignment_2.aux)
+\openout1 = `assignment_2.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 74.
-LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 77.
+LaTeX Font Info:    ... okay on input line 77.
 
 (C:\Users\abom\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mki
 i
@@ -826,7 +826,7 @@ Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 )
-Package hyperref Info: Link coloring OFF on input line 74.
+Package hyperref Info: Link coloring OFF on input line 77.
 
 (C:\Users\abom\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
@@ -840,104 +840,52 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count324
 )
-LaTeX Info: Redefining \ref on input line 74.
-LaTeX Info: Redefining \pageref on input line 74.
-LaTeX Info: Redefining \nameref on input line 74.
- (nlp_assignment_1.out) (nlp_assignment_1.out)
+LaTeX Info: Redefining \ref on input line 77.
+LaTeX Info: Redefining \pageref on input line 77.
+LaTeX Info: Redefining \nameref on input line 77.
+ (assignment_2.out) (assignment_2.out)
 \@outlinefile=\write4
-\openout4 = `nlp_assignment_1.out'.
+\openout4 = `assignment_2.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 82.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 85.
 
 
 (C:\Users\abom\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 82.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 85.
 
 
 (C:\Users\abom\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<./images//comp_graph.jpeg, id=6, 903.375pt x 1204.5pt>
-File: ./images//comp_graph.jpeg Graphic file (type jpg)
-<use ./images//comp_graph.jpeg>
-Package pdftex.def Info: ./images//comp_graph.jpeg  used on input line 85.
-(pdftex.def)             Requested size: 903.3728pt x 1204.49707pt.
-
-Overfull \hbox (14.99533pt too wide) in paragraph at lines 85--86
-[][] 
- []
-
 [1
 
-{C:/Users/abom/AppData/Local/MiKTeX/pdftex/config/pdftex.map} <./images//comp_g
-raph.jpeg>]
-<./images//notation_diagram.jpeg, id=23, 1204.5pt x 1606.0pt>
-File: ./images//notation_diagram.jpeg Graphic file (type jpg)
-<use ./images//notation_diagram.jpeg>
-Package pdftex.def Info: ./images//notation_diagram.jpeg  used on input line 14
-0.
-(pdftex.def)             Requested size: 1204.49707pt x 1605.99611pt.
-
-Overfull \hbox (14.98921pt too wide) in paragraph at lines 140--141
-[][] 
- []
-
-[2] [3 <./images//notation_diagram.jpeg>] [4] [5]
-<./images//redesign.jpeg, id=85, 1204.5pt x 1606.0pt>
-File: ./images//redesign.jpeg Graphic file (type jpg)
-<use ./images//redesign.jpeg>
-Package pdftex.def Info: ./images//redesign.jpeg  used on input line 298.
-(pdftex.def)             Requested size: 1204.49707pt x 1605.99611pt.
-
-Overfull \hbox (14.98921pt too wide) in paragraph at lines 298--299
-[][] 
- []
-
-[6]
-Missing character: There is no ; in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no ; in font nullfont!
- [7 <./images//redesign.jpeg>] [8] [9] [10] [11] [12]
-Overfull \hbox (6.24942pt too wide) detected at line 524
-[]
- []
-
-[13] [14] [15] [16] (nlp_assignment_1.aux)
-Package rerunfilecheck Info: File `nlp_assignment_1.out' has not changed.
+{C:/Users/abom/AppData/Local/MiKTeX/pdftex/config/pdftex.map}] [2] [3]
+[4] (assignment_2.aux)
+Package rerunfilecheck Info: File `assignment_2.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 23012 strings out of 479334
- 408878 string characters out of 2857559
- 724280 words of memory out of 3000000
- 39925 multiletter control sequences out of 15000+200000
- 415945 words of font info for 73 fonts, out of 3000000 for 9000
+ 22829 strings out of 479334
+ 405104 string characters out of 2857559
+ 721263 words of memory out of 3000000
+ 39798 multiletter control sequences out of 15000+200000
+ 415599 words of font info for 72 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 87i,18n,88p,576b,494s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 87i,8n,88p,396b,350s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
 mbx10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmbx7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmex10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/amsfonts/cm/cmmi10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/abom/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/abom/AppData/Local/Pro
-grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/abom/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/abom/App
-Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/a
-bom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/U
-sers/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb
-><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-r7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
-/cm/cmr8.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
-sfonts/cm/cmsy10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/p
-ublic/amsfonts/cm/cmsy5.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/
-type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX
-/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on nlp_assignment_1.pdf (16 pages, 1112381 bytes).
+nts/cm/cmmi10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmmi7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/cm/cmr10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/abom/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/abom/AppData/Local/Prog
+rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/abom/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on assignment_2.pdf (4 pages, 110573 bytes).
 PDF statistics:
- 274 PDF objects out of 1000 (max. 8388607)
- 118 named destinations out of 1000 (max. 500000)
- 28 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 138 PDF objects out of 1000 (max. 8388607)
+ 69 named destinations out of 1000 (max. 500000)
+ 13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

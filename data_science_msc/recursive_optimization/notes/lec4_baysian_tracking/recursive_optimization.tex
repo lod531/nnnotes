@@ -1,0 +1,271 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{setspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{bm}
+\usepackage[lite]{amsrefs}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}\usepackage{xcolor}
+%\graphicspath{ {./img/} }
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{tikz}
+
+\newcommand{\shrug}[1][]{%
+\begin{tikzpicture}[baseline,x=0.8\ht\strutbox,y=0.8\ht\strutbox,line width=0.125ex,#1]
+\def\arm{(-2.5,0.95) to (-2,0.95) (-1.9,1) to (-1.5,0) (-1.35,0) to (-0.8,0)};
+\draw \arm;
+\draw[xscale=-1] \arm;
+\def\headpart{(0.6,0) arc[start angle=-40, end angle=40,x radius=0.6,y radius=0.8]};
+\draw \headpart;
+\draw[xscale=-1] \headpart;
+\def\eye{(-0.075,0.15) .. controls (0.02,0) .. (0.075,-0.15)};
+\draw[shift={(-0.3,0.8)}] \eye;
+\draw[shift={(0,0.85)}] \eye;
+% draw mouth
+\draw (-0.1,0.2) to [out=15,in=-100] (0.4,0.95); 
+\end{tikzpicture}}
+
+
+
+
+\counterwithin*{equation}{section}
+
+\newcommand{\R}{\mathbb{R}}
+
+\makeatletter
+\newcommand*\bigcdot{\mathpalette\bigcdot@{1}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+\makeatother
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\parindent}{0pt}
+
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+                     \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+                     =}
+
+\usepackage[]{algorithm2e}
+
+\begin{document}
+
+
+\title{Recursive Optimization}
+\author{Andrius Buinovskij - 18-940-270}
+\date{}
+
+\maketitle
+
+\section{Bayesian Tracking}
+
+	\subsection{Problem Statement}
+	
+		$x(k)\in\mathcal{X}$ is our goal. It can be vector valued if We like, so multi-dimensional, but it \textbf{must be finite}, so We can't have an infinite number of states that We may inhabit. This is because We have to sum over the states at some point, and having an infinite number of them would be problematic. 
+		
+		$k$ is simply the time, so $x(k)$ is the state at time $k$. 
+		
+		$z(k)$ is the observation, whatever it may be, at time $k$. Note that in contrast to the state, $z(k)$ can have an infinite number of different values e.g. $z(k)\in\mathbb{R}^d$.
+		
+		Our \textbf{model} of the situation then is:
+		
+		\begin{align*}
+			& x(k) = q_{k-1}\big(x(k-1), v(k-1)\big),\qquad k=1, 2\ldots\\
+			& z(k) = h_k\big(x(k), w(k)\big),
+		\end{align*}
+		
+		So which bits are what. $x(k)$ is just the state. 
+		
+		$v(k-1)$ is the \textbf{process noise} at time $k-1$.  I suppose every state gets a little randomness.
+		
+		Then the measurement $z(k)$ is a function of the state at time $k$ and some noise.
+		
+		$q_{k-1}$ is a known function (which can implicitly be parametrized with whatever user input We have), and $h_k$ is also a known function.
+		
+		Summing up then, the new state is a function of old state and noise, and measurements are functions of the current state and some other noise.  
+		
+		\textbf{Objective}
+		
+		Okay, let $z(1:k)$ denote the set $\{z(1)\ldots z(k)\}$. 
+		
+		Our goal then is to efficiently compute 
+		
+		\begin{align}
+			p(x(k)|z(1:k))
+		\end{align}
+		
+		Where, recall, the above can be written as:
+		
+		\begin{align}
+			p_{X|Z(1:k)}(\bar{x}(k)|\bar{z}(1:k))
+		\end{align}
+
+		Where $X$ is the random variable actually generating the states and $\bar{x}$ is just a particular value that $X$ could take at time $k$, and likewise for the noise variables.
+		
+	\subsection{Recursive Estimation Equations}
+	
+		The idea is simple - decompose the problem of computing $p(x(k)|z(1:k))$ into parts such that the end algorithm only depends on $p(x(k-1)|z(k-1))$, $z(k)$ and the known model parameters ($q$ etc.).
+		
+		So, in the name of recursion, We assume $p(x(k-1)|z(1:k-1)$ is known, which is fine since We are given $p(x(0))$.
+		
+		\textbf{Prior Update}
+		
+		Step 1: use $z(1:k-1)$ to get the distribution of $x(k)$:
+		
+		\begin{align*}
+			& p(x(k)|z(1:k-1)) =\\
+			& \sum_{x(k-1)\in\mathcal{X}} p(x(k)|z(1:k-1), x(k-1))\underbrace{p(x(k-1)|z(1:k-1))}_{\text{assumed to be known}}
+		\end{align*}
+		
+		So what did We do here?
+		
+		Almost literally nothing, We simply added a variable to condition on - the previous state $x(k-1)$. 
+		
+		But there are many possible previous states, so We have to sum over all of them. Furthermore this was all conditioned on previous observations $z(1:k-1)$, hence everything remains conditioned on them.
+		
+		However, this was very clever since We introduced something that We know - that "assumed to be known" bit. 
+		
+		I mean, ultimately, this conditioning on the previous state is a kind of obvious move if You think about it - think about the causality DAG of this whole process and You'll see We are creating a D-separated path.
+		
+		So, the state $x(k)$ is independent of previous measurements given previous state. Works for any state obviously.
+		
+		\begin{align*}
+			& p(x(k)|z(1:k-1)) =\\
+			& \sum_{x(k-1)\in\mathcal{X}} p(x(k)|z(1:k-1), x(k-1))\underbrace{p(x(k-1)|z(1:k-1))}_{\text{assumed to be known}}\\
+			& \sum_{x(k-1)\in\mathcal{X}} p(x(k)| x(k-1))p(x(k-1)|z(1:k-1))
+		\end{align*}
+		
+	And the point of all that was to capture the information the previous state gives us about the current state. We can now augment this with information yielded by $z(k)$.
+	
+	I suppose this is called the prior update because this is the distribution of $x(k)$ given the past measurements $z(1:k-1)$? And now we'll add $z(k)$ to the mix with a 
+	
+	\textbf{Measurement update}
+	
+		So, now We add conditioning on $z(k)$:
+		
+		\begin{align}
+			p(x(k)|z(1:k)) &= p(x(k)|z(k), z(1:k-1))\\
+			&= \frac{p\big(z(k)|x(k), z(1:k-1)\big)\cdot p\big(x(k)|z(1:k-1)\big)}{p\big( z(k) | z(1:k-1\big)}
+		\end{align}
+		
+		And that looks like a lot, bur it's not so bad. Take it term by term.
+		
+		$p\big(z(k)|x(k), z(1:k-1)\big)$ can be simplified - if You think about the causal DAG again, You'll notice that measurement $z(k)$ is generated by the state $x(k)$, so knowing that blocks the path to all the ancestor measurements $z(1:k-1)$.
+		
+		We already took a look at $p\big(x(k)|z(1:k-1)\big)$ in the prior section.
+		
+		Finally for the denumerator. We can condition on the current state to turn this denumerator into a summation We know:
+		
+		\begin{align}
+			p(z(k)|z(1:k-1)) &= \sum_{x\in\mathcal{X}} p(z(k)|z(1:k-1), x(k))\cdot p(x(k)|z(1:k-1))\\
+			&= \sum_{x\in\mathcal{X}} p(z(k)| x(k))\cdot p(x(k)|z(1:k-1))
+		\end{align}
+		
+		And then We can calculate $p(z(k)| x(k))$ since it's a function of $x(k)$ and the other term We calculated 
+		
+	\textbf{Summary}
+		
+		Prior update, which is state prediction since We are looking at probability of the state $x$ at time $k$:
+		
+		\begin{align}
+			p(x(k)|z(1:k-1)) = \sum_{x(k-1)\in\mathcal{X}} \underbrace{p(x(k))|x(k-1))}_{\text{model function}}\cdot \underbrace{p(x(k-1)|z(1:k-1))}_{\text{previous iteration}}
+		\end{align}
+		
+		So the first term can be calculated via the model function - We have functions to go from previous state to next state (given noise etc).
+		
+		The second bit is of course a recursive assumption.
+		
+		Then We observe $z(k)$ and update our belief accordingly.
+		
+\section{Computer Implementation}
+		
+		1. Enumerate the state space $\mathcal{X}$. Seems reasonable.
+		
+		2. Define $\mathbf{a}^i_{k|k} = p_{x(k)|z(1:k)}(i|\bar{z}(1:k)$, $i=0, 1\ldots N-1$. This array stores the posterior, or rather our estimation of the posterior. Element $i$ is just the probability of state $i$ at time $k$ given all the measurements, including the measurement at time $k$.
+		
+		3. Define $\mathbf{a}^i_{k|k-1} = p_{x(k)|z(1:k-1)}(i|\bar{z}(1:k-1))$, $i=0\ldots N-1$. This array stores our prior, i.e. $p(x(k)|z(1:k-1)$.
+		
+		\textbf{Algorithm}
+		
+		1. Initialization:
+		
+		\[ a^u_{0|0} = p_{x(0)}(i), i=0\ldots N-1 \]
+		
+		Which is given.
+		
+		2. Recursion - for $k>0$:
+		
+		\begin{align}
+			\mathbf{a}^k_{k|k-1} &= \sum^{N-1}_{j=0} p_{x(k)|x(k-1)}(i|j)\mathbf{a}^j_{k-1|k-1},\quad i=0\ldots N-1\\
+			\mathbf{a}^i_{k|k} &= \frac{p_{z(k)|x(k)}(\bar{z}(k)|i)\mathbf{a}^i_{k|k-1}}{\sum^{N-1}_{j=0} p_{z(k)|x(k)}\mathbf{a}^j_{k|k-1}}
+		\end{align}
+		
+		
+\section{Example}
+
+	Alright so We have an object which is moving in a circle and We want to track it's location.
+	
+	The $x(k)$ We care about is:
+	
+	\begin{align}
+		\theta(k) = 2\pi\frac{x(k)}{N}
+	\end{align}
+		
+	And the new state as a function of the old state is:
+	
+	\begin{align}
+		x(k) = \text{mod}(x(k-1) + v(k-1), N)
+	\end{align}
+	
+	Where mod is just the modulo operator.
+	
+	The noise is then $v(k)=1$ with probability $r$, $v(k)=0$ with probability $1-r$.
+		
+	Oh boy and now the measurement - the distance:
+	
+	\begin{align}
+		z(k) = \sqrt{(L-\cos(\theta(k))^2 + \sin^2(\theta(k)} + w(k)
+	\end{align}
+	
+	where $w(k)$ is uniformly distributed on $[-e, e]$, and is the "sensor noise".
+	
+	
+		
+\newpage
+\section{Appendix}
+	\subsection{Change of Variables}
+	
+		For discrete variables I think it's kind of trivial - the pdf stays the same (aside from summing identical mappings), no worries there.
+		
+		Now for the continuous case. 
+		
+		First up us the univariate case yet again. We have that $Y = g(X)$, and We want $F_Y$, the cumulative distribution function of $Y$.
+		
+		\[ F_Y = P(Y\le y) = P(g(X) \le y) = \]
+		
+		
+	
+\end{document} 
