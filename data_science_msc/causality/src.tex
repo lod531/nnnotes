@@ -201,7 +201,61 @@
 		
 			Just change the interpretation of edges to be causal. So d-separated things are causally independent, and do-calculus forces probabilities to be one. 
 			
-			Faithfulness means that 
+\section{Lecture 4}
+
+	Okay so none of the above was necessary lol.
+	
+	Main bit about causal DAGs - the causal structure is assumed. So when You perform a "do" operation, You just swap out the value of that node in the DAG and replace the probabilities on that edge to 1 for the case You are interested in. Same for calculations.
+	
+	So when writing down decomposed joint distribution, the probability of the parent vanishes and probability of child becomes the conditional distribution.
+	
+	\subsection{Simpson's paradox}
+	
+		How to pick a part when to condition on variables.
+		
+		Well, recall that if You perform a do on a causal DAG, it's equivalent to removing incoming edges to that node. 
+		
+		So in the case of gender, We perform a do and now the graph has treatment $\to$ recovery and gender $\to$ recovery.
+		
+		But, We want just treatment $\to$ recovery. So We condition based on gender to remove it. 
+		
+		In the case of blood pressure, there is no confounder, just treatment affect two variables. Performing a do still gives You all the information You need. I think.
+		
+\section{Lecture 5}
+
+	Okay so two variables share a confounder if there exists a path from confounder to both of them.
+	
+	SEMs are just more nuanced ways to write DAGs. Parents become arguments of functions, children become stuff that depends on the output. Really just a causal DAG but each node gets a function that shows how the node depends on the parents.
+	
+	Usually linear, in which case they are called linear structural equation models.
+	
+	Clicker Q - true, false, true, true.
+	
+	There are different kinds of interventions:
+	
+	Surgical just sets a value
+	
+	Shifting just adds noise.
+	
+	Imperfect cuts incoming edges and replaces with some constant + noise.
+	
+	\subsection{Total Causal Effect}
+	
+		So there exists a total causal effect between X and Y if
+		
+		Performing do X=x1 and X=x2 yields different distributions for Y.
+		
+		Performing P(Y|do(X=x1)) $\neq$ P(Y)
+		
+	\subsection{Finding causal structure}
+	
+		Total average causal effect: look at all paths between two variables and add the weights. That the path method.
+		
+		We can also \textbf{regress} to find the total average causal effect. To find effect of X1 on X4, regress with X4 as target and X1 as predictor, plus the parents of X1.
+		
+		Adjustment set is the set such that regression on X plus adjustment set yields valid total causal effects.
+		
+		
 		 
 		 
 		 
@@ -211,10 +265,107 @@
 	
 	\subsection{Series 1}
 	
-		\textbf{Q1}
+		\textbf{Q1 a)}
 		
-			a) Maybe. Can't do a causal association since maybe choosing to do screening explains away breast cancer due to healthy habits/economic status etc.
+			Evidence suggests it does but does not prove it - the problem is that the "examined" group of women opted in to the checks, and therefore they may be more health-oriented by default. 
 			
-			b) Due to randomly chosen groups. 
+			In other words, the treatment group is not randomized due to the choice involved, and so causal relationships can't be derived (though they may be suggested).
+			
+		\textbf{Q1 b)}
+		
+			Because the groups have identical make-up. Sure, the treatment group was asked to engage more actively in checkups for breast cancer, but this fact does not change their likelihood of dying from an illness other than breast cancer (or maybe changes the odds very slightly).
+			
+		\textbf{Q1 c)}
+		
+			Feels like a trick question - the refused group consists more of poorer women, and their rate of breast cancer is higher. The rate is lower amongst the examined group, which are supposed to be richer.
+			
+			Ah the control group. So the idea is that taking just the poors gives You a rate of 1.5, but taking a mix gives You 2.0, so the poors are less affected.
+			
+		\textbf{Q1 d)}
+		
+			Since rich people suffer from fewer diseases, and the examined group consists primarily of the rich, this relationship between wealth and disease accounts for the disparity.
+			
+		\textbf{Q2 a)}
+		
+			Observational. Don't know if You could call it a study.
+			
+		\textbf{Q2 b)}
+		
+			Yes.
+			
+		\textbf{Q2 c)}
+		
+			Yes.
+			
+		\textbf{Q2 d)}
+		
+			Not without further interpretation. 
+			
+			One, if the gene is random, it should appear equally in controlling and non-controlling families.
+			
+			But the presence of the obesity gene may make parents more controlling, so.
+			
+		\textbf{Q2 e)}
+		
+			Children's large weight makes parents more controlling in order to get the child to lose weight.
+			
+		\textbf{Q2 f)}
+		
+			Depends on the underlying causal structure. Overall, no. 
+			
+		\textbf{Q3 a)}
+			
+			Non-descendants of D: A.
+			
+		\textbf{Q2 b)}
+
+			Okay so to be separated from F We need to have C.  But knowing C opens the collider ACD, so, can't be separated.
+			
+		\textbf{Q2 c)}
+				
+			Aren't A and D separated by default?  Just don't mess with it.
+			
+			Otherwise, C, F cannot be present, ever. Other than that, all nodes are game - G, B, E, H.
+			
+			For the second  path, We can do B and then the chain is blocked so E, H, G are all fine.
+			
+			So either B and any subset of GBEH, or any subset of GH
+			
+		\textbf{Q4 a)}
+		
+			Suppose the opposite - two nodes are connected without the use of a collider. But since they share no ancestors, and there are no colliders, they also cannot share descendants, and so this contradicts our assumption that they are connected.
+			
+		\textbf{Q4 b)}
+		
+			Either the two nodes are disconnected and are therefore d-separated since no path exists.
+			
+			Or they are connected by a collider, but neither the collider nor any descendents of the collider are known, so that's also fine.
+			
+	\subsection{Series 2}
+	
+		\textbf{Q1 a)}
+		
+			Okay so the path method.
+			
+			Paths from 2 to 4 are: $2\to3\to4$ and $2\to 4$. 
+			
+			So the sum is just 3*5+4=19.
+			
+		\textbf{Q2 a)}
+		
+			C is standard gaussian, E is gaussian with mean 0 and variance 17.
+			
+		\textbf{Q2 b)}
+		
+			Okay We are not doing the conditioning lol.
+			
+			Conditioning $E|C$ gives mean of eight and variance one.
+			
+			$C|do(E=2)$ leaves C untouched, and likewise the other way around.
+			
+			
+		\textbf{Q3 a)}
+		
+			A
 	
 \end{document} 

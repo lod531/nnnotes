@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.2.22)  14 MAR 2021 10:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.2.22)  1 JUN 2021 07:11
 entering extended mode
 **./src.tex
 (src.tex
@@ -510,21 +510,15 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 [1
 
 {C:/Users/abom/AppData/Local/MiKTeX/pdftex/config/pdftex.map}] [2] [3]
-[4] [5] (src.aux)
-
-Package rerunfilecheck Warning: File `src.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `src.out':
-(rerunfilecheck)             Before: A256DC53E47D51773027E70982E75DE9;1963
-(rerunfilecheck)             After:  CBE1E32F68B5CFEFED7B728E3C24A941;2079.
+[4] [5] [6] [7] (src.aux)
+Package rerunfilecheck Info: File `src.out' has not changed.
+(rerunfilecheck)             Checksum: 92175F56F442462A1EDDEB2FB80C9D0E;2853.
  ) 
 Here is how much of TeX's memory you used:
- 12035 strings out of 479334
- 172667 string characters out of 2857559
- 501583 words of memory out of 3000000
- 29265 multiletter control sequences out of 15000+200000
+ 12050 strings out of 479334
+ 172855 string characters out of 2857559
+ 501589 words of memory out of 3000000
+ 29272 multiletter control sequences out of 15000+200000
  416909 words of font info for 76 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  71i,12n,74p,432b,342s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -545,9 +539,9 @@ cm/cmsy10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
 msfonts/cm/cmsy7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/p
 ublic/amsfonts/cm/cmti10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts
 /type1/public/amsfonts/latxfont/line10.pfb>
-Output written on src.pdf (5 pages, 175661 bytes).
+Output written on src.pdf (7 pages, 188568 bytes).
 PDF statistics:
- 153 PDF objects out of 1000 (max. 8388607)
- 22 named destinations out of 1000 (max. 500000)
- 121 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 191 PDF objects out of 1000 (max. 8388607)
+ 30 named destinations out of 1000 (max. 500000)
+ 177 words of extra memory for PDF output out of 10000 (max. 10000000)
 
