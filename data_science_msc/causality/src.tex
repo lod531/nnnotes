@@ -255,9 +255,195 @@
 		
 		Adjustment set is the set such that regression on X plus adjustment set yields valid total causal effects.
 		
+
+\section{Covariate Adjustment}
+
+	\subsection{Determining adjustment sets}
+	
+		There's a core definition here - any set $Z$ that is a \textbf{valid adjustment set} must satisfy :
 		
+		\begin{align}
+			p(x_k|do(x_i)) = \int_{X_Z} p(x_k|x_i, x_Z)p(x_Z) dx_Z0
+		\end{align}
 		 
+		 So basically, for any valid adjustment set $Z$, if We marginalize that set out, We get the do distribution. 
 		 
+		 Any set that satisfies that equation is called a valid adjustment set.
+		 
+		 The valid adjustment set with the fewest elements is called the minimal adjustment set.
+		
+	\subsection{Backdoor criterion}
+	
+		So We're looking for a graphical way to decide on the adjustment set.
+		
+		Recall We decided that We could just take the parents of a node before, but that turns out to be inefficient, or rather there's a subtler way of going about it.
+		
+		So We have some nodes $i, k$ and We're interested in $p(x_k|do(x_i))$. 
+		
+		Some adjustment set $Z$ which does not contain $i, k$ then satisfies the \textbf{backdoor criterion} if:
+		
+		1. $Z \cap desc(i) = \emptyset$
+		 
+		2. $Z$ blocks (d-separation) all "backdoor paths" from $i$ to $k$ in the graph. A path is a backdoor path if there's an edge entering $i$. So if the path includes (and it kind of has to end with) an edge into $i$, the thing We want to have a $do$ distribution of, then that path must be blocked.
+		
+		Okay so let's think about that for a second.
+		
+		The first criterion can maybe be thought of as just avoiding collider bias.
+		
+		The second criterion simply avoids confounders. This is identical to the reasoning in the "the parents of a node are a valid adjustment set" case, but now We just make the observation that it's not necessarily the parents We care about, it's actually the confounders.
+		
+		Clicker question: yes, no, yes, yes, yes, yes, no.
+		
+	\subsection{Positivity}
+	
+		Okay so recall identifiability is about whether or not We can actually identify causal relationships - if there's a confounder for A and B but We cannot observe it, then good luck to us trying to make any kind of causal statements.
+		
+		Okay so We perform a $do$ on some node $i$. Positivity just means that the support of the distribution prior to the do has to be the same as the support after the do. 
+		
+		For exam type situations, just means that $p(x_i, X_Z) > 0\; \forall x_i\in X_i, x_Z \in X_Z$.
+		 
+	\subsection{Gaussians}
+	
+		So the point is that if everything involved is Gaussian, then just do linear regression with the target being $k$ and the regressors being $i$ and the adjustment set.
+		
+	\subsection{Adjustment Criterion - Shipster et al, Perkovic et al}
+		 
+	According to those nerds, You just need these two conditions for a valid adjustment set:
+	
+	1. $Z$ does not contain any descendants of nodes $r\neq i$ on a directed path from $i$ to $k$
+	
+	2. $Z$ blocks all paths between $i$ and $k$ that are not directed from $i$ to $k$.
+	
+	So the second criterion is basically same as before - don't want confounders.
+	
+	Now what about that first one? $Z$ cannot contain any descendants of nodes that are along the directed path from $i$ to $k$. Suppose We did include a descendant, so what? Colliders suddenly being opened? Yep that's the one. 
+		 
+	\subsection{Efficient adjustment sets in linear SEMs}
+	
+		So We can do total causal effects via adjustment, but how good is that estimate? Turns out that can depend on the variables We choose.
+		
+		Intuitively, We want to avoid stuff highly correlated with $X_i$, since then our features suck, and use variables that help predict $X_k$, since, You know, that'll give an actually good estimate.
+		
+		So without further ado:
+		
+		Let causal nodes $cn(i, k)$ be nodes $r\neq i$ on a directed path from $i$ to $k$.
+		
+		Let forbidden nodes be descendants of causal nodes and node $i$.
+		
+		And then the optimal valid adjustment set is given by $pa(cn(i, k))- forb(i, k)$.
+		
+		Neat. The variance of the covariates produces by the optimal set will be less than or equal to the variance produced by any other set.
+		
+	\subsection{Direct Effects}
+	
+		As opposed to total effects. I don't think We need to care at all, other than the fact that in a linear SEM these are given by the weights.
+		 
+\section{Week 7}
+
+	\subsection{Identifiability}
+	
+		Again, an interventional (do) distribution is identifiable is You can calculate it just given the observational distribution and the graph structure.
+		
+		We already saw that if We have an adjustment set, We can calculate this.
+		
+		Now We look at two other means - frontdoor criterion and instrumental variables.
+		
+	\subsection{Frontdoor criterion}
+	
+		Suppose We know of an unobserved confounder. This means We're out of luck with adjustments - no way to remove the backdoor path to $i$.
+		
+		However! The idea now is to instead of looking at $i$, We can look at all the nodes $i$ influences, and how \textit{those} influence $k$. We've sort of just moved a little bit farther in.
+		
+		Another intuitive way of looking at it is that We're looking at the mechanisms by which $i$ affects $k$. 
+		
+		Formally, a set $M$ satisfies the frontdoor criterion with respect to $i, k$ if
+		
+		1. $M$ blocks all directed paths from $i$ to $k$.
+		
+		2. There are no unblocked backdoor paths from $i$ to M.
+		
+		3. $i$ blocks all backdoor paths from $M$ to $k$.
+		
+		Well the first condition makes sense - $M$ accounts for all ways $i$ could influence $k$.
+		
+		The second requirement says: a path from $i$ to $M$ which is a backdoor path (so the edge is going \textit{into} $i$ must be blocked. What does this give us? Mechanisms g
+		.oing from $i$ to $k$ but not back again? 
+		
+		The third requirement just ensures causality again - We don't want paths from $M$ going to $k$ through $i$ since We're trying to get rid of $i$ here.
+		
+	\subsection{Instrumental Variables}
+	
+		The idea is simple - use a variable that affects \textit{only} i. 
+		
+		A variable is instrumental if 
+		
+		1. $I$ affects $i$.
+		
+		2. $I$ is independent of confounders We can't observe.
+		
+		3. $I$ affects $k$ only through.
+		
+		Makes sense. There could be confounders but We get around them by using something  that only affects the thing We causally care about.
+		
+	\subsection{Conditional Instrumental Variables}
+	
+		Okay so now We'll condition on some set $S$. The idea is  that hey, $I$ might affect $k$ AND some other shit, but maybe We can just control for the other shit. The other shit is $S$.
+		
+		Conditions We need:
+		
+		1. $I$ affects $i$ given $S$.
+		
+		2. Every path from $I$ to $k$ that is not blocked by $S$ has an arrow pointing into $i$. The idea is that $I$ affects $k$ only through $i$ when We control for $S$.
+		
+		3. $S$ does not contain descendants of $i$.
+		
+		Seems to make sense. The last one is about not messing up effects of $i$ on $k$.
+		 
+	\subsection{Estimation of instrumental variables}
+	
+		With Two stage least squares.
+		
+		Pretty simple. First We regress with $i$ as target and $S$ and $I$ as predictors. Then replace $i$ with the estimate, I think, and then preform another regression with the target being $k$ and predictors being new $i$ and $S$.
+		 
+		Clicker - yes and yes.
+		
+	\subsection{Identification strategies}
+	
+		Randomized controlled trials are self explanatory.
+		
+		Covariate adjustment - but this only works if You already know the causal structure.
+		
+		Frontdoor criterion - different way of adjusting I think.
+		
+		Same deal for instrumental variables.
+		
+	\subsection{External Validity and Transportability}
+		
+		External validity is about whether the findings of a study are valid in external settings.
+		
+		Transportability is about, I think, taking the identified causal effects and using them in a different setting.
+		
+		Honestly not much to it - transporting with causal assumptions is fine, not fine if You're using proxies and the proxies differ in populations.
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		 
 		 
 \newpage
@@ -366,6 +552,48 @@
 			
 		\textbf{Q3 a)}
 		
-			A
+			Hmmm, yeah?
+			
+			If I intervene on $X$, in the first case $Y$ should not change, in the second case it will. And then You write out the full factorization so $p(x, y) = p(x|y)p(y)$ in the one case and $p(x, y) = p(y|x)p(y)$ in the other, then do a $do$ and see that they are not symmetrical.
+			
+		\textbf{Q4}
+		
+	\subsection{Series 3}
 	
+		\textbf{Q3 a)}
+		
+			Recall We had causal nodes that are nodes on a directed path from $i$ to $k$, and forbidden nodes were descendants of causal nodes and the node $i$.
+			
+			Uh so there is only one directed path, and it's the straight link between $X$ and $Y$.
+			
+			Parents of $Y$ are $A_2, B_2, R$.
+			
+			So that's the parents of the causal nodes I think.
+			
+			Forbidden nodes are descendants of causal nodes and of node $i$.
+			
+			So $F$ is out.
+			
+			Okay so it's just $A_2, B_2, R$.
+			
+			Parental is trivial.
+			
+			Minimal
+			
+		\textbf{Q4 a)}
+	
+			I mean, depends. Old people die anyhow, so.
+			
+		\textbf{Q4 b)}
+		
+			Older people die more. 
+			
+			I don't think this is a Simpson's paradox? Simpson's paradox can be described as individual groups displaying one trend, and overall groups displaying a different trend. 
+			
+		\textbf{Q4 c)}
+
+			At first glance it might, but upon closer examination it does not.
+			
+			Perhaps white people are more susceptible, but if so then younger people would show more deaths.
+			
 \end{document} 

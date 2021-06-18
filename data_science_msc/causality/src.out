@@ -1,22 +1,39 @@
-\BOOKMARK [1][-]{section.1}{\376\377\000L\000e\000c\000t\000u\000r\000e\000\040\0001}{}% 1
-\BOOKMARK [2][-]{subsection.1.1}{\376\377\000D\000i\000f\000f\000e\000r\000e\000n\000t\000\040\000t\000y\000p\000e\000s\000\040\000o\000f\000\040\000e\000x\000p\000e\000r\000i\000m\000e\000n\000t\000s}{section.1}% 2
-\BOOKMARK [2][-]{subsection.1.2}{\376\377\000I\000n\000t\000e\000r\000n\000a\000l\000\040\000v\000.\000s\000.\000\040\000E\000x\000t\000e\000r\000n\000a\000l\000\040\000V\000a\000l\000i\000d\000i\000t\000y}{section.1}% 3
-\BOOKMARK [2][-]{subsection.1.3}{\376\377\000S\000i\000m\000p\000s\000o\000n\000'\000s\000\040\000P\000a\000r\000a\000d\000o\000x}{section.1}% 4
-\BOOKMARK [1][-]{section.2}{\376\377\000L\000e\000c\000t\000u\000r\000e\000\040\0002}{}% 5
-\BOOKMARK [2][-]{subsection.2.1}{\376\377\000D\000A\000G\000\040\000m\000o\000d\000e\000l\000s}{section.2}% 6
-\BOOKMARK [2][-]{subsection.2.2}{\376\377\000d\000-\000S\000e\000p\000a\000r\000a\000t\000i\000o\000n}{section.2}% 7
-\BOOKMARK [1][-]{section.3}{\376\377\000L\000e\000c\000t\000u\000r\000e\000\040\0003}{}% 8
-\BOOKMARK [2][-]{subsection.3.1}{\376\377\000D\000o\000-\000C\000a\000l\000c\000u\000l\000u\000s}{section.3}% 9
-\BOOKMARK [2][-]{subsection.3.2}{\376\377\000R\000e\000g\000i\000m\000e\000\040\000i\000n\000d\000i\000c\000a\000t\000o\000r}{section.3}% 10
-\BOOKMARK [2][-]{subsection.3.3}{\376\377\000P\000o\000t\000e\000n\000t\000i\000a\000l\000\040\000O\000u\000t\000c\000o\000m\000e\000s}{section.3}% 11
-\BOOKMARK [2][-]{subsection.3.4}{\376\377\000C\000a\000u\000s\000a\000l\000\040\000E\000f\000f\000e\000c\000t\000s}{section.3}% 12
-\BOOKMARK [2][-]{subsection.3.5}{\376\377\000I\000n\000t\000e\000r\000v\000e\000n\000t\000i\000o\000n\000\040\000G\000r\000a\000p\000h\000s}{section.3}% 13
-\BOOKMARK [2][-]{subsection.3.6}{\376\377\000C\000a\000u\000s\000a\000l\000\040\000D\000A\000G\000s}{section.3}% 14
-\BOOKMARK [1][-]{section.4}{\376\377\000L\000e\000c\000t\000u\000r\000e\000\040\0004}{}% 15
-\BOOKMARK [2][-]{subsection.4.1}{\376\377\000S\000i\000m\000p\000s\000o\000n\000'\000s\000\040\000p\000a\000r\000a\000d\000o\000x}{section.4}% 16
-\BOOKMARK [1][-]{section.5}{\376\377\000L\000e\000c\000t\000u\000r\000e\000\040\0005}{}% 17
-\BOOKMARK [2][-]{subsection.5.1}{\376\377\000T\000o\000t\000a\000l\000\040\000C\000a\000u\000s\000a\000l\000\040\000E\000f\000f\000e\000c\000t}{section.5}% 18
-\BOOKMARK [2][-]{subsection.5.2}{\376\377\000F\000i\000n\000d\000i\000n\000g\000\040\000c\000a\000u\000s\000a\000l\000\040\000s\000t\000r\000u\000c\000t\000u\000r\000e}{section.5}% 19
-\BOOKMARK [1][-]{section.6}{\376\377\000E\000x\000e\000r\000c\000i\000s\000e\000s}{}% 20
-\BOOKMARK [2][-]{subsection.6.1}{\376\377\000S\000e\000r\000i\000e\000s\000\040\0001}{section.6}% 21
-\BOOKMARK [2][-]{subsection.6.2}{\376\377\000S\000e\000r\000i\000e\000s\000\040\0002}{section.6}% 22
+\BOOKMARK [1][-]{section.1}{Lecture 1}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Different types of experiments}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Internal v.s. External Validity}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{Simpson's Paradox}{section.1}% 4
+\BOOKMARK [1][-]{section.2}{Lecture 2}{}% 5
+\BOOKMARK [2][-]{subsection.2.1}{DAG models}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.2}{d-Separation}{section.2}% 7
+\BOOKMARK [1][-]{section.3}{Lecture 3}{}% 8
+\BOOKMARK [2][-]{subsection.3.1}{Do-Calculus}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.2}{Regime indicator}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.3}{Potential Outcomes}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.4}{Causal Effects}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.5}{Intervention Graphs}{section.3}% 13
+\BOOKMARK [2][-]{subsection.3.6}{Causal DAGs}{section.3}% 14
+\BOOKMARK [1][-]{section.4}{Lecture 4}{}% 15
+\BOOKMARK [2][-]{subsection.4.1}{Simpson's paradox}{section.4}% 16
+\BOOKMARK [1][-]{section.5}{Lecture 5}{}% 17
+\BOOKMARK [2][-]{subsection.5.1}{Total Causal Effect}{section.5}% 18
+\BOOKMARK [2][-]{subsection.5.2}{Finding causal structure}{section.5}% 19
+\BOOKMARK [1][-]{section.6}{Covariate Adjustment}{}% 20
+\BOOKMARK [2][-]{subsection.6.1}{Determining adjustment sets}{section.6}% 21
+\BOOKMARK [2][-]{subsection.6.2}{Backdoor criterion}{section.6}% 22
+\BOOKMARK [2][-]{subsection.6.3}{Positivity}{section.6}% 23
+\BOOKMARK [2][-]{subsection.6.4}{Gaussians}{section.6}% 24
+\BOOKMARK [2][-]{subsection.6.5}{Adjustment Criterion - Shipster et al, Perkovic et al}{section.6}% 25
+\BOOKMARK [2][-]{subsection.6.6}{Efficient adjustment sets in linear SEMs}{section.6}% 26
+\BOOKMARK [2][-]{subsection.6.7}{Direct Effects}{section.6}% 27
+\BOOKMARK [1][-]{section.7}{Week 7}{}% 28
+\BOOKMARK [2][-]{subsection.7.1}{Identifiability}{section.7}% 29
+\BOOKMARK [2][-]{subsection.7.2}{Frontdoor criterion}{section.7}% 30
+\BOOKMARK [2][-]{subsection.7.3}{Instrumental Variables}{section.7}% 31
+\BOOKMARK [2][-]{subsection.7.4}{Conditional Instrumental Variables}{section.7}% 32
+\BOOKMARK [2][-]{subsection.7.5}{Estimation of instrumental variables}{section.7}% 33
+\BOOKMARK [2][-]{subsection.7.6}{Identification strategies}{section.7}% 34
+\BOOKMARK [2][-]{subsection.7.7}{External Validity and Transportability}{section.7}% 35
+\BOOKMARK [1][-]{section.8}{Exercises}{}% 36
+\BOOKMARK [2][-]{subsection.8.1}{Series 1}{section.8}% 37
+\BOOKMARK [2][-]{subsection.8.2}{Series 2}{section.8}% 38
+\BOOKMARK [2][-]{subsection.8.3}{Series 3}{section.8}% 39
