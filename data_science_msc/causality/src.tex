@@ -425,9 +425,137 @@
 		
 		Honestly not much to it - transporting with causal assumptions is fine, not fine if You're using proxies and the proxies differ in populations.
 		
+\section{Week 8}
+
+	\subsection{Counterfactuals}
+	
+		Are simple. You observe one thing and ponder what if You observed another.
 		
+		Assumptions:
 		
+		SUTVA - stable unit treatment value assumption. Each patient is independent, each case independent etc.
 		
+		Consistency - $Y=Y(x)$ for all cases, so the mechanism remains the same.
+		
+		Ignorability - no confounders, and treatment assignment is independent of outcome.
+		
+		Positivity - all cases occur, same as before.
+		
+	\subsection{Matching}
+	
+		Is one way to get around counterfactuals.
+		
+		The simplest way is to take a positive case of treatment and match it with a non-positive case. If there are fewer treated than untreated people You'll lose data, and vice versa.
+		
+		Matching is done via a metric of Your choice, e.g. Mahalanobis distance.
+		
+		Can be done greedily or optimally, where optimal is feasible up to 1 million pairing, so 1k treated 1k controls.
+		
+		Must also check that the treatment and control groups aren't too weird (no idea to be honest) with standardized mean difference. $<0.2$ is fine, otherwise bad.
+		
+	\subsection{Propensity Scores}
+	
+		Summarize a whole lot of factors as just probability of getting treatment. Think of it as logistic regression. Can then match on propensity scores.
+		
+\section{Week 10}
+
+	\subsection{Inverse Probability Weighting}
+	
+		If You have 9 untreated patients and 1 treated, one possibility is just to weight the treated patient 9x.
+		
+	\subsection{Markov Properties}
+	
+		Global Markov - if $A$ and $B$ are d-separated by $S$ then they are independent given $S$.
+		
+		Local Markov - non-descendant independence given parents.
+		
+		Markov factorization - probability of some node decomposes according to parents.
+		
+	\subsection{Minimal I-map}
+	
+		I-Map is a synonym for a causal DAG, and minimal I-map is just a minimal DAG.
+		
+		To construct one just take the full factorization and simplify it as much as possible.
+		
+		A skeleton is a DAG without the directions.
+		
+	\subsection{Faithfulness and perfect maps}
+	
+		So We had the global Markov property, which was that d-separation implied conditional independence.
+		
+		Now We're going the other way around - a DAG is faithful if a conditional independence in the actual distribution implies d-separation in the DAG.
+		
+		If a distribution if Markov and Faithful w.r.t. a DAG, then the DAG is a perfect map of the distribution.
+		
+		There are distributions that a DAG can't capture - no perfect map exists.
+		
+	\subsection{Graph Terminology}
+	
+		A triple is a v-structure if You have $a\to b \leftarrow c$.
+		
+		An \textbf{unshielded} triple, so I guess like a triple-candidate, is when $a, b$ are adjacent, $b, c$ are adjacent, but not $a, c$.
+		
+	\subsection{Markov Equivalence}
+	
+		A perfect map, if it exists, is unique up to Markov Equivalence.
+		
+		Where, two DAGs are Markov Equivalent if they result in same d-separations.
+		
+		And this is why We cared about v-structures - You can identify whether a v-structure exists by testing for conditional independence. You can't do this in a chain, since regardless of the direction of the chain, the same d-separation holds.
+		
+		Therefore, DAGs in a markov equivalence class have the same skeleton with the same v-structures.
+		
+		Note that the skeleton just gives You edges, but the v-structures actually give You directionality.
+		
+		With this in mind, We have CPDAGs - completed partially directed acyclic graphs. These have undirected edges where the edge can be in either direction.
+		
+	\subsection{Constraint-based structure learning}
+	
+		The idea is simple:
+		
+		1. Two nodes are adjacent if they cannot  be d-separated.
+		
+		2. If two nodes are not adjacent, then they can be d-separated.
+		
+		So I suppose You test for stuff like that and v-structures to get a DAG up to markov equivalence.
+		
+\section{Week 11}
+
+	\subsection{SGS algorithm}
+	
+		So You start with a full graph, which is to say an arbitrary ordering and then just expand the conditional probabilities.
+		
+		So now for all pairs of nodes, asses whether they are independent given some other set of nodes, and if they are, remove the edge. Awful.
+		
+		Now You need to check for v-structures. If two nodes are independent without conditioning but become dependent conditioning on an unshielded triple, then You have a v-structure.
+		
+	\subsection{PC algorithm}
+	
+		Now You look at adjacent nodes and trim their parents by considering parents of either node (just taking subsets of parents and checking for conditional independence). Speeds things up since now You aren't looking at just the whole graph.
+		
+		Clicker - yes, yes.
+		
+\section{Week 12}
+
+	Establishing conditional independence is hard in non-Gaussian case.
+	
+	\subsection{Challenges for SGS and PC algorithms}
+	
+		Contradictory test results due to small sample size.
+		
+		Choice of tuning $\alpha$, the significance level for conditional independence.
+		
+		Non-parametric conditional independence tests are hard.
+		
+	\subsection{Score-based causal structure learning}
+	
+		What it says on the tin.
+		
+		First, You assume a parametric model - some set of parameters that can capture the entire search space.
+		
+		Then come up with a loss function - in this case penalized log-likelihood, and optimize away. Can also use Bayesian Information Criterion.
+		
+		BIC is neat because the score it gives is the same for all DAGs in the same Markov equivalence class (MEC), and it's decomposable into parts which means it can be efficiently computed.
 		
 		
 		
@@ -595,5 +723,28 @@
 			At first glance it might, but upon closer examination it does not.
 			
 			Perhaps white people are more susceptible, but if so then younger people would show more deaths.
+			
+	\subsection{Series 4}
+	
+		\textbf{Q2  a)}
+			
+			Yep it's an instrumental variable.
+			
+		\textbf{Q2 b)}
+			
+			Well first We perform a regression with $X$ as target and $Z$ as predictor. We then replace values of $X$ with the regressed/predicted values, and then perform a regression with the standard adjustment set (so with $H$ included).
+			
+		\textbf{Q4 a)}
+		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 \end{document} 
