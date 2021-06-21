@@ -463,6 +463,8 @@
 	
 		If You have 9 untreated patients and 1 treated, one possibility is just to weight the treated patient 9x.
 		
+		The rule is to weigh the treated samples by the inverse of their propensity score, and weigh controls by 1-propensity score.
+		
 	\subsection{Markov Properties}
 	
 		Global Markov - if $A$ and $B$ are d-separated by $S$ then they are independent given $S$.
@@ -531,7 +533,15 @@
 		
 	\subsection{PC algorithm}
 	
-		Now You look at adjacent nodes and trim their parents by considering parents of either node (just taking subsets of parents and checking for conditional independence). Speeds things up since now You aren't looking at just the whole graph.
+		So in the SGS algorithm We just looked at conditional independence given a subset of the rest of the graph. Very computationally inefficient.
+		
+		In the PC version, We instead scale up as We go - start with a fully connected graph. 
+		
+		Then test whether there are any unconditional independences - if $X_1$ is independent of $X_2$ for example. If independent, the edge between the two edges is dropped.
+		
+		Not that this step has reduced the number of adjacent nodes for both of $X_1$ and $X_2$.
+		
+		Then next in the algorithm You'd consider conditioning on a single variable, and if another independence is discovered, remove the edge accordingly etc. etc.
 		
 		Clicker - yes, yes.
 		
@@ -557,7 +567,33 @@
 		
 		BIC is neat because the score it gives is the same for all DAGs in the same Markov equivalence class (MEC), and it's decomposable into parts which means it can be efficiently computed.
 		
+		So off You go adding and removing edges to optimize  the BIC but You'll run into trouble rather quickly due to local optima.
 		
+		Instead of searching over DAGs, search over Markov Equivalence Classes.
+		
+		Main assumptions - Markov and faithfulness.
+		
+		Then first phase is to add one edge at a time until a local maximum is reached (traversing MECs).
+		
+		Second phase is to remove edges until a local maximum is reached.
+		
+	\subsection{Structural identifiability}
+	
+		So with Gaussian noise, linear SEMs cannot be distinguished in an equivalence class. 
+		
+		Non-Gaussian noise allows identification.
+		
+	\subsection{Linear non-Gaussian Acyclic Models LiNGAM}
+	
+		Honestly don't worry about it.
+		
+	\subsection{Invariant Causal Prediction}
+	
+		Idea is simple - You take a causal graph, I suppose a hypothetical causal graph, Your hypothesis that is, and then You want to identify which parts of this are true.
+		
+		So then You take Your interventions, and You take all sets that can d-separate Your interventions from Your target.
+		
+		Then You take the intersection of all those sets and that gives You the nodes that Your intersections could identify as causal, I suppose through like conditioning or something.
 		
 		
 		
