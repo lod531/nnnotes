@@ -770,12 +770,73 @@
 			
 			Well first We perform a regression with $X$ as target and $Z$ as predictor. We then replace values of $X$ with the regressed/predicted values, and then perform a regression with the standard adjustment set (so with $H$ included).
 			
-		\textbf{Q4 a)}
+	\subsection{Series 5}
+	
+		\textbf{Q2 a)}
 		
+			I want to say yes, by definition? 
+			
+		\textbf{Q2 b)}
+			
+			No, counter example given in lectures (namely cyclic-stuff).
+			
+	
+		\textbf{Q2 c)}
+		
+			That's true. Start with an ordering of variables, write out full Markov factorization and simplify where possible. This won't capture all relationships, but it'll capture some, and that's good enough here.
+			
+		\textbf{Q2 d)}
+			
+			No because You can factor a distribution in different ways eventually arriving at an minimal I-map for this factorization.
+			
+		\textbf{Q2 e)}
+		
+			Nope, again due to different factorizations.
+			
+		\textbf{Q2 f)}
+		
+			True. Since they are perfect maps, they encode the same d-separations, and so are markov equivalent.
+			
+		\textbf{Q2 g)}
+		
+			True by the full and empty DAGs.
 			
 			
 			
-			
+\section{Exam Stuff}
+
+	\subsection{Series 1}
+	
+		Can't say - women that accept screening have fewer problems in general, but that could just be correlation.
+		
+		Paths from A to do
+		
+		$A \rightarrow C \leftarrow D $ or $A \to E \leftarrow B \leftarrow D$.
+		
+		So to block the first path We can't have $C$ or any descendants of $C$, so $C$ and $F$ are out, forever.
+		
+		To block the second path is blocked by default. It is also blocked if We include $B$. If We include $E$ We open it, but can block it again with $B$. Likewise We can open it with the inclusion of $H$.
+		
+	\subsection{Lec 3}
+	
+		X has a causal effect on Y if manipulating X changes Y, which in math is something like 
+		
+		\begin{align}
+			\exists a, b: P(Y|do(X=a))\neq P(Y|do(X=b))
+		\end{align}
+		
+		Average causal effect is compared between two interventions
+		
+		\begin{align}
+			ACE(x, x') = E(y|do(X=x)) - E(y|do(X'=x))
+		\end{align}
+		
+		
+		
+		
+		
+		
+		
 			
 			
 			

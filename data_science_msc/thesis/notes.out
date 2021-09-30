@@ -1,0 +1,36 @@
+\BOOKMARK [1][-]{section.1}{Regularizing Neural Networks by Penalizing Confident Output Distributions}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Aight}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Smoothing as KL penalty}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{KL and entropy penalty}{section.1}% 4
+\BOOKMARK [1][-]{section.2}{Jurafsky and Martin - Speech and Language Processing}{}% 5
+\BOOKMARK [2][-]{subsection.2.1}{N-Grams}{section.2}% 6
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Laplace Smoothing}{subsection.2.1}% 7
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Good-Turing Smoothing}{subsection.2.1}% 8
+\BOOKMARK [3][-]{subsubsection.2.1.3}{On the Estimation of 'Small' Probabilities by Leaving-One-Out}{subsection.2.1}% 9
+\BOOKMARK [3][-]{subsubsection.2.1.4}{Good-Turing Smooth Stanford Lecture}{subsection.2.1}% 10
+\BOOKMARK [3][-]{subsubsection.2.1.5}{Good Turing Let Me Go}{subsection.2.1}% 11
+\BOOKMARK [3][-]{subsubsection.2.1.6}{Okay so here is a Good-Turing Smoothing derivation}{subsection.2.1}% 12
+\BOOKMARK [3][-]{subsubsection.2.1.7}{One Last Good Time, I Swear}{subsection.2.1}% 13
+\BOOKMARK [3][-]{subsubsection.2.1.8}{Issues in Good-Turing}{subsection.2.1}% 14
+\BOOKMARK [3][-]{subsubsection.2.1.9}{Backoff and Interpolation}{subsection.2.1}% 15
+\BOOKMARK [3][-]{subsubsection.2.1.10}{Katz Backoff}{subsection.2.1}% 16
+\BOOKMARK [1][-]{section.3}{Working through what's already there}{}% 17
+\BOOKMARK [1][-]{section.4}{Jelinek-Mercer}{}% 18
+\BOOKMARK [2][-]{subsection.4.1}{So now what}{section.4}% 19
+\BOOKMARK [2][-]{subsection.4.2}{From count to log likelihood}{section.4}% 20
+\BOOKMARK [2][-]{subsection.4.3}{Additive Smoothing}{section.4}% 21
+\BOOKMARK [3][-]{subsubsection.4.3.1}{Mistakes}{subsection.4.3}% 22
+\BOOKMARK [2][-]{subsection.4.4}{Deriving it I suppose}{section.4}% 23
+\BOOKMARK [1][-]{section.5}{Appendix}{}% 24
+\BOOKMARK [2][-]{subsection.5.1}{Entropy}{section.5}% 25
+\BOOKMARK [2][-]{subsection.5.2}{Cross Entropy}{section.5}% 26
+\BOOKMARK [2][-]{subsection.5.3}{KL Divergence}{section.5}% 27
+\BOOKMARK [2][-]{subsection.5.4}{Perplexity}{section.5}% 28
+\BOOKMARK [2][-]{subsection.5.5}{As a measure of model confusion}{section.5}% 29
+\BOOKMARK [2][-]{subsection.5.6}{Lagrange Multipliers}{section.5}% 30
+\BOOKMARK [2][-]{subsection.5.7}{Unigram MLE}{section.5}% 31
+\BOOKMARK [2][-]{subsection.5.8}{Bigram MLE}{section.5}% 32
+\BOOKMARK [2][-]{subsection.5.9}{Unigram MLE with Uniform distribution KL}{section.5}% 33
+\BOOKMARK [3][-]{subsubsection.5.9.1}{Sanity Check}{subsection.5.9}% 34
+\BOOKMARK [2][-]{subsection.5.10}{Unigram MLE with Uniform distribution KL but right lol}{section.5}% 35
+\BOOKMARK [3][-]{subsubsection.5.10.1}{Mistakes}{subsection.5.10}% 36
