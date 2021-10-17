@@ -1,0 +1,12 @@
+\BOOKMARK [1][-]{section.1}{Intro}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Physical and logical independence}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Query Optimization}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{Data Integrity}{section.1}% 4
+\BOOKMARK [2][-]{subsection.1.4}{Access Control}{section.1}% 5
+\BOOKMARK [2][-]{subsection.1.5}{Concurrency Control}{section.1}% 6
+\BOOKMARK [2][-]{subsection.1.6}{Recovery}{section.1}% 7
+\BOOKMARK [2][-]{subsection.1.7}{Data vs Query shipping}{section.1}% 8
+\BOOKMARK [2][-]{subsection.1.8}{Cons/Pros of Shared-Nothing}{section.1}% 9
+\BOOKMARK [2][-]{subsection.1.9}{Shared Memory}{section.1}% 10
+\BOOKMARK [2][-]{subsection.1.10}{Shared Disk}{section.1}% 11
+\BOOKMARK [1][-]{section.2}{Storage Systems}{}% 12

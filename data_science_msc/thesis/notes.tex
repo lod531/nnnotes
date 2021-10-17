@@ -11,6 +11,7 @@
 \usepackage[lite]{amsrefs}
 \usepackage{amsthm}
 \usepackage{graphicx}
+\usepackage{bbm}
 %\graphicspath{ {./img/} }
 
 \usepackage{graphicx}
@@ -1285,6 +1286,991 @@ by Leaving-One-Out}
 				&= \frac{\sum^2_{n=1} (\#(w_i, \context_{<n})\alpha_n}{\sum^2_{n=1} \sum^{|V|}_{i=1} (\#(w_i, \context_{<n})\alpha_n}\\
 				&= \frac{\sum^2_{n=1} (\#(w_i, \context_{<n})\alpha_n}{\sum^2_{n=1} (\#(\context_{<n})\alpha_n}		
 			\end{align}
+		
+			Yep, that's a weighted sum lol. 
+			
+			I suppose I ought to sanity check this
+		
+			\begin{align}
+				&= \frac{\sum^2_{n=1} (\#(w_i, \context_{<n})\alpha_n}{\sum^2_{n=1} (\#(\context_{<n})\alpha_n}\\
+				&= \sum^{|V|}_{i=1}\frac{\sum^2_{n=1} (\#(w_i, \context_{<n})\alpha_n}{\sum^2_{n=1} (\#(\context_{<n})\alpha_n}\\
+				&= \frac{ \sum^{|V|}_{i=1} \sum^2_{n=1} (\#(w_i, \context_{<n})\alpha_n}{\sum^2_{n=1} (\#(\context_{<n})\alpha_n}\\
+				&= \frac{  \sum^2_{n=1} \sum^{|V|}_{i=1} (\#(w_i, \context_{<n})\alpha_n}{\sum^2_{n=1} (\#(\context_{<n})\alpha_n}\\
+				&= \frac{  \sum^2_{n=1} (\#(\context_{<n})\alpha_n}{\sum^2_{n=1} (\#(\context_{<n})\alpha_n} = 1
+			\end{align}
+		
+			Yeet.
+			
+			Oh yeah I'd like a justification for the starting line - which I guess is not difficult to do. 
+			
+		\subsection{General and hopefully pretty case}
+		
+			So We consider all tokens up to size $N$, and our model is aware of a fixed size context $\context_N$
+			
+			\begin{align}
+				\sum^N_{n=1} \alpha_n \KL (\tilde{p}(\cdot | \context_{<n}) \mid\mid \model(\cdot | \context_{<N}))
+			\end{align}
+			
+			Consider a particular token has been observed: $(w_j, \context)$. Removing the KL notation:
+			
+			\begin{align}
+				\KL (\tilde{p}(\cdot | \context_{<n}) \mid\mid \model(\cdot | \context_{<N})) &= \sum^{|V|}_{i=1} \tilde{p}(w_i | \context_{<n})\ln\bigg(\frac{\tilde{p}(w_i | \context_{<n})}{\model(w_i| \context_{<N})}\bigg)\\
+				&= \sum^{|V|}_{i=1} \mathbbm{1}_{\{w_i = w_j\}} \ln\bigg(\frac{\mathbbm{1}_{\{w_i = w_j\}}}{\model(w_i| \context_{<N})}\bigg)\\
+				&= \ln\bigg(\frac{1}{\model(w_j| \context_{<N})}\bigg)\\
+				&= -\ln(\model(w_j| \context_{<N}))		
+			\end{align}
+			
+			Summing over the KL terms yields
+			
+			\begin{align}
+				\sum^N_{n=1}  -\alpha_n \ln(\model(w_j| \context_{<N}))		
+			\end{align}
+						
+			Then summing over the entire vocabulary and using the count function to account for duplicates:
+		
+			\begin{align}
+				\sum^{|V|}_{i=1} \sum^N_{n=1}  -(\#(w_i, \context_{<n})\alpha_n \ln(\model(w_j| \context_{<N}))		
+			\end{align}
+			
+			Then for the Lagrange multiplier:
+			
+			\begin{align}
+				\mathcal{L} = \bigg(\sum^{|V|}_{i=1} \sum^N_{n=1}  -(\#(w_i, \context_{<n})\alpha_n \ln(\model(w_j| \context_{<N}))	\bigg) + \lambda\sum^{|V|}_{i=1} \model(w_i|\context_{<N}) - 1	
+			\end{align}
+			
+			Then taking the derivative w.r.t. a particular $\model(w_m|\context_{<N})$:
+			
+			\begin{align}
+				\bigg(\sum^N_{n=1}  -(\#(w_m, \context_{<n})\alpha_n \frac{1}{\model(w_m| \context_{<N})}	\bigg) + \lambda &= 0\\
+				\sum^N_{n=1} (\#(w_m, \context_{<n})\alpha_n \frac{1}{\model(w_m| \context_{<N})}  &= \lambda	\\
+				\frac{\sum^N_{n=1} \#(w_m, \context_{<n})\alpha_n}{\model(w_m| \context_{<N})}  &= \lambda\\
+				\frac{\model(w_m| \context_{<N})}{\sum^N_{n=1} \#(w_m, \context_{<n})\alpha_n}  &= \frac{1}{\lambda}\\
+				\model(w_m| \context_{<N})  &= \frac{\sum^N_{n=1} \#(w_m, \context_{<n})\alpha_n}{\lambda}
+			\end{align}
+			
+			Then using the above and our constraint:
+			
+			\begin{align}
+				\sum^{|V|}_{i=1} \model(w_i|\context_{<N}) &= 1\\
+				\sum^{|V|}_{i=1} \frac{\sum^N_{n=1} \#(w_m, \context_{<n})\alpha_n}{\lambda} &= 1\\
+				\sum^{|V|}_{i=1} \sum^N_{n=1} \#(w_m, \context_{<n})\alpha_n &= \lambda
+			\end{align}
+			
+			Plugging this $\lambda$ into the previous expression for $\model(w_m| \context_{<N})$:
+			
+			\begin{align}
+				\model(w_m| \context_{<N})  &= \frac{\sum^N_{n=1} \#(w_m, \context_{<n})\alpha_n}{\lambda}\\
+				&= \frac{\sum^N_{n=1} (\#(w_m, \context_{<n})\alpha_n}{\sum^{|V|}_{i=1} \sum^N_{n=1} \#(w_m, \context_{<n})\alpha_n}
+			\end{align}
+			
+			Which looks about right.
+			
+\newpage		
+\section{Katz-Backoff}
+
+	Okay so real slowly:
+	
+	If the count is non-null, We have
+	
+	\begin{align}
+		P_{katz}(w_i|w^{i-1}_{i-N+1}) = P^*(w_n|w^{n-1}_{n-N+1})
+	\end{align}
+	
+	All that says it's not just straight probability, which, like, no kidding.
+	
+	If the count \textit{is} zero then
+	
+	\begin{align}
+		P_{katz}(w_i|w^{i-1}_{i-N+1}) = \alpha(w^{n-1}_{n-N+1})P_{katz}(w_n|w^{n-1}_{n-N+2})
+	\end{align}
+	
+	So if the count is zero We get some customed tailored coefficient and a probability which takes into account one less context word. 
+	
+	The same awkwardness exists in this formulation as before - it's in terms of absolute terms instead of variables. 
+	
+	\begin{align}
+		P_{katz}(w_i|w^{i-1}_{i-N+1}) &= \alpha(w^{n-1}_{n-N+1})P_{katz}(w_n|w^{n-1}_{n-N+2})\\
+		P_{katz}(w_i|w^{a}_{b}) &= \alpha(w^{a}_{b})P_{katz}(w_n|w^{a}_{b+1})
+	\end{align}	
+	
+	The idea then is to define a function to keep track of the available probability mass:
+	
+	\begin{align}
+		\beta(w^{n-1}_{n-N+1}) = 1 - \sum_{w_n:\#(w^n_{n-N+1})>0} P^*(w_n|w^{n-1}_{n-N+1})
+	\end{align}
+	
+	So the available mass given a context is the total mass, sure, minus the sum of probabilities of words with non-zero count. One thing that bothers me is that each individual word gets it's own probability mass. I guess We are just looking for the probability of $UNK$, so, sure.
+	
+	There's a problem that I'm having which is I'm not sure what it is that We are counting. Like, tokens, sure but so here is my problem:
+	
+	It sounds like We are giving probability mass to each unknown new word, but the number of such words is infinite, so We're inventing an infinite amount of mass which like no.
+	
+	Okay so I think this is a fixed size vocabulary? Yep. And You just count words that don't have a history. 
+	
+	Then You take that available mass and distribute it - that's the $\alpha^{n-1}_{n-N+1}$, so
+	
+	\begin{align}
+		\alpha^{n-1}_{n-N+1} = \frac{\beta(w^{n-1}_{n-N+1})}{\sum_{w_i:\#(w^n_{n-N+1})=0} P_{katz}(w_n|w^{n-1}_{n-N+2})}
+	\end{align}
+		
+	So that's fine - the denominator is just the sum of Katz probabilities of tokens with zero count
+		
+	Instead of calculating the sum of the probability mass of the tokens with zero count, You can take the total probability mass (1), and subtract all the stuff that has a non-zero count to leave You with the mass for the zero count terms:
+		
+	\begin{align}
+		\alpha^{n-1}_{n-N+1} &= \frac{\beta(w^{n-1}_{n-N+1})}{\sum_{w_i:\#(w^n_{n-N+1})\color{red}{=0}} P_{katz}(w_n|w^{n-1}_{n-N+2})}\\
+		&= \frac{\beta(w^{n-1}_{n-N+1})}{1-\sum_{w_i:\#(w^n_{n-N+1})\color{red}{>}0} P_{katz}(w_n|w^{n-1}_{n-N+2})}
+	\end{align}	
+		
+	Seems fair.
+	
+	So now it's just $P^*$ and how to calculate that. 
+	
+	\subsection{Another attempt due to bad notation lol}
+	
+		Source can be found \href{https://dash.harvard.edu/bitstream/handle/1/25104739/tr-10-98.pdf}{here}.
+		
+		So, first We define modified counts:
+		
+		\begin{align}
+			\#_{katz}(w^n_{n-N+1}) = d_r\cdot \#(w^n_{n-N+1})
+		\end{align}
+		
+		So in the case of a non-zero count, We take the true count $\#_{katz}(w^n_{n-N+1})$ and discount it by some factor $d_r$, which $d_r$ depends on the number of times the token in question has occurred.
+		
+		If the count of a particular token is zero, then
+		
+		\begin{align}
+			\#_{katz}(w^n_{n-N+1}) = \alpha(w^n_{n-N+1})p_{katz}(w^n_{n-N+2})
+		\end{align}
+		
+		So We have that $\alpha$ term that will split the probability among tokens with zero count, and We have that $p_{katz}$ that We'll need to define. 
+		
+		The $\alpha$ here is also a bit different - in the previous formulation We thought about probabilities, but now We are thinking about counts. All the same in the end I guess, but so now the point of the $\alpha$ is to ensure that the overall count remains unchanged - the number of tokens is the same when using the Katz counting scheme.
+		
+		\begin{align}
+			\alpha(w^n_{n-N+1}) = \frac{1 - \sum_{w_n:\#(w^n_{n-N+1})>0} p_{katz}(w_n|w^{n-1}_{n-N+1})}{\sum_{w_n:\#(w^n_{n-N+1})=0} p_{katz}(w^n|w^{n-1}_{n-N+2})}
+		\end{align}
+		
+		What a mess.
+		
+		Okay so on top We have the total probability mass minus the mass term for non zero counts so then We just have the mass reserved for zero count words, sure.
+		
+		Now if We just gave each word a constant weight, I think We'd just recover Good-Turing.
+		
+		But instead We are going to slice up that mass in accordance to the weighting dictated by the $n-1$-gram model.
+		
+		We know what those weights are going to be so We calculate up a normalizer. With You so far.
+		
+		So now for the actual probability of a zero-count token, You'll do
+		
+		\begin{align}
+			&p_{katz}(w^n|w^{n-1}_{n-N+1}) \\
+			&= \frac{1 - \sum_{w_n:\#(w^n_{n-N+1})>0} p_{katz}(w_n|w^{n-1}_{n-N+1})}{\sum_{w_n:\#(w^n_{n-N+1})=0} p_{katz}(w^n|w^{n-1}_{n-N+2})} \times p_{katz}(w^n|w^{n-1}_{n-N+2})
+		\end{align}
+		
+		kay. And now also observe that
+		
+		\begin{align}
+			p_{katz}(w^n|w^{n-1}_{n-N+1}) = \frac{\#_{katz}(w^n_{n-N+1})}{\sum_{w\in|V|} \#(w_i, w^{n-1}_{n-N+1})}
+		\end{align}
+		
+		So then in total, for an unobserved token We have 
+		
+		\begin{align}
+			&p_{katz}(w^n|w^{n-1}_{n-N+1}) \\
+			&= \frac{\frac{1 - \sum_{w_n:\#(w^n_{n-N+1})>0} p_{katz}(w_n|w^{n-1}_{n-N+1})}{\sum_{w_n:\#(w^n_{n-N+1})=0} p_{katz}(w^n|w^{n-1}_{n-N+2})} \times p_{katz}(w^n|w^{n-1}_{n-N+2})}{\sum_{w\in|V|} \#(w_i, w^{n-1}_{n-N+1})}
+		\end{align}
+		
+		Isn't it beautiful?
+		
+		Okay so I think that their formulation is actually wrong. Let's see if I can prove this:
+		
+	\subsection{Mistakes?}
+		
+		Kay so the point is that obviously this must hold:
+		
+		\begin{align}
+			\sum_{w_i\in V} P(w_i|w^n_{n-N+1}) = 1
+		\end{align}
+		
+		Now We can split this into two cases - zero and non-zero.
+		
+		In the non-zero cases We have
+		
+		\begin{align}
+			P_{katz}(w_i|w^n_{n-N+1}) &= \frac{\#_{katz}(w_i, w^n_{n-N+1})}{\#(w^n_{n-N+1})}\\
+			\sum_{w_i:\#(w_i, w^n_{n-N+1}>0)}P_{katz}(w_i|w^n_{n-N+1}) &= \sum_{w_i:\#(w_i, w^n_{n-N+1}>0)}\frac{\#_{katz}(w_i, w^n_{n-N+1})}{\#(w^n_{n-N+1})}
+		\end{align}
+		
+		Sure yeah.
+		
+		In the zero case We have 
+		
+		\begin{align}
+			&= \frac{\frac{1 - \sum_{w_n:\#(w^n_{n-N+1})>0} p_{katz}(w_n|w^{n-1}_{n-N+1})}{\sum_{w_n:\#(w^n_{n-N+1})=0} p_{katz}(w^n|w^{n-1}_{n-N+2})} \times p_{katz}(w^n|w^{n-1}_{n-N+2})}{\sum_{w\in|V|} \#(w_i, w^{n-1}_{n-N+1})}
+		\end{align}
+		
+		Everything is divided by the total count so let's multiply it out 
+		
+		\begin{align}
+			\sum_{w_i:\#(w_i, w^n_{n-N+1}>0)}P_{katz}(w_i|w^n_{n-N+1}) &= \sum_{w_i:\#(w_i, w^n_{n-N+1}>0)}\frac{\#_{katz}(w_i, w^n_{n-N+1})}{\#(w^n_{n-N+1})}\\
+			\#(w^n_{n-N+1})P_{katz}(w_i|w^n_{n-N+1}) &= \#_{katz}(w_i, w^n_{n-N+1})
+		\end{align}
+		
+		Dropped the sum term 'cause it's taking up tons of space.
+		
+		So now if We sum over those terms like We are supposed to We'll get the sum of the Katz counts, sure.
+		
+		If We do the same for the zero count case, as in sum over all of them
+		
+		\begin{align}
+			&\frac{1 - \sum_{w_n:\#(w^n_{n-N+1})>0} p_{katz}(w_n|w^{n-1}_{n-N+1})}{\sum_{w_n:\#(w^n_{n-N+1})=0} p_{katz}(w^n|w^{n-1}_{n-N+2})} \times p_{katz}(w^n|w^{n-1}_{n-N+2})
+		\end{align}
+		
+		Yeah when You sum the above over all tokens that have zero count You'll just get 
+		
+		\begin{align}
+			1 - \sum_{w_n:\#(w^n_{n-N+1})>0} p_{katz}(w_n|w^{n-1}_{n-N+1})
+		\end{align}
+		
+		By definition, which ain't no God damn count, it's a probability, so this paper fucked it.
+		
+	\subsection{Bad-Turing lol}
+	
+		So I guess I ought to do the Turing bit, since it's going to be used by Katz anyway, so.
+		
+		We're back to this paper by the by \href{https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=476512&tag=1}{link}.
+		
+		So $N$ observed token instances, $K$ types.
+		
+		Partition by $n_r$ such that
+		
+		\begin{align}
+			n_r &= \sum_{k:N(k)=r} 1\\
+			\sum^{R}_{r=0} n_r  r &= N\\
+			\sum^R_{r=0} n_r p_r &= 1
+		\end{align}
+		
+		So $n_r$ is just the number of types that have occurred $r$ times, summing over the partitions and multiplying by their frequencies gets You the total count which makes sense, and each member of a partition gets some probability mass, with each partition having $n_r$ members so yeah, sure.
+		
+		Then divide a corpus into holdout and training sets.
+		
+		The training part sets up the partition - this is where We count how much of each token occurs, thereby partitioning the tokens. Training is the set up. Alright.
+		
+		The first thing the holdout set is used or is to calculate $C_r$ - $C_2$ for example is the number of words in the holdout set that belong to $n_2$ in the training set. 
+		
+		So as far as I can see it's the holdout set that dictates what We are trying to maximize as an objective:
+		
+		\begin{align}
+			G(p_0, p_1\ldots p_R) &= \prod^R_{r=1} p_r^{C_r}\\
+			\ln(G(p_0, p_1\ldots p_R)) &= \sum^R_{r=1} C_r\ln(p_r)\\
+			F(p_0, p_1\ldots p_R) &= \sum^R_{r=1} C_r\ln(p_r)
+		\end{align}
+		
+		Okay and then You want the probabilities to sum to one so:
+		
+		\begin{align}
+			\mathcal{L} &= \bigg(\sum^R_{r=1} C_r\ln(p_r)\bigg) + \lambda \bigg(\bigg(\sum^R_{r=0} n_r p_r\bigg)-1\bigg)
+		\end{align}
+		
+		So a bit of confusion is that $n_r$ thing, but I mean what else could You do? It's the training set that dictates the partitions, so $n_r$ kind of has to be in there.
+		
+		So then We take the derivative w.r.t. some particular $p_j$ I suppose:
+		
+		\begin{align}
+			\frac{\partial}{\partial p_j} \sum^R_{r=1} C_r\ln(p_r) &= \frac{C_j}{p_j}
+		\end{align}
+		
+		So that's fine and
+		
+		\begin{align}
+			\frac{\partial}{\partial p_j} \lambda \bigg(\bigg(\sum^R_{r=0} n_r p_r\bigg)-1\bigg) &= \lambda n_j
+		\end{align}
+		
+		Okay cool so We have $R$ equations of the form
+		
+		\begin{align}
+			\frac{C_j}{p_j} + \lambda n_j &= 0\\
+			\frac{C_j}{p_j} &= - \lambda n_j \\
+			\frac{p_j}{C_j} &= - \frac{1}{\lambda n_j} \\
+			p_j &= - \frac{C_j}{\lambda n_j} 
+		\end{align}
+		
+		Then
+		
+		\begin{align}
+			\sum^R_{r=1} n_r p_r &= 1\\
+			-\sum^R_{r=1} n_r \frac{C_r}{\lambda n_r} &= 1\\
+			-\sum^R_{r=1} \frac{C_r}{\lambda} &= 1\\
+			-\sum^R_{r=1} C_r &= \lambda
+		\end{align}
+		
+		So then the optimal value for the probability is:
+		
+		\begin{align}
+			p_j &= - \frac{C_j}{\lambda n_j}\\
+			&= - \frac{C_j}{n_j \bigg(-\sum^R_{r=0} C_r\bigg)}\\
+			&= \frac{C_j}{n_j \bigg(\sum^R_{r=0} C_r\bigg)} \\
+			&= \frac{C_j}{n_j}\frac{1}{\sum^R_{r=0} C_r} 
+		\end{align}
+		
+		So that's the setup.
+		
+		Now the idea is to do Leave One Out Cross Validation?
+		
+		You're going to generate a whole lot of holdout sets, for some set $C$, it'll have one item, and the training will therefore have $N-1$ tokens, and though the original count in the whole set for this particular holdout item was $r+1$, after being held out it's now $r$.
+		
+		So then in total, across holdout sets, it'll be $(r+1)n_{r+1}$ number of tokens that will belong to the $p_r$ partition in the training set.
+		
+		\begin{align}
+			\ln\bigg(\prod^{R-1}_{r=0} p_r^{n_{r+1}(r+1)} \bigg) &= \sum_{r=0}^{R-1} (r+1)n_{r+1}\ln(p_r)
+		\end{align}
+		
+		So points of confusion - the indexing now starts at $r=0$ because there will be tokens in the holdout set that occur 0 times in the training set. No worries though, right? You'd right $p_0=0$, but there's no like law about that. The objective is dictated by the holdout set, and there are things in the holdout set that are not in the training set, and now You just get to optimize and see what ya get.
+		
+		But so then the whole shebang is:
+		
+		\begin{align}
+			\mathcal{L} &= \bigg(\sum_{r=0}^{R-1} (r+1)n_{r+1}\ln(p_r)\bigg) +  \lambda \bigg(\bigg(\sum^R_{r=0} n_r p_r\bigg)-1\bigg)
+		\end{align}
+		
+		Why does the constraint start at 0? I see why $p_0$ exists, and I suppose $n_0$ can then be thought of as the number types that have probability $p_0$.
+		
+		Okay so I think this is that thing again of different training sets and different holdout sets playing together. 
+		
+		If You have some dictionary, then $n_0$ is just the number of words that do not appear in the observed corpus.
+		
+		Like We had $\sum_{r=1}^R n_r r = N$ but if You include the words that did not occur in the corpus then yeah of course Your sum will be at least $N$.
+		
+		This makes sense in the objective equation - it's got $p_0$ in there since if held out item can occur 0 times, and there will be $n_1$ such occurences, so You assign to $p_0$ in whatever way You have to to maximize the likelihood.
+		
+		But then also the probability mass of an equivalence class is distributed evenly to it's members, so the constraint has $n_0$ from the perspective of the vocabulary.
+		
+		
+		
+		Then the derivatives:
+		
+		\begin{align}
+			\frac{\partial}{\partial p_j} \sum_{r=0}^{R-1} (r+1)n_{r+1}\ln(p_r) = \frac{(j+1)n_{j+1}}{p_j}
+		\end{align}
+		
+		and then
+		
+		\begin{align}
+			\frac{\partial}{\partial p_j} \lambda \bigg(\bigg(\sum^R_{r=0} n_r p_r\bigg)-1\bigg) &= \lambda n_j
+		\end{align}
+		
+		So putting those together:
+		
+		\begin{align}
+			\frac{(j+1)n_{j+1}}{p_j} + \lambda n_j &= 0\\
+			\frac{(j+1)n_{j+1}}{p_j}  &= - \lambda n_j\\
+			\frac{p_j}{(j+1)n_{j+1}}  &= - \frac{1}{\lambda n_j}\\
+			p_j  &= - \frac{(j+1)n_{j+1}}{\lambda n_j}
+		\end{align}
+		
+		Then the constraint:
+		
+		\begin{align}
+			\sum^R_{r=0} n_r p_r &= 1\\
+			-\sum^R_{r=0} n_r \frac{(r+1)n_{r+1}}{\lambda n_r} &= 1\\
+			-\sum^R_{r=0}  (r+1)n_{r+1} &= \lambda \\
+		\end{align}
+		
+		Then back again:
+		
+		\begin{align}
+			p_j  &= - \frac{(j+1)n_{j+1}}{\lambda n_j}\\
+			p_j  &= - \frac{(j+1)n_{j+1}}{\bigg( -\sum^R_{r=0}  (r+1)n_{r+1} \bigg) n_j}\\
+			p_j  &= \frac{(j+1)n_{j+1}}{\bigg(\sum^R_{r=0}  (r+1)n_{r+1} \bigg) n_j}\\
+			p_j  &= \frac{(j+1)n_{j+1}}{N n_j}\\
+			p_j  &= \frac{(j+1)n_{j+1}}{n_j}\frac{1}{N }
+		\end{align}
+		
+		
+		Something's gone amiss.
+		
+		So it's true that 
+		
+		\begin{align}
+			p_j  &= - \frac{(j+1)n_{j+1}}{\lambda n_j}\\
+			&= - \frac{1}{\lambda}\frac{(j+1)n_{j+1}}{n_j}
+		\end{align}
+		
+		And then We stick that into the constraint
+		
+		\begin{align}
+			\sum^R_{r=0} n_r p_r &= 1\\
+			-\sum^R_{r=0} n_r \frac{1}{\lambda}\frac{(r+1)n_{r+1}}{n_r} &= 1\\
+			-\sum^R_{r=0} n_r \frac{(r+1)n_{r+1}}{n_r} &= \lambda\\
+		\end{align}
+		
+		Okay I think this may have to do with the fact that We have constraints for $R-1$ of the tokens in the lagrange formulation.
+		
+		\subsubsection{Mistakes}
+		
+			Alright so We have 
+		
+			\begin{align}
+				\frac{\partial}{\partial p_j} \sum_{r=0}^{R-1} (r+1)n_{r+1}\ln(p_r) = \frac{(j+1)n_{j+1}}{p_j}
+			\end{align}
+			
+			and then
+			
+			\begin{align}
+				\frac{\partial}{\partial p_j} \lambda \bigg(\bigg(\sum^R_{r=0} n_r p_r\bigg)-1\bigg) &= \lambda n_j
+			\end{align}
+			
+			Where the first derivative gives us expressions for $p_0\ldots p_{R-1}$, and the second derivative is true across all bits.
+			
+			We do still have this
+			
+			\begin{align}
+				p_j  &= - \frac{(j+1)n_{j+1}}{\lambda n_j}\\
+				&= - \frac{1}{\lambda}\frac{(j+1)n_{j+1}}{n_j}
+			\end{align}
+			
+			But only for $j=0\ldots R-1$. We also have
+			
+			\begin{align}
+				\lambda n_R = 0
+			\end{align}
+			
+			Which, uhhhhh lol.
+			
+			I guess they step around this by making the function a function of $p_0\ldots p_{R-1}$.
+			
+			But so then
+		
+			\begin{align}
+				\sum^R_{r=0} n_r p_r &= 1\\
+				n_Rp_R + \sum^{R-1}_{r=0} n_r p_r &= 1\\
+				\sum^{R-1}_{r=0} n_r p_r &= 1-n_R p_R\\
+				-\sum^{R-1}_{r=0} n_r \frac{1}{\lambda}\frac{(r+1)n_{r+1}}{n_r} &= 1-n_R p_R\\
+				-\sum^{R-1}_{r=0} (r+1)n_{r+1} &= \lambda(1-n_R p_R)\\
+				-N &= \lambda(1-n_R p_R)\\
+				- &= \lambda\\
+			\end{align}
+		
+			Yeah and so then 
+		
+			\begin{align}
+				p_j  &= - \frac{(j+1)n_{j+1}}{\lambda n_j}\\
+				&= - \frac{1}{\lambda}\frac{(j+1)n_{j+1}}{n_j}\\
+				&= \frac{1-n_R p_R}{N}\frac{(j+1)n_{j+1}}{n_j}
+			\end{align}
+			
+			
+		\subsubsection{Using standard notation}
+			
+			Consider a set of $N$ tokens, with $K$ different types of tokens present in the corpus. Now create $N$ pairs of holdout and training sets by holding out one token at a time. The joint log likelihood of the holdout sets is
+			
+			\begin{align}
+				\ln\bigg(\prod^{R-1}_{r=0} p_r^{n_{r+1}(r+1)} \bigg) &= \sum_{r=0}^{R-1} (r+1)n_{r+1}\ln(p_r)
+			\end{align}
+		
+			Using notation from \href{https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=476512&tag=1}{this} paper, let $r+1$ be the number of times a token occurred in the full size corpus, then if that type of token is in the holdout set, it must only occur $r$ times in the training set. Therefore, from the perspective of the training set, the held out token belongs to the $p_r$ partition, and there will be $n_r(r+1)$ such cases among all the holdout sets, where $n_r$ is the number of tokens which appear with frequency $r$.
+			
+			The normalizing constraint is:
+			
+			\begin{align}
+				\sum^R_{r=0} n_r p_r &= 1
+			\end{align}
+			
+			And it's important to note that $p_0n_0$ make an appearance since the likelihood of the holdout sets will include tokens that never occur from the perspective of the associated training set, namely tokens that occur only once in the complete corpus. 
+		
+			\begin{align}
+				\mathcal{L}(p_0\ldots p_{R-1}) &= \bigg( \sum_{r=0}^{R-1} (r+1)n_{r+1}\ln(p_r)\bigg) - \lambda\bigg(\bigg(\sum^R_{r=0} n_r p_r)\bigg) -1 \bigg)
+			\end{align}
+			
+			Then taking the derivative
+			
+			\begin{align}
+				\frac{\partial}{\partial p_j} \sum_{r=0}^{R-1} (r+1)n_{r+1}\ln(p_r) = \frac{(j+1)n_{j+1}}{p_j}
+			\end{align}
+			
+			and
+			
+			\begin{align}
+				\frac{\partial}{\partial p_j} \lambda \bigg(\bigg(\sum^R_{r=0} n_r p_r\bigg)-1\bigg) &= \lambda n_j
+			\end{align}
+			
+			Putting those back together yields
+			
+			\begin{align}
+				\frac{(j+1)n_{j+1}}{p_j} - \lambda n_j &= 0\\
+				p_j  &= -\frac{1}{\lambda}\frac{(j+1)n_{j+1}}{n_j}\qquad \text{For }j\in\{0\ldots R-1\}
+			\end{align}
+			
+			Then using plugging the above into the constraint (keeping track of the fact that We only have equations for $p_0\ldots p_{R-1}$:
+			
+			\begin{align}
+				\sum^R_{r=0} n_r p_r &= 1\\
+				n_Rp_R + \sum^{R-1}_{r=0} n_r p_r &= 1\\
+				\sum^{R-1}_{r=0} n_r p_r &= 1-n_R p_R\\
+				-\sum^{R-1}_{r=0} n_r \frac{1}{\lambda}\frac{(r+1)n_{r+1}}{n_r} &= 1-n_R p_R\\
+				-\sum^{R-1}_{r=0} (r+1)n_{r+1} &= \lambda(1-n_R p_R)\\
+				-N &= \lambda(1-n_R p_R)\\	
+				-\frac{N}{(1-n_R p_R)} &= \lambda		
+			\end{align}
+			
+			Using this yields our probabilities:
+			
+			\begin{align}
+				p_j  &= -\frac{1}{\lambda}\frac{(j+1)n_{j+1}}{n_j}\\
+				&= \frac{(1-n_R p_R)}{N}\frac{(j+1)n_{j+1}}{n_j} \qquad \text{For }j\in\{0\ldots R-1\}
+			\end{align}
+			
+			Since $n_Rp_R$ is the number of words that occur frequently times the probability of a word on the frequent partition, it's usually close to 0. Ignoring the term yields the Good-Turing estimate:
+			
+			\begin{align}
+				p_j  &= \frac{1}{N}\frac{(j+1)n_{j+1}}{n_j} \qquad \text{For }j\in\{0\ldots R-1\}
+			\end{align}
+		
+		\subsubsection{Mistakes??}
+		
+			Is there a way to get rid of that $n_Rp_R$ term?
+			
+			Well why is it there.
+			
+			I feel like this is double counting somehow. 
+			
+			Okay so We are expressing the probability of the held out set in terms of partitions. 
+			
+			In a particular example We yoink out some token, there were $r+1$ tokens to begin with, now there are $r$ in the training set, so the probability of this token is $p_r$. I'm okay with that I think.
+			
+			What about the most frequent tokens?
+			
+			In that case $r+1=R$ so the term in the log likelihood sum is $Rn_R\ln(p_{R-1})$.
+			
+			
+	\subsection{Katz!}
+	
+		Parts of Katz:
+		
+		Discounting according to Good-Turing to save some probability mass. Call the saved mass $S$.
+		
+		Good-Turing divides the mass evenly among the classes, Katz does it unevenly, in accordance to a smaller n-gram model.
+		
+		Trouble is that those weights won't sum to one, so, We normalize the probabilities.
+		
+		So it's just a wonky Good-Turing.
+		
+		Which means I need a KL version for Good-Turing. 
+		
+		
+	\subsection{Not Katz lol, KL-Turing}
+	
+		How does that even work.
+		
+		Well if I could factor the Good-Turing thing into a straight forward maximum likelihood plus some offset that would be great lol
+		
+		\begin{align}
+			p_j^{GT}  &= \frac{1}{N}\frac{(j+1)n_{j+1}}{n_j} \qquad \text{For }j\in\{0\ldots R-1\}
+		\end{align}
+		
+		That there is the probability of a particular type belonging to partition $j$.
+		
+		In that notation in standard maximum likelihood You'd get
+		
+		\begin{align}
+			p^{MLE}_j = \frac{j}{N}
+		\end{align}
+		
+		Hmm lol
+		
+		\begin{align}
+			p_j^{GT}  &= \frac{1}{N}\frac{(j+1)n_{j+1}}{n_j}\\
+			&= \frac{j}{N}\frac{ n_{j+1}}{n_j}+\frac{1}{N}\frac{n_{j+1}}{n_j}
+		\end{align}
+		
+		Okay so We do have the MLE estimate in there lol, it's just that it's scaled on a per-item basis, so I can't just like put a multiplicative term in front a KL term lol.
+		
+		Taking the KL between the model and the true distribution will result in $j/N$.
+		
+		So, recall, what We'll have is a KL thing per observed token.
+		
+		And for each token in the MLE case We had just the KL between the observed and the model distribution I think.
+		
+		What do We need to get to this magical Good-Turing place in terms of KL divergence.
+		
+		Uhh You could do something weird like 
+		
+		\begin{align}
+			p_j^{GT}  &= \frac{1}{N}\frac{(j+1)n_{j+1}}{n_j}\\
+			&= \frac{1}{N}\frac{jn_{j+1} + n_{j+1}}{n_j}\\
+		\end{align}
+		
+		So at first let's try to specify the MLE objective in terms of partitioned probabilities.
+		
+		\subsubsection{Partition MLE}
+		
+			So We have our $1\ldots N$ samples, $1\ldots K$ type of token (just assume We are focusing on a particular context), We partition the $K$ tokens according to how many times each has appeared, and We let $n_r$ be the number of tokens that appear $r$ times and $p_r$ be the probability of a token that appears $r$ times. Let also $R$ be the maximum frequency of tokens - no token occurs more times than some $R$.
+			
+			Yeah everywhere just assume some particular context $\context$ lol.
+			
+			Suppose some ordering of tokens? $w^r_i$ maybe? So We would have something like $w^r_i,\;i\in[n_r]$ so $w^r$ means it's a token belonging to the $r$'th partition and $w^r_i$ means it's the $i$'th token in the $r$'th partition.
+			
+			Let also $V$ be the vocabulary.
+			
+			So then We can express the MLE KL yoke as
+			
+			\begin{align}
+				\sum^R_{r=1} \sum^{n_r}_{i=1} \KL( \tilde{p}(\cdot|w^r_i,\context)\mid\mid \model(\cdot | w^r_i,\context))
+			\end{align}
+			
+			Then We simplify the KL term:
+			
+			\begin{align}
+			\KL( \tilde{p}(\cdot|w^r_i,\context)\mid\mid \model(\cdot | w^r_i,\context)) &= \sum_{w'\in V} \tilde{p}( w' |w^r_i,\context) \ln\bigg(\frac{\tilde{p}( w' |w^r_i,\context)}{\model( w' |w^r_i,\context)} \bigg)\\
+			&= \ln\bigg(\frac{1}{\model(w^r_i|\context)} \bigg)
+			\end{align}
+			
+			So then 
+		
+			\begin{align}
+				\sum^R_{r=1} \sum^{n_r}_{i=1} \KL( \tilde{p}(\cdot|w^r_i,\context)\mid\mid \model(\cdot | w^r_i,\context)) &= \sum^R_{r=1} \sum^{n_r}_{i=1} \ln\bigg(\frac{1}{\model(w^r_i|\context)} \bigg)
+			\end{align}
+		
+			Then the constraint. I suppose let's do the one from the paper:
+			
+			We had
+			
+			\begin{align}
+				\sum^R_{r=0} n_r p_r &= 1\\
+				\sum^R_{r=0} \sum^{n_r}_{i=1} \model(w^r_i) &= 1
+			\end{align}
+			
+			Plugging it in:
+			
+			\begin{align}
+				\mathcal{L} = \bigg(\sum^R_{r=1} \sum^{n_r}_{i=1} \ln\bigg(\frac{1}{\model(w^r_i|\context)} \bigg)\bigg) - \lambda\bigg(\sum^R_{r=0}n_r p_r\bigg) -1\bigg)
+			\end{align}
+			
+			Let's just carry this one out I suppose:
+			
+			\begin{align}
+				\frac{\partial }{\partial \model(w^a_b|\context)} \sum^R_{r=1} \sum^{n_r}_{i=1} \ln\bigg(\frac{1}{\model(w^r_i|\context)} \bigg) &= \frac{\partial }{\partial \model(w^a_b|\context)} \sum^R_{r=1} \sum^{n_r}_{i=1} \ln(\model(w^r_i|\context)^{-1} )\\
+				&= \frac{\partial }{\partial \model(w^a_b|\context)} \sum^R_{r=1} \sum^{n_r}_{i=1} -\ln(\model(w^r_i|\context) )\\
+				&= -\frac{1}{\model(w^a_b|\context)}
+			\end{align}
+					
+			Things to note: it's only the unseen items that will get heterogenous assignments in Katz, so maybe those can just be split out or something.
+			
+			\begin{align}
+				\frac{\partial }{\partial \model(w^a_b|\context)} - \lambda\bigg(\sum^R_{r=0}n_r p_r\bigg) -1\bigg) &= 
+			\end{align}
+			
+			Well here's a problem. I think We need to also do summation here. This notation's kinda clunky.
+			
+			There's also stuff about $n_0$ here. 
+			
+			There will not be any KL terms for unseen examples because We have no observed distribution. 
+			
+			I feel like the problem here is that We have different variables in the function We are trying to optimize and the constraint - the constraint depends on all probabilities, the function only probabilities associated with observed words.
+			
+			Maybe cutting off at certain $R$ is a workaround.
+			
+			Yeah in the paper they just limited themselves to well I mean yeah it's not wrong You set the other probabilities and the last is dictated by the constraint right.
+			
+			Okay so We just take the derivative w.r.t. observed stuff.
+			
+			Anyway, here's wonderwall:
+			
+			\begin{align}
+				\frac{\partial }{\partial \model(w^a_b|\context)} -\bigg(\lambda  \bigg( \sum^R_{r=0} \sum^{n_r}_{i=1} p^r_i \bigg)-1\bigg) &= \lambda
+			\end{align}
+			
+			lol
+			
+			So the above derivative exists only for $a\in\{1\ldots R\}$ is the important bit.
+			
+			Alright then putting the derivatives together:
+			
+			\begin{align}
+				-\frac{1}{\model(w^a_b|\context)} - \lambda &= 0\\
+				\model(w^a_b|\context)  &= -\frac{1}{\lambda}\qquad\text{for }a\in\{1\ldots R\}
+			\end{align}
+			
+			I mean yeah each occurrence is getting some set probability mass.
+			
+			\begin{align}
+				\sum^R_{r=0} \sum^{n_r}_{i=1} p^r_i &= 1\\
+				\bigg(\sum^{n_0}_{j=1}p^0_j\bigg) + \sum^R_{r=1} \sum^{n_r}_{i=1} p^r_i &= 1\\
+				\bigg(\sum^{n_0}_{j=1}p^0_j\bigg) + \sum^R_{r=1} \sum^{n_r}_{i=1} -\frac{1}{\lambda} &= 1\\
+				\sum^R_{r=1} \sum^{n_r}_{i=1} -\frac{1}{\lambda} &= 1 - \bigg(\sum^{n_0}_{j=1}p^0_j\bigg)\\
+				-\frac{N}{\lambda} &= 1 - \bigg(\sum^{n_0}_{j=1}p^0_j\bigg)\\
+				-\frac{\lambda}{N} &= \frac{1 - \bigg(\sum^{n_0}_{j=1}p^0_j\bigg)}{1}\\
+				\lambda &= -N\frac{1 - \bigg(\sum^{n_0}_{j=1}p^0_j\bigg)}{1}\\
+			\end{align}
+			
+			So then
+			
+			\begin{align}
+				\model(w^a_b|\context)  &= -\frac{1}{\lambda}\qquad\text{for }a\in\{1\ldots R\}\\
+				&= -\bigg( -N\frac{1 - \bigg(\sum^{n_0}_{j=1}p^0_j\bigg)}{1} \bigg)^{-1}\\
+				&= \frac{1}{N \bigg( 1 - \bigg(\sum^{n_0}_{j=1}p^0_j\bigg)\bigg)}
+			\end{align}
+			
+			So basically You get to decide how much mass You allocate to these unseen examples. It's a hyperparameter.
+			
+			There was an $r$ term missing the whole time lol.
+			
+			
+		\subsubsection{Partition Good-Turing}
+		
+			This depends on grouping partitions, I think.
+			
+			So I think You'll actually not want to keep everything as individual probabilities. 
+			
+			But We need a per-term KL loss right.
+			
+			Kay so We go over the dataset one item at a time, and We pretend that this item has been held out. So let's say that in the full set some observed word was occurred $r+1$ times. Okay. 
+			
+			This is making things more complicated - before We just had what is the correct word, but now We also have which partition the correct word is in in the full set. 
+			
+			But so ok We have some true word $w$, it occurred $a+1$ times in the full set. Now We want to write a KL term for it.
+			
+			We have the true distribution $\tilde{p}$ which will select the correct from the model distribution.
+			
+			So I guess it's the model distribution term that changes? Our prediction for word $w^{a+1}$ is $p^a$, right?
+			
+			So the surface stays the same: 
+			
+			\begin{align}
+				\sum^R_{r=1} \sum^{n_r}_{i=1} \KL( \tilde{p}(\cdot|w^r_i,\context)\mid\mid \model(\cdot | w^r_i,\context))
+			\end{align}
+			
+			Then given that We are observing word $w^{a+1}$, this becomes
+			
+			\begin{align}
+				\KL( \tilde{p}(\cdot|w^{a+1}_i,\context)\mid\mid \model(\cdot | w^{a+1}_i,\context)) &= \sum_{w'\in V} \tilde{p}( w' |w^{a+1}_i,\context) \ln\bigg(\frac{\tilde{p}( w' |w^{a+1}_i,\context)}{\model( w' |w^{a+1}_i,\context)} \bigg)\\
+				&= \ln\bigg(\frac{1}{\model(w^a|\context)} \bigg)
+			\end{align}
+			
+			or You can go one down instead of one up:
+			
+			\begin{align}
+				\KL( \tilde{p}(\cdot|w^{a}_i,\context)\mid\mid \model(\cdot | w^{a}_i,\context)) &= \sum_{w'\in V} \tilde{p}( w' |w^{a}_i,\context) \ln\bigg(\frac{\tilde{p}( w' |w^{a}_i,\context)}{\model( w' |w^{a}_i,\context)} \bigg)\\
+				&= \ln\bigg(\frac{1}{\model(w^{a-1}|\context)} \bigg)
+			\end{align}
+			
+			Maybe also simplify this notation by saying
+			
+			\begin{align}
+				\model(w^{a-1}|\context) = \model^{a-1}
+			\end{align}
+			
+			The constraint is also partitioned:
+			
+			\begin{align}
+				\sum^{R}_{r=0} n_r \model^r &= 1
+			\end{align}
+			
+			So then
+			
+			Now to streamline the likelihood
+			
+			\begin{align}
+				\sum^R_{r=1} \sum^{n_r}_{i=1} r\cdot \KL( \tilde{p}(\cdot|w^{r}_i,\context)\mid\mid \model(\cdot | w^{r}_i,\context)) &= \sum^R_{r=1} \sum^{n_r}_{i=1} r\cdot \KL( \tilde{p}(\cdot|w^{r}_i,\context)\mid\mid \model(\cdot | w^{r}_i,\context))\\
+				&= \sum^R_{r=1} n_r r\cdot \KL( \tilde{p}(\cdot|w^{r}_i,\context)\mid\mid \model(\cdot | w^{r}_i,\context))\\
+				&= \sum^R_{r=1} n_r r\cdot \ln\bigg(\frac{1}{\model(w^{r-1}|\context)} \bigg)
+			\end{align}
+			
+			Putting both together:
+			
+			\begin{align}
+				\mathcal{L} = \bigg(\sum^R_{r=1} n_r r\cdot \ln\bigg(\frac{1}{\model^{r-1}} \bigg)\bigg) - \lambda\bigg( \bigg(\sum^{R}_{r=0} n_r \model^r \bigg) - 1 \bigg)
+			\end{align}
+			
+			So We have model parameters that are present in the function to be optimized $\model^r,\;r\in\{1\ldots R-1\}$. 
+			
+			Then the derivatives
+			
+			\begin{align}
+				\frac{\partial}{\partial \model^j}\; \sum^R_{r=1} n_r r\cdot \ln\bigg(\frac{1}{\model^{r-1}} \bigg) &= \frac{\partial}{\partial \model^j}\; \sum^R_{r=1} -n_r r\cdot \ln(\model^{r-1})\\
+				&=  \frac{-n_{j+1} (j+1)}{\model^{j}}
+			\end{align}
+			
+			And the constraint
+			
+			\begin{align}
+				\frac{\partial}{\partial \model^j}\; - \lambda\bigg( \sum^{R}_{r=0} n_r \model^r - 1 \bigg) &= -\lambda n_j
+			\end{align}
+			
+			So then We get
+			
+			\begin{align}
+				\frac{-n_{j+1} (j+1)}{\model^{j}} -\lambda n_j &= 0\\
+				\frac{n_{j+1} (j+1)}{\model^{j}}  &= -\lambda n_j\\
+				\frac{1}{\model^{j}}  &= -\frac{\lambda n_j}{n_{j+1} (j+1)}\\
+				\model^{j}  &= -\frac{n_{j+1} (j+1)}{\lambda n_j}\qquad\text{for }j\in\{0\ldots R-1\}
+			\end{align}
+			
+			Plugging this into the constraint:
+			
+			\begin{align}
+				\sum^{R}_{r=0} n_r \model^r &= 1\\
+				n_R\model^R + \sum^{R-1}_{r=0} n_r \model^r &= 1\\
+				n_R\model^R + \sum^{R-1}_{r=0} -n_r \frac{n_{r+1} (r+1)}{\lambda n_r}&= 1\\
+				 \sum^{R-1}_{r=0} -n_r \frac{n_{r+1} (r+1)}{\lambda n_r}&= 1 - n_R\model^R\\
+				 \sum^{R-1}_{r=0} -n_r \frac{n_{r+1} (r+1)}{n_r}&= \lambda(1 - n_R\model^R)\\
+				 \frac{\sum^{R-1}_{r=0} -n_r \frac{n_{r+1} (r+1)}{ n_r}}{1 - n_R\model^R} &= \lambda\\
+				 \frac{\sum^{R-1}_{r=0} -n_{r+1} (r+1)}{1 - n_R\model^R} &= \lambda
+			\end{align}
+			
+			Plugging this back in
+			
+			\begin{align}
+				\model^{j}  &= -\frac{n_{j+1} (j+1)}{\lambda n_j}\\
+				&= -\frac{n_{j+1} (j+1)}{ n_j}\frac{1}{\lambda}\\
+				&= -\frac{n_{j+1} (j+1)}{ n_j}\bigg(\frac{\sum^{R-1}_{r=0} -n_{r+1} (r+1)}{1 - n_R\model^R} \bigg)^{-1}\\
+				&= -\frac{n_{j+1} (j+1)}{ n_j} \frac{1 - n_R\model^R}{\sum^{R-1}_{r=0} -n_{r+1} (r+1)} \\
+				&= -\frac{n_{j+1} (j+1)}{ n_j} \frac{1 - n_R\model^R}{N} \\
+				&= \frac{n_{j+1} (j+1)}{ n_j} \frac{1}{N}\times (1 - n_R\model^R) \\
+			\end{align}
+			
+			So a certain amount of mass is reserved for max count stuff, and it's up to You what that amount is.
+			
+			Also a minus sign got lost along the way lol.
+			
+	\subsection{Follow up on Katz}
+	
+		So to get to Katz We need a few modifications.
+		
+		Namely, heterogenous probability values for unseen n-grams and
+		
+		Mess with the count lol.
+		
+		Messing with the count then:
+		
+		There will be all kinds of problems here since Katz is trying to mimick the amount of mass discounted on the whole set by only focusing on a subset, so it'll be scaled somehow, as in the subset that is getting mass taken away will have to lose more in order to keep the amount of mass going to 0-count grams the same as in Good-Turing.
+		
+		But so the first requirement is proportionality.
+		
+		The adjusted counts are $d_r r$ where $r$ is the count in the full training set.
+		
+		So there are three pieces - the true count $r$, the Good-Turing discounted count $r^*$, and the Katz count, $d_r$.
+		
+		Nope lol. $d_r$ is a factor scaling the true count
+		
+		\begin{align}
+			d_r = \mu \frac{r^*}{r}
+		\end{align}
+			
+		Dumb examples:
+		
+		\begin{align}
+			10(1-\frac{1}{2}) &= 5\\
+			10(1-\frac{1}{4}) &= 7.5\\
+			10(1-\frac{1}{8}) &= 8.75\\
+		\end{align}
+		
+		Oh right We are trying to keep the discount factor the same.
+		
+		1 is not discounting at all
+		
+		$d_r$ is the factor We multiply by to get the discount, and it's strictly less than 1.
+		
+		So the amount of mass We lose as a proportion of the full thing is $1-d_r$
+		
+		So then
+		
+		\begin{align}
+			1-d_r = \mu\bigg(1-\frac{r^*}{r} \bigg)
+		\end{align}
+		
+		And that's true for $r\in\{ 1\ldots k\}$, where I guess We are kind of overloading $k$ here, but so We won't discount anything that occurs more than $k$ times.
+		
+		So that's the first constraint, the proportionality thing. The second one was that the amount of mass assigned to 0-count grams should remain the same as if though We did full Good-Turing across the entire dataset.
+		
+		This can be expressed as a count - We have $n_0$ grams that occur 0 times, and each one will get $\model^0\times N$ counts:
+		
+		\begin{align}
+			n_0 \times\model^0\times N &= n_0\times\frac{n_{j+1} (j+1)}{ n_j} \frac{1}{N}\times (1 - n_R\model^R) \\
+			 &= n_0\times\frac{n_{1} (1)}{ n_0} \frac{1}{N}\times (1 - n_R\model^R)\times N \\
+			 &= n_0\times\frac{n_{1} }{ n_0} \frac{1}{N}\times N \\
+			 &= n_{1} 
+		\end{align}
+		
+		Cool. So then We have
+		
+		\begin{align}
+			\sum^k_{r=0} (1-d_r) r n_r = n_1
+		\end{align}
+		
+		So now what. 
+		
+		\begin{align}
+			1-d_r = \mu\bigg(1-\frac{r^*}{r} \bigg)
+		\end{align}
+		
+		Gotta combine these, and We're looking for $d_r$.	
+		
+		I'll just take them at their word for
+		
+		\begin{align}
+			d_r = \frac{\frac{r^*}{r} - \frac{(k+1)n_{k+1}}{n_1} }{1 - \frac{(k+1)n_{k+1}}{n_1}}
+		\end{align}
+		
+		Ach I would kind of like to derive it in case there's a clue in there about how it might be used in our context.
+		
+		So then
+		
+		\begin{align}
+			1-d_r &= \mu\bigg(1-\frac{r^*}{r} \bigg)\\
+			-d_r &= \mu\bigg(1-\frac{r^*}{r} \bigg)-1\\
+			d_r &= 1-\mu\bigg(1-\frac{r^*}{r} \bigg)
+		\end{align}
+		
+		And then maybe single one out?
+		
+		\begin{align}
+			\sum^k_{r=0} (1-d_r) r n_r &= n_1\\
+			\sum^k_{r=1} (1-d_r) r n_r &= n_1
+		\end{align}
+		
+		Since if $r=0$ the term in the sum is also zero.
+		
+		\begin{align}
+			\sum^k_{r=1} (1-d_r) r n_r &= n_1\\
+			(1-d_1)  n_1 + \sum^k_{r=2} (1-d_r) r n_r &= n_1\\
+			(1-d_1)  n_1  &= n_1 - \sum^k_{r=2} (1-d_r) r n_r\\
+			(1-d_1)  n_1  &= n_1 - \sum^k_{r=2} (1-\bigg( 1-\mu\bigg(1-\frac{r^*}{r} \bigg)\bigg)) r n_r
+		\end{align}
+		
+		eh it probably works out, it's just algebra. 
+		
+	\subsection{So now what}
+	
+		Layers of the onion:
+		
+		Tokens occurring more frequently than $k$ are left alone ah fuck doesn't this mean We need like separate model functions? Well We'll have like if terms
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		

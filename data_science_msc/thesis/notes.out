@@ -21,16 +21,29 @@
 \BOOKMARK [2][-]{subsection.4.3}{Additive Smoothing}{section.4}% 21
 \BOOKMARK [3][-]{subsubsection.4.3.1}{Mistakes}{subsection.4.3}% 22
 \BOOKMARK [2][-]{subsection.4.4}{Deriving it I suppose}{section.4}% 23
-\BOOKMARK [1][-]{section.5}{Appendix}{}% 24
-\BOOKMARK [2][-]{subsection.5.1}{Entropy}{section.5}% 25
-\BOOKMARK [2][-]{subsection.5.2}{Cross Entropy}{section.5}% 26
-\BOOKMARK [2][-]{subsection.5.3}{KL Divergence}{section.5}% 27
-\BOOKMARK [2][-]{subsection.5.4}{Perplexity}{section.5}% 28
-\BOOKMARK [2][-]{subsection.5.5}{As a measure of model confusion}{section.5}% 29
-\BOOKMARK [2][-]{subsection.5.6}{Lagrange Multipliers}{section.5}% 30
-\BOOKMARK [2][-]{subsection.5.7}{Unigram MLE}{section.5}% 31
-\BOOKMARK [2][-]{subsection.5.8}{Bigram MLE}{section.5}% 32
-\BOOKMARK [2][-]{subsection.5.9}{Unigram MLE with Uniform distribution KL}{section.5}% 33
-\BOOKMARK [3][-]{subsubsection.5.9.1}{Sanity Check}{subsection.5.9}% 34
-\BOOKMARK [2][-]{subsection.5.10}{Unigram MLE with Uniform distribution KL but right lol}{section.5}% 35
-\BOOKMARK [3][-]{subsubsection.5.10.1}{Mistakes}{subsection.5.10}% 36
+\BOOKMARK [2][-]{subsection.4.5}{General and hopefully pretty case}{section.4}% 24
+\BOOKMARK [1][-]{section.5}{Katz-Backoff}{}% 25
+\BOOKMARK [2][-]{subsection.5.1}{Another attempt due to bad notation lol}{section.5}% 26
+\BOOKMARK [2][-]{subsection.5.2}{Mistakes?}{section.5}% 27
+\BOOKMARK [2][-]{subsection.5.3}{Bad-Turing lol}{section.5}% 28
+\BOOKMARK [3][-]{subsubsection.5.3.1}{Mistakes}{subsection.5.3}% 29
+\BOOKMARK [3][-]{subsubsection.5.3.2}{Using standard notation}{subsection.5.3}% 30
+\BOOKMARK [3][-]{subsubsection.5.3.3}{Mistakes??}{subsection.5.3}% 31
+\BOOKMARK [2][-]{subsection.5.4}{Katz!}{section.5}% 32
+\BOOKMARK [2][-]{subsection.5.5}{Not Katz lol, KL-Turing}{section.5}% 33
+\BOOKMARK [3][-]{subsubsection.5.5.1}{Partition MLE}{subsection.5.5}% 34
+\BOOKMARK [3][-]{subsubsection.5.5.2}{Partition Good-Turing}{subsection.5.5}% 35
+\BOOKMARK [2][-]{subsection.5.6}{Follow up on Katz}{section.5}% 36
+\BOOKMARK [1][-]{section.6}{Appendix}{}% 37
+\BOOKMARK [2][-]{subsection.6.1}{Entropy}{section.6}% 38
+\BOOKMARK [2][-]{subsection.6.2}{Cross Entropy}{section.6}% 39
+\BOOKMARK [2][-]{subsection.6.3}{KL Divergence}{section.6}% 40
+\BOOKMARK [2][-]{subsection.6.4}{Perplexity}{section.6}% 41
+\BOOKMARK [2][-]{subsection.6.5}{As a measure of model confusion}{section.6}% 42
+\BOOKMARK [2][-]{subsection.6.6}{Lagrange Multipliers}{section.6}% 43
+\BOOKMARK [2][-]{subsection.6.7}{Unigram MLE}{section.6}% 44
+\BOOKMARK [2][-]{subsection.6.8}{Bigram MLE}{section.6}% 45
+\BOOKMARK [2][-]{subsection.6.9}{Unigram MLE with Uniform distribution KL}{section.6}% 46
+\BOOKMARK [3][-]{subsubsection.6.9.1}{Sanity Check}{subsection.6.9}% 47
+\BOOKMARK [2][-]{subsection.6.10}{Unigram MLE with Uniform distribution KL but right lol}{section.6}% 48
+\BOOKMARK [3][-]{subsubsection.6.10.1}{Mistakes}{subsection.6.10}% 49
