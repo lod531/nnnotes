@@ -34,16 +34,20 @@
 \BOOKMARK [3][-]{subsubsection.5.5.1}{Partition MLE}{subsection.5.5}% 34
 \BOOKMARK [3][-]{subsubsection.5.5.2}{Partition Good-Turing}{subsection.5.5}% 35
 \BOOKMARK [2][-]{subsection.5.6}{Follow up on Katz}{section.5}% 36
-\BOOKMARK [1][-]{section.6}{Appendix}{}% 37
-\BOOKMARK [2][-]{subsection.6.1}{Entropy}{section.6}% 38
-\BOOKMARK [2][-]{subsection.6.2}{Cross Entropy}{section.6}% 39
-\BOOKMARK [2][-]{subsection.6.3}{KL Divergence}{section.6}% 40
-\BOOKMARK [2][-]{subsection.6.4}{Perplexity}{section.6}% 41
-\BOOKMARK [2][-]{subsection.6.5}{As a measure of model confusion}{section.6}% 42
-\BOOKMARK [2][-]{subsection.6.6}{Lagrange Multipliers}{section.6}% 43
-\BOOKMARK [2][-]{subsection.6.7}{Unigram MLE}{section.6}% 44
-\BOOKMARK [2][-]{subsection.6.8}{Bigram MLE}{section.6}% 45
-\BOOKMARK [2][-]{subsection.6.9}{Unigram MLE with Uniform distribution KL}{section.6}% 46
-\BOOKMARK [3][-]{subsubsection.6.9.1}{Sanity Check}{subsection.6.9}% 47
-\BOOKMARK [2][-]{subsection.6.10}{Unigram MLE with Uniform distribution KL but right lol}{section.6}% 48
-\BOOKMARK [3][-]{subsubsection.6.10.1}{Mistakes}{subsection.6.10}% 49
+\BOOKMARK [2][-]{subsection.5.7}{So now what}{section.5}% 37
+\BOOKMARK [1][-]{section.6}{Guess Again}{}% 38
+\BOOKMARK [2][-]{subsection.6.1}{Add-delta smoothing}{section.6}% 39
+\BOOKMARK [2][-]{subsection.6.2}{Good-Turing}{section.6}% 40
+\BOOKMARK [1][-]{section.7}{Appendix}{}% 41
+\BOOKMARK [2][-]{subsection.7.1}{Entropy}{section.7}% 42
+\BOOKMARK [2][-]{subsection.7.2}{Cross Entropy}{section.7}% 43
+\BOOKMARK [2][-]{subsection.7.3}{KL Divergence}{section.7}% 44
+\BOOKMARK [2][-]{subsection.7.4}{Perplexity}{section.7}% 45
+\BOOKMARK [2][-]{subsection.7.5}{As a measure of model confusion}{section.7}% 46
+\BOOKMARK [2][-]{subsection.7.6}{Lagrange Multipliers}{section.7}% 47
+\BOOKMARK [2][-]{subsection.7.7}{Unigram MLE}{section.7}% 48
+\BOOKMARK [2][-]{subsection.7.8}{Bigram MLE}{section.7}% 49
+\BOOKMARK [2][-]{subsection.7.9}{Unigram MLE with Uniform distribution KL}{section.7}% 50
+\BOOKMARK [3][-]{subsubsection.7.9.1}{Sanity Check}{subsection.7.9}% 51
+\BOOKMARK [2][-]{subsection.7.10}{Unigram MLE with Uniform distribution KL but right lol}{section.7}% 52
+\BOOKMARK [3][-]{subsubsection.7.10.1}{Mistakes}{subsection.7.10}% 53

@@ -2248,6 +2248,113 @@ by Leaving-One-Out}
 		
 		Tokens occurring more frequently than $k$ are left alone ah fuck doesn't this mean We need like separate model functions? Well We'll have like if terms
 		
+
+\newpage		
+\section{Guess Again}
+
+	\subsection{Add-delta smoothing}
+		
+		So We had
+		
+		\begin{align}
+	  		\sum_{\context} \Big( {\color{blue} \KL\left(\tilde{p}(\cdot 			\mid \context) \mid\mid \model(\cdot \mid \context)					\right)} + {\color{red}\gamma(\context) \cdot 						\KL(\uniform \mid\mid \model(\cdot \mid \context)}\Big)
+		\end{align}
+		
+		And He's using different notation. Given a context, We'll have an empirical distribution of words, which is just an n-gram distribution if You will, and then also adding that uniform term.
+		
+		So then ignoring the normalizer, We know that the 
+		
+	\subsection{Good-Turing}
+	
+		Different contexts essentially represent separate problems - given a context $\context$ We'll want to obtain a smoothed probability distribution for the next word. So for the rest of the derivation, assume there's a $|\context$. 
+		
+		So then We have our model distribution $\model$ and the observed empirical distribution, which is just the simple n-gram MLE, $\#(w\circ\context)/\#(\context)$.
+		
+		We want to come up with some distribution $\bar{p}$ such that minimizing
+		
+		\begin{align}
+			\KL(\bar{p}(\cdot) \mid\mid \model(\cdot))
+		\end{align}
+		
+		Yields Good-Turing in $\model$, and furthermore We want to express $\tilde{p}$ as the convex combination of the observed empirical distribution and some other distribution $g$:
+		
+		\begin{align}
+			\bar{p} = \alpha\tilde{p} + (1-\alpha)g
+		\end{align}
+		
+		So then We try to break down good turing - let $w_r$ be a word which occurred $r$ times given some context $|\context$, then
+		
+		\begin{align}
+			GT(w_r) = \frac{(r+1)S(N_{r+1})}{NS(N_r)}
+		\end{align}
+		
+		Where $N$ is the number of observed words in the corpus (not the number of unique words), and $S(N_r)$ is a smoothed version of $N_r$, the number of unique words that has happened $r$ times.\footnote{$N_r$ needs to be smoothed since We use $N_{r+1}$ to estimate the probability for words that occur $r$ times, and We'll run into problems when We try to estimate the probability for word which occurs $R$ times, where $R$ is the maximum frequency - no word that is more frequent than the most frequent word means no probability estimate. Unless You smooth these counts as well and use some of the saved mass for the most frequent term. Good-Turing just trades the problem of not knowing what to do with unseen tokens for the problem of not knowing what to do with the most frequent tokens.}
+		
+		So $GT(w_r)$ is what We'll want our model to output, and We need to re-express it:
+		
+		\begin{align}
+			\model(w_r) &= \frac{(r+1)S(N_{r+1})}{NS(N_r)} \\
+			&\approx  \frac{(r+1)S(N_{r+1})}{S(N_r)}\qquad\text{Drop } N,\text{ Normalize later?}\\
+			&\approx (r+1)C_r \qquad\qquad\qquad C_r=\frac{S(N_{r+1})}{S(N_r)}\\
+			&\approx (N\tilde{p}(w_r)+1)C_r \\
+			&\approx C_r N\tilde{p}(w_r) + C_r \\
+			&\approx C_r N\tilde{p}(w_r) + C_r u(w_r)\qquad u(w_r)\text{ just uniform dist.} 
+		\end{align}
+		
+		If We let $a(w_r) = \frac{NC_r}{(N+1)C_r}$, We can write
+		
+		\begin{align}
+			\model(w_r) &\approx C_r N\tilde{p}(w_r) + C_r u(w_r)\\
+			&\approx \alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)) u(w_r)
+		\end{align}
+		
+		So then the proposition:
+		
+		Let $C_{w_r} = \frac{S(N_{r+1})}{S(N_r)}$, $N$ being the number of tokens which being with a particular context $\context$, and $\alpha(w_r) = \frac{NC_r}{(N+1)C_r}$ then minimizing the following KL divergence:
+		
+		\begin{align}
+			\KL(\alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)u(w_r)\mid\mid \model(w_r))
+		\end{align}
+		
+		Yields the Good-Turing estimate, and then this is true by construction.
+		
+		Note: Strictly speaking, I guess You would write
+		
+		\begin{align}
+			\KL(\alpha(\cdot)\tilde{p}(\cdot) + (1-\alpha(\cdot)u(\cdot)\mid\mid \model(\cdot))
+		\end{align}	
+	
+		Where the $\cdot\in w_r, r\in{0\ldots R}$, meaning $\cdot$ is a word that belongs to a particular partition, and We partition based on observed frequency in the full corpus.
+		
+		So then for this last bit
+		
+		\begin{align}
+			\delta(w) &= (a(w_r) - 1)\tilde{p}(w_r) + (1-\alpha(w_r)) r(w)
+		\end{align}
+		
+		And I'm pretty sure $r(w)$ is just the uniform distribution. 
+		
+		$\delta$ is introduced as an algebraic means to get to a cleaner formulation?
+		
+		\begin{align}
+			\tilde{p}_w (w_r) + \delta(w_r) &= \tilde{p}_w (w_r) + (a(w_r) - 1)\tilde{p}(w_r) + (1-\alpha(w_r)) r(w)\\
+			&= a(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)) r(w)
+		\end{align}
+		
+		But so now You have two clean separate terms that by construction We already showed equivalent to Good-Turing. Since cross entropy can be broken down into entropy and KL divergence, minimizing KL divergence turns out to be equivalent to minimizing the cross entropy (since the entropy part remains constant), and cross entropy is linear in it's first argument, so You can use that to create two cross-entropy terms and then reduce them down the cross entropy to get
+		
+		\begin{align}
+			\argmin_{p_\theta} \KL(\tilde{p}\mid\mid\model) + \lambda \cdot \KL(\delta\mid\mid\model)
+		\end{align}
+		
+		$\delta$ is not a proper distribution though right? $\tilde{p} + \delta$ is. Does that not matter?
+		
+		Oh is it okay because the first argument of the first KL term is $\tilde{p}$?
+		
+		
+		
+		
+		
 		
 		
 		
