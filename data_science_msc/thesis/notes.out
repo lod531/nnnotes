@@ -38,16 +38,30 @@
 \BOOKMARK [1][-]{section.6}{Guess Again}{}% 38
 \BOOKMARK [2][-]{subsection.6.1}{Add-delta smoothing}{section.6}% 39
 \BOOKMARK [2][-]{subsection.6.2}{Good-Turing}{section.6}% 40
-\BOOKMARK [1][-]{section.7}{Appendix}{}% 41
-\BOOKMARK [2][-]{subsection.7.1}{Entropy}{section.7}% 42
-\BOOKMARK [2][-]{subsection.7.2}{Cross Entropy}{section.7}% 43
-\BOOKMARK [2][-]{subsection.7.3}{KL Divergence}{section.7}% 44
-\BOOKMARK [2][-]{subsection.7.4}{Perplexity}{section.7}% 45
-\BOOKMARK [2][-]{subsection.7.5}{As a measure of model confusion}{section.7}% 46
-\BOOKMARK [2][-]{subsection.7.6}{Lagrange Multipliers}{section.7}% 47
-\BOOKMARK [2][-]{subsection.7.7}{Unigram MLE}{section.7}% 48
-\BOOKMARK [2][-]{subsection.7.8}{Bigram MLE}{section.7}% 49
-\BOOKMARK [2][-]{subsection.7.9}{Unigram MLE with Uniform distribution KL}{section.7}% 50
-\BOOKMARK [3][-]{subsubsection.7.9.1}{Sanity Check}{subsection.7.9}% 51
-\BOOKMARK [2][-]{subsection.7.10}{Unigram MLE with Uniform distribution KL but right lol}{section.7}% 52
-\BOOKMARK [3][-]{subsubsection.7.10.1}{Mistakes}{subsection.7.10}% 53
+\BOOKMARK [2][-]{subsection.6.3}{TODO}{section.6}% 41
+\BOOKMARK [1][-]{section.7}{Practice with Add-Delta smoothing}{}% 42
+\BOOKMARK [2][-]{subsection.7.1}{Add-delta smoothing}{section.7}% 43
+\BOOKMARK [1][-]{section.8}{Katz again}{}% 44
+\BOOKMARK [2][-]{subsection.8.1}{More than k}{section.8}% 45
+\BOOKMARK [2][-]{subsection.8.2}{Less than k but more than zero}{section.8}% 46
+\BOOKMARK [2][-]{subsection.8.3}{Zero}{section.8}% 47
+\BOOKMARK [1][-]{section.9}{Absolute Discounting}{}% 48
+\BOOKMARK [1][-]{section.10}{Kneser-Ney}{}% 49
+\BOOKMARK [1][-]{section.11}{Appendix}{}% 50
+\BOOKMARK [2][-]{subsection.11.1}{Entropy}{section.11}% 51
+\BOOKMARK [2][-]{subsection.11.2}{Cross Entropy}{section.11}% 52
+\BOOKMARK [2][-]{subsection.11.3}{KL Divergence}{section.11}% 53
+\BOOKMARK [2][-]{subsection.11.4}{Perplexity}{section.11}% 54
+\BOOKMARK [2][-]{subsection.11.5}{As a measure of model confusion}{section.11}% 55
+\BOOKMARK [2][-]{subsection.11.6}{Lagrange Multipliers}{section.11}% 56
+\BOOKMARK [2][-]{subsection.11.7}{Unigram MLE}{section.11}% 57
+\BOOKMARK [2][-]{subsection.11.8}{Bigram MLE}{section.11}% 58
+\BOOKMARK [2][-]{subsection.11.9}{Unigram MLE with Uniform distribution KL}{section.11}% 59
+\BOOKMARK [3][-]{subsubsection.11.9.1}{Sanity Check}{subsection.11.9}% 60
+\BOOKMARK [2][-]{subsection.11.10}{Unigram MLE with Uniform distribution KL but right lol}{section.11}% 61
+\BOOKMARK [3][-]{subsubsection.11.10.1}{Mistakes}{subsection.11.10}% 62
+\BOOKMARK [2][-]{subsection.11.11}{Sanity Check}{section.11}% 63
+\BOOKMARK [2][-]{subsection.11.12}{General? Counts}{section.11}% 64
+\BOOKMARK [2][-]{subsection.11.13}{Mistakes}{section.11}% 65
+\BOOKMARK [2][-]{subsection.11.14}{More Generally?}{section.11}% 66
+\BOOKMARK [2][-]{subsection.11.15}{General Formula}{section.11}% 67

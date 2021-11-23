@@ -113,11 +113,64 @@
 	
 	\subsection{Cons/Pros of Shared-Nothing}
 	
+		Pros: easy to maintain and to scale, sure.
+		
+		Ideal when data can be sharded - a shard is a horizontal partition. Yeah I suppose in a horizontal case there won't be any need to do data shipping.
+		
+		Basically works well as long as each node can function as it's own little island - this is broken if the data cannot be horizontally partitioned for some reason or if there are a lot of updates to the entire table, because operations that involve the entire table will probably do data shipping and that's no bueno.
+	
 	\subsection{Shared Memory}
+	
+		Not actually shared memory, but this is an abstraction that allows the node to pretend as if though all the nodes are sharing memory - so I guess the advantage here is that if a table is in some node's memory, it might as well be in Your memory. Simplifies design, and I guess if hardware allows for this it ought to be fast.
 	
 	\subsection{Shared Disk}
 	
+		Is more cloud oriented - the idea is that each node has access to some sort of giga-sized storage that contains everything, and local storage becomes more of a cache. 
+		
+	\subsection{Exericses - Process Models}
 	
+		\subsubsection{Thread v.s. Process}
+		
+			Process is a task in an OS - can basically think of it as an application. It's got it's own virtual memory, privileges, access to stuff, all that.
+			
+			A process can have threads, these are I guess subtasks for the process. The main point here is that the threads share resources of the process - files, memory, whatever. So communicating between threads is fast, communicating between processes is slow and hard lol.
+			
+			A DBMS client is, well, a client - it's a piece of software belonging conceptually to the user of the DBMS, and the client interacts with the DBMS through some established API. 
+			
+			The thing that the client interacts with is a worker - each client gets a worker. Picture a loop listening for connections on a socket. You can think of the DBMS server as the whole DBMS from the client's perspective - a client sends a request to a server, and within the server a worker is created to handle the client's requests.
+			
+		\subsection{Process per Worker}
+		
+			So the OS allocates a process for each conceptual worker. 
+			
+			Advantages are that it's easy to implement - every time You need something new, throw a process at it. OS handles parallelism, for better or for worse. Debugging processes is easier, since there's lots of support for that sort of thing from OS perspective.
+			
+			Downsides are that DMBS workers need to communicate - locks for example. Not ideal for processes. Plus a process has it's own virtual memory, security stuff, basically overhead, so if You have a lot of workers it won't be super efficient.
+			
+		\subsection{Thread per worker}
+	
+			So You get a process for the DBMS I suppose, and within that process each worker gets a thread.
+			
+			Advantage is that this is more lightweight, sharing is easier.
+			
+			Disadvantage is that it can become a real mess, and You get to maybe do Your own management of resources instead of it being handled by the OS.
+			
+		
+\section{Storage Management}
+
+	\subsection{An Evaluation of Buffer Management Strategies for
+Relational Database Systems}
+
+		a	
+		
+		
+		
+		
+		
+		
+		
+		
+		
 \newpage
 \section{Storage Systems}
 	

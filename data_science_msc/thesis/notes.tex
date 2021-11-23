@@ -2265,101 +2265,516 @@ by Leaving-One-Out}
 		So then ignoring the normalizer, We know that the 
 		
 	\subsection{Good-Turing}
-	
 		Different contexts essentially represent separate problems - given a context $\context$ We'll want to obtain a smoothed probability distribution for the next word. So for the rest of the derivation, assume there's a $|\context$. 
 		
-		So then We have our model distribution $\model$ and the observed empirical distribution, which is just the simple n-gram MLE, $\#(w\circ\context)/\#(\context)$.
-		
-		We want to come up with some distribution $\bar{p}$ such that minimizing
-		
-		\begin{align}
-			\KL(\bar{p}(\cdot) \mid\mid \model(\cdot))
-		\end{align}
-		
-		Yields Good-Turing in $\model$, and furthermore We want to express $\tilde{p}$ as the convex combination of the observed empirical distribution and some other distribution $g$:
-		
-		\begin{align}
-			\bar{p} = \alpha\tilde{p} + (1-\alpha)g
-		\end{align}
-		
-		So then We try to break down good turing - let $w_r$ be a word which occurred $r$ times given some context $|\context$, then
-		
-		\begin{align}
-			GT(w_r) = \frac{(r+1)S(N_{r+1})}{NS(N_r)}
-		\end{align}
-		
-		Where $N$ is the number of observed words in the corpus (not the number of unique words), and $S(N_r)$ is a smoothed version of $N_r$, the number of unique words that has happened $r$ times.\footnote{$N_r$ needs to be smoothed since We use $N_{r+1}$ to estimate the probability for words that occur $r$ times, and We'll run into problems when We try to estimate the probability for word which occurs $R$ times, where $R$ is the maximum frequency - no word that is more frequent than the most frequent word means no probability estimate. Unless You smooth these counts as well and use some of the saved mass for the most frequent term. Good-Turing just trades the problem of not knowing what to do with unseen tokens for the problem of not knowing what to do with the most frequent tokens.}
-		
-		So $GT(w_r)$ is what We'll want our model to output, and We need to re-express it:
-		
-		\begin{align}
-			\model(w_r) &= \frac{(r+1)S(N_{r+1})}{NS(N_r)} \\
-			&\approx  \frac{(r+1)S(N_{r+1})}{S(N_r)}\qquad\text{Drop } N,\text{ Normalize later?}\\
-			&\approx (r+1)C_r \qquad\qquad\qquad C_r=\frac{S(N_{r+1})}{S(N_r)}\\
-			&\approx (N\tilde{p}(w_r)+1)C_r \\
-			&\approx C_r N\tilde{p}(w_r) + C_r \\
-			&\approx C_r N\tilde{p}(w_r) + C_r u(w_r)\qquad u(w_r)\text{ just uniform dist.} 
-		\end{align}
-		
-		If We let $a(w_r) = \frac{NC_r}{(N+1)C_r}$, We can write
-		
-		\begin{align}
-			\model(w_r) &\approx C_r N\tilde{p}(w_r) + C_r u(w_r)\\
-			&\approx \alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)) u(w_r)
-		\end{align}
-		
-		So then the proposition:
-		
-		Let $C_{w_r} = \frac{S(N_{r+1})}{S(N_r)}$, $N$ being the number of tokens which being with a particular context $\context$, and $\alpha(w_r) = \frac{NC_r}{(N+1)C_r}$ then minimizing the following KL divergence:
-		
-		\begin{align}
-			\KL(\alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)u(w_r)\mid\mid \model(w_r))
-		\end{align}
-		
-		Yields the Good-Turing estimate, and then this is true by construction.
-		
-		Note: Strictly speaking, I guess You would write
-		
-		\begin{align}
-			\KL(\alpha(\cdot)\tilde{p}(\cdot) + (1-\alpha(\cdot)u(\cdot)\mid\mid \model(\cdot))
-		\end{align}	
+	    So then We have our model distribution $\model$ and the observed empirical distribution $\tilde{p}$, the latter being just the simple n-gram MLE, $\#(w\circ\context)/\#(\context)$, normalized counts.
+	    
+	    We want to come up with some distribution $\bar{p}$ such that minimizing
+	    
+	    \begin{align}
+	    	\KL(\bar{p}(\cdot) \mid\mid \model(\cdot))
+	    \end{align}
+	    
+	    Yields Good-Turing in $\model$. That's not difficult to do, as in just let $\bar{p} = \text{Good-Turing}$, but We also want to express $\tilde{p}$ as the convex combination of the observed empirical distribution and some other distribution $g$:
+	    
+	    \begin{align}
+	    	\bar{p} = \alpha\tilde{p} + (1-\alpha)g
+	    \end{align}
+	    
+	    So then We try to break down Good Turing - let $w_r$ be a word which occurred $r$ times given some context $|\context$, then
+	    
+	    \begin{align}
+	    	GT(w_r) = \frac{(r+1)S(N_{r+1})}{NS(N_r)}
+	    \end{align}
+	    
+	    Where $N$ is the number of observed words in the corpus (not the number of unique words), and $S(N_r)$ is a smoothed version of $N_r$, the number of unique words that has happened $r$ times.\footnote{$N_r$ needs to be smoothed since We use $N_{r+1}$ to estimate the probability for words that occur $r$ times, and We'll run into problems when We try to estimate the probability for words which occur $R$ times, where $R$ is the maximum frequency - no word that is more frequent than the most frequent word means no probability estimate,  unless You smooth $N_r$ and use some of the saved mass for the most frequent term. Good-Turing just trades the problem of not knowing what to do with unseen tokens for the problem of not knowing what to do with the most frequent tokens.}
+	    
+	    So $GT(w_r)$ is what We'll want our model to output, and We need to re-express it:
+	    
+	    \begin{align}
+	    	\model(w_r) &= \frac{(r+1)S(N_{r+1})}{NS(N_r)} \\
+	    	&\approx  \frac{(r+1)S(N_{r+1})}{S(N_r)}\qquad\text{Drop } N,\text{ Normalize later?}\\
+	    	&\approx (r+1)C_r \qquad\qquad\qquad C_r=\frac{S(N_{r+1})}{S(N_r)}\\
+	    	&\approx (N\tilde{p}(w_r)+1)C_r \\
+	    	&\approx C_r N\tilde{p}(w_r) + C_r \\
+	    	&\approx C_r N\tilde{p}(w_r) + C_r u(w_r)\qquad u(w_r)\text{ just uniform dist.} 
+	    \end{align}
+	    
+	    If We let $a(w_r) = \frac{NC_r}{(N+1)C_r}$, We can write
+	    
+	     Question: shouldn't $C_r$ just cancel here?
+	    
+	    \begin{align}
+	    	\model(w_r) &\approx C_r N\tilde{p}(w_r) + C_r u(w_r)\\
+	    	&= \alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)) u(w_r)
+	    \end{align}
+	    
+	    And We went from approximately to equal since We normalized, I think.
+	    
+	    So then the proposition:
+	    
+	    Let $C_{w_r} = \frac{S(N_{r+1})}{S(N_r)}$, $N$ = the number of tokens satisfying a particular context $\context$, and $\alpha(w_r) = \frac{NC_r}{(N+1)C_r}$ then minimizing the following KL divergence:
+	    
+	    \begin{align}
+	    	\KL(\alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r))u(w_r)\mid\mid \model(w_r))
+	    \end{align}
+	    
+	    Yields the Good-Turing estimate, and then this is true by construction.
+	    
+	    Note: Strictly speaking, I guess You would write
+	    
+	    \begin{align}
+	    	\KL(\alpha(\cdot)\tilde{p}(\cdot) + (1-\alpha(\cdot))u(\cdot)\mid\mid \model(\cdot))
+	    \end{align}	
+	    
+	    Where the $\cdot\in w_r, r\in{0\ldots R}$, meaning $\cdot$ is a word that belongs to a particular partition of the vocabulary, and We partition based on observed frequency of tokens of the form $(w_r\circ\context)$.
+	    
+	    So then for this last bit
+	    
+	    \begin{align}
+	    	\delta(w) &= (a(w_r) - 1)\tilde{p}(w_r) + (1-\alpha(w_r)) r(w_r)
+	    \end{align}
+	    
+	    I'm pretty sure $r(w)$ is just the uniform distribution. 
+	    
+	    $\delta$ is introduced as an algebraic means to get to a cleaner formulation?
+	    
+	    \begin{align}
+	    	\tilde{p}_w (w_r) + \delta(w_r) &= \tilde{p}_w (w_r) + (a(w_r) - 1)\tilde{p}(w_r) + (1-\alpha(w_r)) r(w_r)\\
+	    	&= a(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)) r(w_r)
+	    \end{align}
+	    
+	    Now You have two clean separate terms whose sum is equivalent to Good-Turing. Since cross entropy can be broken down into entropy and KL divergence, minimizing KL divergence turns out to be equivalent to minimizing the cross entropy (since the entropy part remains constant), and cross entropy is linear in it's first argument, so You can use that to create two cross-entropy terms and then reduce them down the cross entropy to get
+	    
+	    \begin{align}
+	    	\argmin_{p_\theta} \underbrace{\KL(\tilde{p}\mid\mid\model)}_{\text{Standard MLE}} + \lambda \cdot \underbrace{\KL(\delta\mid\mid\model)}_{\text{Regularizer}}
+	    \end{align}
+	    
+	    And now You can use this objective function in training wherever You like, so long as You are able to partition the vocabulary according to token frequency in training corpus and provide $S(N_r)$.
+	    
+	    $\delta$ is not a proper distribution though right? $\tilde{p} + \delta$ is. Does that not matter?
+	    
+	    Oh is it okay because the first argument of the first KL term is $\tilde{p}$?
 	
-		Where the $\cdot\in w_r, r\in{0\ldots R}$, meaning $\cdot$ is a word that belongs to a particular partition, and We partition based on observed frequency in the full corpus.
-		
-		So then for this last bit
-		
-		\begin{align}
-			\delta(w) &= (a(w_r) - 1)\tilde{p}(w_r) + (1-\alpha(w_r)) r(w)
+	    As a sidenote, let $CE$ be cross entropy:
+	    
+	    \begin{align}
+			CE(\alpha P+(1-\alpha)W, Q) &= \sum_{x\in\mathcal{X}} (\alpha P(x)+(1-\alpha)W(x))\ln(Q(x))\\
+			&= \sum_{x\in\mathcal{X}} \alpha P(x)\ln(Q(x)) +(1-\alpha)W(x)\ln(Q(x))\\
+			&= \alpha CE(P, Q) + (1-\alpha)CE(W, Q)
 		\end{align}
 		
-		And I'm pretty sure $r(w)$ is just the uniform distribution. 
+		So swap out KL for CE, then use linearity in CE, then go back to KL, is what I'm getting here. Only works when looking for minima (or maxima I guess).
 		
-		$\delta$ is introduced as an algebraic means to get to a cleaner formulation?
-		
-		\begin{align}
-			\tilde{p}_w (w_r) + \delta(w_r) &= \tilde{p}_w (w_r) + (a(w_r) - 1)\tilde{p}(w_r) + (1-\alpha(w_r)) r(w)\\
-			&= a(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)) r(w)
-		\end{align}
-		
-		But so now You have two clean separate terms that by construction We already showed equivalent to Good-Turing. Since cross entropy can be broken down into entropy and KL divergence, minimizing KL divergence turns out to be equivalent to minimizing the cross entropy (since the entropy part remains constant), and cross entropy is linear in it's first argument, so You can use that to create two cross-entropy terms and then reduce them down the cross entropy to get
+		Another question:
 		
 		\begin{align}
-			\argmin_{p_\theta} \KL(\tilde{p}\mid\mid\model) + \lambda \cdot \KL(\delta\mid\mid\model)
+	    	\model(w_r) &\approx C_r N\tilde{p}(w_r) + C_r u(w_r)\\
+	    	&= \alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)) u(w_r)
+	    \end{align}
+		
+		And Ryan noted $u(w_r)=1$, so We should be able to just algebraically recover Good-Turing from this - 
+		
+		\begin{align}
+	    	\model(w_r) &= \alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)) u(w_r)\\
+	    	&= \alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r)) 1\\
+	    	&= \alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r))\\
+	    	&= \frac{NC_r}{(N+1)C_r}\tilde{p}(w_r) + \frac{C_r}{(N+1)C_r}\\
+	    	&= \frac{NC_r}{(N+1)C_r}\frac{r}{N} + \frac{C_r}{(N+1)C_r}\\
+	    	&= \frac{NC_r\cdot r}{(N+1)C_r\cdot N} + \frac{NC_r}{N(N+1)C_r}\\
+	    	&= \frac{r}{(N+1)} + \frac{1}{(N+1)}	
+	    \end{align}
+		
+		Which is almost right? What is that (N+1) doing down there.
+		
+		$\model(w_r)$ is the probability of a word, and in general words that occur $r$ times in total will have $n_rp_r$ mass allotted to them. 
+		
+		So the uniform distribution here should be concerned with the size of the vocabulary, right? We have that subscript $r$ in $\model(w_r)$, but this equation is still concerning itself only with a single word from a vocabulary, the subscript $r$ is just keeping track of the frequency.
+		
+		And if $u(w_r)$ is uniform in the vocabulary, then $u(w_r) = 1/|V|$.
+		
+		This does not bode well lol:		
+		
+		\begin{align}
+	    	\model(w_r) &= \frac{(r+1)S(N_{r+1})}{NS(N_r)} \\
+	    	&\approx  \frac{(r+1)S(N_{r+1})}{S(N_r)}\qquad\text{Drop } N,\text{ Normalize later?}\\
+	    	&\approx (r+1)C_r \qquad\qquad\qquad C_r=\frac{S(N_{r+1})}{S(N_r)}\\
+	    	&\approx (N\tilde{p}(w_r)+1)C_r \\
+	    	&\approx C_r N\tilde{p}(w_r) + C_r \\
+	    	&\approx C_r N\tilde{p}(w_r) + C_r |V| u(w_r)\qquad u(w_r)\text{ just uniform dist.} 
+	    \end{align}
+	    
+	    Then let 
+	    
+	    \begin{align}
+	    	\alpha(w_r) &= \frac{C_r N}{ C_r N + C_r|V|}\\
+	    	&= \frac{C_r N}{ C_r (N + |V|)}\\
+	    	&= \frac{N}{N + |V|}
+	    \end{align}
+	    
+	    \begin{align}
+	    	\model(w_r) &\approx C_r N\tilde{p}(w_r) + C_r |V|u(w_r)\\
+	    	&= \alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r))u(w_r )
+	    \end{align}
+	    
+	    And, sure. But now You are supposed to be able to get back to Good-Turing from here, but We've cancelled $C_r$ lol:
+	    
+	    \begin{align}
+	    	\model(w_r) &= \alpha(w_r)\tilde{p}(w_r) + (1-\alpha(w_r))u(w_r )\\
+	    	&= \frac{N}{N + |V|}\tilde{p}(w_r) + \frac{|V|}{N + |V|}u(w_r )\\
+	    	&= \frac{N}{N + |V|}\tilde{p}(w_r) + \frac{|V|}{N + |V|}\frac{1}{|V|}\\
+	    	&= \frac{N}{N + |V|}\frac{r}{N} + \frac{|V|}{N + |V|}\frac{1}{|V|}\\
+	    	&= \frac{r}{N + |V|} + \frac{1}{N + |V|}
+	    \end{align}
+	    
+	    
+	\subsection{TODO}
+	
+		Okay so We have 
+		
+		$h_{pos}(w)$ and $h_{neg}(w)$, the positive and negative parts of some function $w$. Then obviously $h(w) = h_{pos} + h_{neg}$.
+		
+		Then We come up with some $r_{pos}$ and $\lambda_{pos}$ such that 
+		
+		\begin{align}
+			\lambda_{pos}r(w)_{pos} &= h_{pos}(w),\\
+			\sum_w r_{pos}(w) &= 1
 		\end{align}
 		
-		$\delta$ is not a proper distribution though right? $\tilde{p} + \delta$ is. Does that not matter?
+		So $\lambda_{pos} = Z{-1}$, the inverted normalization term We had to apply to $r_{pos}$ get a distribution.
 		
-		Oh is it okay because the first argument of the first KL term is $\tilde{p}$?
+		Similarly
+		
+		\begin{align}
+			\lambda_{neg} r(w)_{neg} &= -h_{neg}(w),\\
+			\sum_w r_{neg}(w) &= 1
+		\end{align}
+		
+		Then You can say
+		
+		\begin{align}
+			GT(w) &= \tilde{p}(w) + \lambda_{pos}r_{pos}(w) - \lambda_{neg}r_{neg}(w)\\
+			&= \tilde{p}(w) + h_{pos}(w) - (-h_{neg}(w))
+		\end{align}
+		
+		So I'm guessing minus sign in $\lambda_{neg} r(w)_{neg} = -h_{neg}(w)$ to have both the terms on the right be positive.
+		
+		As I see it:
+		
+		1. Split the function $h(w)$ into positive and negative parts $h_{pos}(w)$ and $h_{neg}(w)$, so $h_{pos}(w)$ is always positive (or 0) and $h_{neg}(w)$ is always negative.
+		
+		2. Let $\lambda_{pos} = \sum_w h_{pos}(w)$, so $\sum_w h_{pos}(w)/\lambda_{pos} = 1$, and let $r_{pos}(w) = h_{pos}(w)/\lambda_{pos}$.
+		
+		3. Let $\sum_{w} h_{neg}(w) = \lambda_{neg}$, so $h_{neg}/\lambda_{neg} = 1$, and let $\sum_w r_{neg}(w) = h_{neg}(w)/\lambda_{neg}$. Note that since $h_{neg}(w)$ is always negative, that means that the $\lambda_{neg}$ term is also negative, which makes every term in $r_{neg}(w)$ positive.
+		
+		4. Using the above We can write $GT(w) = \tilde{p} + \lambda_{pos}r_{pos}(w) - $
 		
 		
+		Okay so We have
 		
+		\begin{align}
+			\sum_w r_{neg}(w) &= 1\\
+			\sum_w \frac{h_{neg}(w)}{\lambda_{1}} &= 1
+		\end{align}
 		
+		So $\lambda_{neg}$ is a negative term.
 		
+		So $r(w) = h_{neg}(w)/\lambda_1$ 
 		
+		So then
 		
+		\begin{align}
+			GT(w) &= \tilde{p} + \lambda_{pos}r_{pos}(w) + \lambda_{neg}r_{neg}(w)\\
+			&= \tilde{p} + h_{pos}(w) + h_{neg}(w)\\
+			&= \tilde{p} + h(w)
+		\end{align}
 		
+		So We have 
 		
+\section{Practice with Add-Delta smoothing}
+
+	\begin{align}
+		p_{\delta}(w) &= \frac{\#(w) + \delta}{N + |V|\delta}\\
+		&= \frac{\#(w)}{N + |V|\delta} + \frac{\delta}{N + |V|\delta}
+	\end{align}
+	    
+	Here, since the terms are all global, You actually could just normalize locally I think, but so
+	
+	\begin{align}
+		p_{\delta}(w) &= \frac{\#(w)}{N + |V|\delta} + \frac{\delta}{N + |V|\delta}\\
+		&= \#(w)C + \delta C\qquad\qquad {\color{gray} C=\frac{1}{N+|V|\delta}}\\
+		&= \frac{\#(w)}{N} - \frac{\#(w)}{N} + \#(w)C + \delta C\\
+		&= \frac{\#(w)}{N} + \bigg(C - \frac{1}{N}\bigg)\#(w) + \delta C\\
+		&= \underbrace{\frac{\#(w)}{N}}_{\tilde{p}} + \underbrace{\bigg(C - \frac{1}{N}\bigg)\#(w) + \delta C}_{h(w)}
+	\end{align}
+	
+	Then We do
+	
+	\begin{align}
+		h_{pos}(w) = \begin{cases} h(w) & h(w) \geq 0\\
+								0 &\textbf{otherwise}
+					\end{cases}\\
+		h_{neg}(w) = \begin{cases} h(w) & h(w) < 0\\
+								0 &\textbf{otherwise}
+					\end{cases}
+	\end{align}
+	    
+	Then let 
+	
+	\begin{align}
+		\lambda_{pos} &= \sum_w h_{pos}(w)\\
+		\lambda_{neg} &= \sum_w h_{neg}(w)\\
+		r_{pos}(w) &= \frac{h_{pos}(w)}{\lambda_{pos}}\\
+		r_{neg}(w) &= \frac{h_{neg}(w)}{\lambda_{neg}}
+	\end{align}
+	
+	We then have
+	
+	\begin{align}
+		\sum_w r_{pos}(w) &= 1\\
+		\sum_w r_{neg}(w) &= 1\\
+		\lambda_{pos}r_{pos}(w) = h_{pos}(w)\\
+		\lambda_{neg}r_{neg}(w) = h_{neg}(w)
+	\end{align}
+	
+	and finally
+	
+	\begin{align}
+		p_\delta(w) &= \tilde{p} + h(w)\\
+		&= \tilde{p} + h_{pos}(w) + + h_{neg}(w)\\
+		&= \tilde{p} + \lambda_{pos}r_{pos}(w) + \lambda_{neg}r_{neg}(w)
+	\end{align}
+	
+	And from there it's just a hop skip and a jump to KL.
+	    
+	\newpage		
+	\subsection{Add-delta smoothing}
+	
+		Let's use the same reasoning again:
 		
+		Just assume a context.
+		
+		\begin{align}
+			p_\delta(w) &= \frac{\delta + \#(w)}{\delta |\mathcal{V}| + \sum_{w\in\mathcal{V}} \#(w)}\\
+			&\approx \delta + \#(w)\\
+			&\approx \delta u(w) + N\tilde{p}(w)
+		\end{align}
+		
+		and then
+		
+		\begin{align}
+			\alpha(w) = \frac{N}{\delta+N}
+		\end{align}
+		
+		Plugging that in:
+		
+		\begin{align}
+			p_\delta(w) &\approx \delta u(w) + N\tilde{p}(w)\\
+			&= \alpha(w) \tilde{p}(w) + (1-\alpha(w)) u(w)  \\
+			&= \frac{N}{\delta+N} \tilde{p}(w) + \frac{\delta}{\delta+N} u(w)\\
+			&= \frac{N}{\delta+N} \frac{r}{N} + \frac{\delta}{\delta+N}\\
+			&= \frac{r}{\delta+N} + \frac{\delta}{\delta+N}\\
+			&= \frac{r+\delta}{\delta+N}
+		\end{align}
+		
+		Hmm. I don't know if You can let the uniform term be equal to 1.
+		
+		So We had
+		
+		\begin{align}
+			p_\delta(w) = \frac{\delta + \#(w)}{\delta |\mathcal{V}| + \sum_{w\in\mathcal{V}} \#(w)}
+		\end{align}
+		
+		So then We wanna split this up, but this time use $u(w)=|V|^{-1}$:
+		
+		\begin{align}
+			p_\delta(w) &= \frac{\delta + \#(w)}{\delta |\mathcal{V}| + \sum_{w\in\mathcal{V}} \#(w)}\\
+			&\approx \delta + \#(w)\\
+			&\approx \delta|V|u(w) + N\tilde{p}(w)
+		\end{align}
+		
+		And then normalize? Let $\alpha = \frac{N}{|V|\delta + N}$
+		
+		\begin{align}
+			p_\delta(w) &\approx \delta|V|u(w) + N\tilde{p}(w)\\
+			&= \alpha\tilde{p}(w) + (1-\alpha)u(w) 
+		\end{align}
+		
+		And I guess a sanity check is: is that true. It feels like the normalization is sus:
+		
+		\begin{align}
+			p_\delta(w) &= \alpha\tilde{p}(w) + (1-\alpha)u(w) \\
+			&= \alpha\frac{\#(w)}{N} + (1-\alpha)u(w)\\
+			&= \frac{N}{|V|\delta + N}\frac{\#(w)}{N} + \frac{|V|\delta}{|V|\delta + N}u(w)\\
+			&= \frac{N}{|V|\delta + N}\frac{\#(w)}{N} + \frac{|V|\delta}{|V|\delta + N}\frac{1}{|V|}\\
+			&= \frac{\#(w)}{|V|\delta + N} + \frac{\delta}{|V|\delta + N}\\
+			&= \frac{\#(w)}{|V|\delta + N} + \frac{\delta}{|V|\delta + N}
+		\end{align}
+		
+
+		 Yep okay so then We can say
+	    
+	    \begin{align}
+	    	\argmin_{\model}\KL(\alpha\tilde{p}(\cdot) + (1-\alpha)u(\cdot) \mid\mid \model(\cdot))
+	    \end{align}		
+	    
+	    Will be minimized by add-$\delta$ smoothing.
+	    
+		Then We want a $\gamma(w)$ such that
+		
+		\begin{align}
+			\tilde{p}(w) + \gamma(w) &= \alpha\tilde{p}(w) + (1-\alpha)u(w)\\
+			\gamma(w) &= \alpha\tilde{p}(w) - \tilde{p}(w) + (1-\alpha)u(w)\\
+			\gamma(w) &= (1-\alpha)\tilde{p}(w) + (1-\alpha)u(w)
+		\end{align}
+		
+		And so then We can also say that minimizing
+		
+		\begin{align}
+	    	\argmin_{\model}\KL( \tilde{p}(w) + \gamma(w) \mid\mid \model(\cdot))
+	    \end{align}
+	    
+	    Will also yield add-$\delta$ smoothing.
+	    
+	    Then using the whole KL$\to$CE$\to$KL trick We can say
+	    
+		\begin{align}
+	    	&\argmin_{\model}\KL( \tilde{p}(w) + \gamma(w) \mid\mid \model(\cdot)) \\
+	    	&= \argmin_{\model}\KL( \tilde{p}(w)  \mid\mid \model(\cdot)) + \lambda\cdot \KL(\gamma(w) \mid\mid \model(\cdot))
+	    \end{align}
+	    
+	    When $\lambda=1$.
+		
+\section{Katz again}
+
+	Let $r = \#(w\circ\context_{N-1})$, then for an $N$-gram model, We have:
+	
+	\begin{align}
+		p_{katz}(w|\context_{N-1}) = \begin{cases} 
+										\tilde{p}(w|\context_{N-1}) & r > k\\
+										d_r \cdot \tilde{p}(w_r|\context_{N-1}) & k \ge r > 0\\
+										\alpha(w|\context)p_{katz}(w|\context_{N-2}) & r =0
+									\end{cases}
+	\end{align}
+	
+	Where $\context_{N}$ is some context of length $N$.
+	
+	If a token occurs more frequently than $k$ times, We do not discount it.
+	
+	If a token occurs 1 or more and up to $k$ times, then We discount the probability by some factor $d_r$.
+	
+	And if a token occurs 0 times, We back off to an $N-1$-gram model, appropriately weighted.
+	
+	\subsection{More than k}
+	
+		In this case We just have
+		
+		\begin{align}
+			\argmin_{\model}\KL(\tilde{p} \mid\mid \model)
+		\end{align}
+		
+	\subsection{Less than k but more than zero}
+	
+		I.e. now We have $r = \#(w\circ\context_{N-1})$, $0<r\le k$.
+		
+		\begin{align}
+			p_{katz}(w|\context_{N-1}) = d_r \cdot \tilde{p}(w_r|\context_{N-1})
+		\end{align}
+		
+		So here is what $d_r$ is lol:
+		
+		\begin{align}
+			d_r = \bigg(\frac{r^*}{r} - \frac{(k+1)n_{k+1}}{n_1} \bigg)\cdot \bigg(1 - \frac{(k+1)n_{k+1}}{n_1} \bigg)^{-1}
+		\end{align}
+		
+		And
+		
+		\begin{align}
+			r^* = \frac{(r+1)n_{r+1}}{n_r}
+		\end{align}
+		
+		So I suppose to lay it all out:
+	
+		\begin{align}
+			d_r &= \bigg( \frac{(r+1)n_{r+1}}{n_r}\frac{1}{r} - \frac{(k+1)n_{k+1}}{n_1} \bigg)\cdot \bigg(1 - \frac{(k+1)n_{k+1}}{n_1} \bigg)^{-1}\\
+			d_r &= \bigg( \frac{(r+1)n_{r+1}}{r n_r} - \frac{(k+1)n_{k+1}}{n_1} \bigg)\cdot \bigg(1 - \frac{(k+1)n_{k+1}}{n_1} \bigg)^{-1}
+		\end{align}
+		
+		And recall that $k$ is just a hyperparameter.
+		
+		To bring this back to Katz:
+		
+		\begin{align}
+			p_{katz}(w|\context_{N-1}) &= d_r \cdot \tilde{p}(w_r|\context_{N-1})\\
+			&= d_r \cdot \tilde{p}(w_r|\context_{N-1})\\
+			&= \tilde{p}(w_r|\context_{N-1}) - \tilde{p}(w_r|\context_{N-1}) + d_r \cdot \tilde{p}(w_r|\context_{N-1})\\
+			&= \tilde{p}(w_r|\context_{N-1}) + \underbrace{(d_r-1)\tilde{p}(w_r|\context_{N-1})}_{h(w|\context_{N-1})}
+		\end{align}
+		
+	\subsection{Zero}
+	
+		Isn't this just an inference-time switch? You won't even really be able to calculate $\beta$ until the distribution's settled down. 
+		
+\section{Absolute Discounting}
+
+	Interpolation between a discounted count and a backoff model:
+	
+	\begin{align}
+		p_{abs}(w_i|\context_{N-1}) = \frac{\max\{\#(w^i|\context_{N-1}) - D, 0 \}}{\sum_w \#(w|\context_{N-1})} + (1-\lambda_{\context_{N-1})} p_{abs}(w_i|\context_{N-2})
+	\end{align}
+		
+	I'm ok with that
+	
+	\begin{align}
+		1-\lambda_{\context_{N-1}} = \frac{D}{\sum_w \#(w|\context_{N-1})} N_{1+} (\context_{N-1}\bullet)
+	\end{align}
+	
+	So $D$ normalized by the count of all tokens satisfying the context times the number of times We apply the absolute discount.
+	
+	$N_{1+} (w^{i-1}_{i-N+1}\bullet)$ is the number of unique words that follow the context $\context_{N-1}$.
+	
+	To avoid trouble they use $0 \le D \le 1$.
+	
+\newpage
+\section{Kneser-Ney}
+
+	Following the derivation from \href{https://dash.harvard.edu/bitstream/handle/1/25104739/tr-10-98.pdf}{here, page 15}, in all cases the probability is the same:
+	
+	\begin{align}
+		&P_{KN}(w|\context_{N-1}) \\
+		&= \frac{\max\{\#(w|\context_{N-1}) - D, 0 \}}{\sum_w \#(w|\context_{N-1})} + \frac{D}{\sum_w \#(w|\context_{N-1})} N_{1+} (\context_{N-1}\bullet) \times \frac{N_{1+}(\bullet w))}{N_{1+}(\bullet \bullet)}
+	\end{align}
+	
+	where
+	
+	\begin{align}
+		N_{1+}(\bullet, w) &= |\{w_{i-n+1} : \#(w^i_{i-n+1} ) > 0	\} |\\
+		N_{1+}(\bullet, \bullet) &= |\{w_{i-n+1}, w^i : \#(w^i_{i-n+1} ) > 0	\} | = \sum_w N_{1+}(\bullet, w)
+	\end{align}
+	
+	$N_{1+}(\bullet, w)$, in words, is the number of unique contexts which have $w$ as the final word.
+	
+	Then observe that $N_{1+}(\bullet, \bullet)$ is simply the number of unique tokens of length $N$.
+	
+	And finally, to explain Kneser-Ney, We use absolute discounting to save some probability mass on a per-\textbf{observed}-unique-word-basis, and then distribute this mass according to a continuation probability, which is the probability that the observed word is the final word in a token.
+	
+	In practice We will not have KL divergence terms on unobserved tokens, so We can ignore the $0$ case (given that $0\le D \le 1$). Assume also that a particular context $\context_{N-1}\in V^{N-1}$ has been observed, (almost) reducing the problem to unigram counts:
+	
+	\begin{align} 
+		p_{KN}(w) &= \frac{\#(w) - D}{N} + \frac{D}{N} N_{1+} (\bullet) \times \frac{N_{1+}(\bullet w))}{N_{1+}(\bullet \bullet)}
+	\end{align}
+	
+	Where $N_{1+} (\bullet)$ is the number of unique observed words given $\context_{N-1}$, and $\frac{N_{1+}(\bullet w))}{N_{1+}(\bullet \bullet)}$ is the same as before.
+	
+	Then
+	
+	\begin{align} 
+		p_{KN}(w) &= \frac{\#(w) - D}{N} + \frac{D}{N} N_{1+} (\bullet) \times \frac{N_{1+}(\bullet w))}{N_{1+}(\bullet \bullet)}\\
+		&= \frac{\#(w)}{N} - \frac{D}{N} + \frac{D}{N} N_{1+} (\bullet) \times \frac{N_{1+}(\bullet w))}{N_{1+}(\bullet \bullet)}\\
+		&= \frac{\#(w)}{N} + \frac{D}{N}\bigg( N_{1+} (\bullet) \times \frac{N_{1+}(\bullet w))}{N_{1+}(\bullet \bullet)} - 1 \bigg)\\
+		&= \tilde{p}(w) + \underbrace{\frac{D}{N}\bigg( N_{1+} (\bullet) \times \frac{N_{1+}(\bullet w))}{N_{1+}(\bullet \bullet)} - 1 \bigg)}_{h(w)}
+	\end{align}
+
 		
 		
 		
@@ -2442,6 +2857,16 @@ by Leaving-One-Out}
 		
 		\begin{align}
 			CE(P, Q) = Ent(P) + KL(P, Q)
+		\end{align}
+		
+		If You are just changing $Q$, then minimizing CE is equivalent to minimizing KL, since the entropy term remains constant. 
+		
+		Just assume the sum is convex lol:
+				
+		\begin{align}
+			CE(\alpha P+(1-\alpha)W, Q) &= \sum_{x\in\mathcal{X}} (\alpha P(x)+(1-\alpha)W(x))\ln(Q(x))\\
+			&= \sum_{x\in\mathcal{X}} \alpha P(x)\ln(Q(x)) +(1-\alpha)W(x)\ln(Q(x))\\
+			&= \alpha CE(P, Q) + (1-\alpha)CE(W, Q)
 		\end{align}
 		
 	\subsection{Perplexity}
@@ -3043,11 +3468,365 @@ by Leaving-One-Out}
 			\end{align}
 		
 		
+	\subsection{Sanity Check}
+	
+		\begin{align}
+			\sum_w \frac{(r_w+1)S(N_{r_w+1})}{NS(N_{r_w})} &= \sum_w \frac{(r_w+1)N_{r_w+1}}{NN_{r_w}}\\
+			&= \frac{1}{N}\sum_w \frac{(r_w+1)N_{r_w+1}}{N_{r_w}}
+		\end{align}
+		
+		Then You group the words by frequency to cancel the denominator and You're done.
+		
+		Question: What does it mean to sum over all words?
+		
+		You know, in practice, the amount of mass saved for words that occur zero times is $n_1/N$.
+		
+	\subsection{General? Counts}
+	
+		\begin{align}
+			\KL(\tilde{p}\mid\mid\model) + \lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model)
+		\end{align}
+		
+		$g_p = r_{pos}$ is the original derivation. Changing $r$ to $g$ since $r$ usually designated frequency of some word.
+		
+		That first equation is from the "general" perspective - $\tilde{p}$ is the empirical distribution of tokens in the dataset.
+		
+		But in practice We will be using NLL loss, and that loss is done per-token, so We can instead let $\tilde{p}$ be the empirical distribution of a particular token - the perspective is that You are going along the dataset, one token at a time, and at each token You observe a one-hot distribution, where 1 is the probability of the token which was actually observed.
+		
+	    The loss over all tokens will then be:
+		
+		\begin{align}
+			\sum^{|V|}_{i=1} \#(w_i)\big(\KL(\tilde{p}\mid\mid\model) + \alpha_i(\lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model))\big)
+		\end{align}
+		
+		Where We introduced some scaling factor $\alpha_i$ to restore the balance between the empirical distribution KL terms and the $g_{pos}$ and all that.
 		
 		
+		For now lump the KL terms together: $h = \lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model)$
+		
+		\begin{align}
+			\sum^{|V|}_{i=1} \#(w_i)\big(\KL(\tilde{p}\mid\mid\model) + \alpha_i h\big)
+		\end{align}
+		
+		So then on a token by token basis:
+		
+		\begin{align}
+			\sum^{|V|}_{i=1} \#(w_i) \big(\KL(\tilde{p}\mid\mid\model) + \alpha_i h \big)&= \sum^{|V|}_{i=1} \#(w_i) \bigg(\ln\bigg(\frac{1}{\model(w_i)}\bigg) + \alpha_i h \bigg)
+		\end{align}
+		
+		That's all We need really, since the Lagrange equation is then:
+		
+		\begin{align}
+			\mathcal{L} &= \bigg(\sum^{|V|}_{i=1} \#(w_i) \bigg(\ln\bigg(\frac{1}{\model(w)}\bigg) + \alpha_i h \bigg)\bigg) + \lambda\bigg(\bigg(\sum^{|V|}_{i=1} \model(w_i)\bigg) -1 \bigg) 
+		\end{align}
+		
+		Then the derivative piece by piece:
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \ln\bigg(\frac{1}{\model(w_j)}\bigg) = -\frac{1}{\model(w_j)}
+		\end{align}
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \alpha_j h &= \frac{\partial}{\partial \model(w_j)} \alpha_j\big(\lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model)\big)
+		\end{align}
+		
+		Let's just focus on an individual KL term I suppose:
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \lambda_p\KL(g_p\mid\mid\model) &= \frac{\partial}{\partial \model(w_j)} \sum^{|V|}_{i=1} g_p(w_i)\ln\bigg(\frac{g_p(w_i)}{\model(w_i)}\bigg)\\
+			&= \frac{\partial}{\partial \model(w_j)} g_p(w_j)\ln\bigg(\frac{g_p(w_j)}{\model(w_j)}\bigg)\\
+			&= \frac{\partial}{\partial \model(w_j)} -g_p(w_j)\ln\bigg(\frac{\model(w_j)}{g_p(w_j)}\bigg)\\
+			&=  -g_p(w_j)\frac{1}{g_p(w_j)}\frac{g_p(w_j)}{\model(w_j)}\\
+			&=  -g_p(w_j)\frac{1}{\model(w_j)}
+		\end{align}
+		
+		Alright so then 
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \alpha_j h &= \frac{\partial}{\partial \model(w_j)} \alpha_j\big(\lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model)\big)\\
+			&= \alpha_j\bigg(-\lambda_p g_p(w_j)\frac{1}{\model(w_j)} -\lambda_n g_n(w_j)\frac{1}{\model(w_j)}\bigg)\\
+			&= -\alpha_j\frac{1}{\model(w_j)}\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+		\end{align}
+		
+		And of course
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)}  \lambda\bigg(\bigg(\sum^{|V|}_{i=1} \model(w_i)\bigg) -1 \bigg) = \lambda
+		\end{align}
+		
+		So putting it all together:
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \mathcal{L} &= \#(w_j)\bigg(-\frac{1}{\model(w_j)} -\alpha_j\frac{1}{\model(w_j)}\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg) \bigg) + \lambda = 0			
+		\end{align}
+		
+		And now We need to get an expression for $\model(w_j)$
+		
+		\begin{align}
+			\#(w_j)\bigg(-\frac{1}{\model(w_j)} -\alpha_j\frac{1}{\model(w_j)}\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg) \bigg) +\lambda&= 0\\
+			-\frac{1}{\model(w_j)} -\alpha_j\frac{1}{\model(w_j)}\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)  &= \frac{-\lambda}{\#(w_j)}\\
+			-\frac{1}{\model(w_j)}\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)  &= \frac{-\lambda}{\#(w_j)}\\
+			\frac{-\model(w_j)}{\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)}  &= \frac{\#(w_j)}{-\lambda}
+		\end{align}
+		
+		And so then
+		
+		\begin{align}
+			\model(w_j)  &= \bigg(1 -\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)\frac{\#(w_j)}{\lambda}
+		\end{align}
+		
+		Plugging this into the constraint:
+		
+		\begin{align}
+		 	\sum^{|V|}_{i=1} \model(w_i) &= 1\\
+		 	\sum^{|V|}_{i=1} \bigg(1 -\alpha_o\bigg(\lambda_p g_p(w_i) +\lambda_n g_n(w_i)\bigg)\bigg)\frac{\#(w_i)}{\lambda} &= 1\\
+		 	\sum^{|V|}_{i=1} \bigg(1 -\alpha_i\bigg(\lambda_p g_p(w_i) +\lambda_n g_n(w_i)\bigg)\bigg)\#(w_i) &= \lambda
+		\end{align}
+		
+		Alright lol, so then
+		
+		\begin{align}
+			\model(w_j)  &= \bigg(1 -\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)\frac{\#(w_j)}{\lambda}\\
+			&= \frac{\#(w_j)\bigg(1 -\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)}{\lambda}\\
+			&= \frac{\#(w_j)\bigg(1 -\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)}{\sum^{|V|}_{i=1} \bigg(1 -\alpha_i\bigg(\lambda_p g_p(w_i) +\lambda_n g_n(w_i)\bigg)\bigg)\#(w_i)}
+		\end{align}
+		
+		Lot of ado about not much lol.
+		
+		What does $\alpha$ need to be for this to equal add-delta?
+		
+		\begin{align}
+			\model(w_j) = \frac{\#(w_j) + \delta}{|V|*\delta + \sum^{|V|}_{i=1} \#(w_i)}
+		\end{align}
+		
+		I guess We just need 
+		
+		\begin{align}
+			\#(w_j) + \delta &= \#(w_j)\bigg(1 -\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			&= \#(w_j) -\#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			 \delta &= -\#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			 \frac{-\delta}{\#(w_j)\big(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\big)} &= \alpha_j\\
+		\end{align}
+		
+		Huh.
+		
+		\begin{align}
+			\delta &=-\#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			\delta &= -\#(w_j)\alpha_j h(w_j)\\
+			\delta &= -\#(w_j)\alpha_j \bigg(\bigg(C - \frac{1}{N}\bigg)\#(w_j) + \delta C\bigg)\\
+			\frac{\delta}{\#(w_j)\bigg(\bigg(C - \frac{1}{N}\bigg)\#(w_j) + \delta C\bigg)} &= \alpha_j \\	
+		\end{align}
+		
+
+\newpage
+\subsection{Mistakes}
+	
+		\begin{align}
+			\KL(\tilde{p}\mid\mid\model) + \lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model)
+		\end{align}
+		
+		$g_p = r_{pos}$ is the original derivation. Changing $r$ to $g$ since $r$ usually designated frequency of some word.
+		
+		That first equation is from the "general" perspective - $\tilde{p}$ is the empirical distribution of tokens in the dataset.
+		
+		But in practice We will be using NLL loss, and that loss is done per-token, so We can instead let $\tilde{p}$ be the empirical distribution of a particular token - the perspective is that You are going along the dataset, one token at a time, and at each token You observe a one-hot distribution, where 1 is the probability of the token which was actually observed.
+		
+	    The loss over all tokens will then be:
+		
+		\begin{align}
+			\sum^{|V|}_{i=1} \#(w_i)\big(\KL(\tilde{p}\mid\mid\model) + \alpha_i(\lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model))\big)
+		\end{align}
+		
+		Where We introduced some scaling factor $\alpha_i$ to restore the balance between the empirical distribution KL terms and the $g_{pos}$ and all that.
 		
 		
+		For now lump the KL terms together: $h = \lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model)$
 		
+		\begin{align}
+			\sum^{|V|}_{i=1} \#(w_i)\big(\KL(\tilde{p}\mid\mid\model) + \alpha_i h\big)
+		\end{align}
+		
+		So then on a token by token basis:
+		
+		\begin{align}
+			\sum^{|V|}_{i=1} \#(w_i) \big(\KL(\tilde{p}\mid\mid\model) + \alpha_i h \big)&= \sum^{|V|}_{i=1} \#(w_i) \bigg(\ln\bigg(\frac{1}{\model(w_i)}\bigg) + \alpha_i h \bigg)
+		\end{align}
+		
+		That's all We need really, since the Lagrange equation is then:
+		
+		\begin{align}
+			\mathcal{L} &= \bigg(\sum^{|V|}_{i=1} \#(w_i) \bigg(\ln\bigg(\frac{1}{\model(w)}\bigg) + \alpha_i h \bigg)\bigg) + \lambda\bigg(\bigg(\sum^{|V|}_{i=1} \model(w_i)\bigg) -1 \bigg) 
+		\end{align}
+		
+		Then the derivative piece by piece:
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \ln\bigg(\frac{1}{\model(w_j)}\bigg) = -\frac{1}{\model(w_j)}
+		\end{align}
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \alpha_j h &= \frac{\partial}{\partial \model(w_j)} \alpha_j\big(\lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model)\big)
+		\end{align}
+		
+		Let's just focus on an individual KL term I suppose:
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \lambda_p\KL(g_p\mid\mid\model) &= \frac{\partial}{\partial \model(w_j)} \sum^{|V|}_{i=1} g_p(w_i)\ln\bigg(\frac{g_p(w_i)}{\model(w_i)}\bigg)\\
+			&= \frac{\partial}{\partial \model(w_j)} g_p(w_j)\ln\bigg(\frac{g_p(w_j)}{\model(w_j)}\bigg)\\
+			&= \frac{\partial}{\partial \model(w_j)} -g_p(w_j)\ln\bigg(\frac{\model(w_j)}{g_p(w_j)}\bigg)\\
+			&=  -g_p(w_j)\frac{1}{g_p(w_j)}\frac{g_p(w_j)}{\model(w_j)}\\
+			&=  -g_p(w_j)\frac{1}{\model(w_j)}
+		\end{align}
+		
+		Alright so then 
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \alpha_j h &= \frac{\partial}{\partial \model(w_j)} \alpha_j\big(\lambda_p\KL(g_p\mid\mid\model) + \lambda_n\KL(g_n\mid\mid\model)\big)\\
+			&= \alpha_j\bigg(-\lambda_p g_p(w_j)\frac{1}{\model(w_j)} -\lambda_n g_n(w_j)\frac{1}{\model(w_j)}\bigg)\\
+			&= -\alpha_j\frac{1}{\model(w_j)}\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+		\end{align}
+		
+		And of course
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)}  \lambda\bigg(\bigg(\sum^{|V|}_{i=1} \model(w_i)\bigg) -1 \bigg) = \lambda
+		\end{align}
+		
+		So putting it all together:
+		
+		\begin{align}
+			\frac{\partial}{\partial \model(w_j)} \mathcal{L} &= \#(w_j)\bigg(-\frac{1}{\model(w_j)} -\alpha_j\frac{1}{\model(w_j)}\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg) \bigg) + \lambda = 0			
+		\end{align}
+		
+		And now We need to get an expression for $\model(w_j)$
+		
+		\begin{align}
+			\#(w_j)\bigg(-\frac{1}{\model(w_j)} -\alpha_j\frac{1}{\model(w_j)}\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg) \bigg) +\lambda&= 0\\
+			-\frac{1}{\model(w_j)} -\alpha_j\frac{1}{\model(w_j)}\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)  &= \frac{-\lambda}{\#(w_j)}\\
+			-\frac{1}{\model(w_j)}\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)  &= \frac{-\lambda}{\#(w_j)}\\
+			\frac{-\model(w_j)}{\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)}  &= \frac{\#(w_j)}{-\lambda}
+		\end{align}
+		
+		And so then
+		
+		\begin{align}
+			\model(w_j)  &= \bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)\frac{\#(w_j)}{\lambda}
+		\end{align}
+		
+		Plugging this into the constraint:
+		
+		\begin{align}
+		 	\sum^{|V|}_{i=1} \model(w_i) &= 1\\
+		 	\sum^{|V|}_{i=1} \bigg(1 +\alpha_o\bigg(\lambda_p g_p(w_i) +\lambda_n g_n(w_i)\bigg)\bigg)\frac{\#(w_i)}{\lambda} &= 1\\
+		 	\sum^{|V|}_{i=1} \bigg(1 +\alpha_i\bigg(\lambda_p g_p(w_i) +\lambda_n g_n(w_i)\bigg)\bigg)\#(w_i) &= \lambda
+		\end{align}
+		
+		Alright lol, so then
+		
+		\begin{align}
+			\model(w_j)  &= \bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)\frac{\#(w_j)}{\lambda}\\
+			&= \frac{\#(w_j)\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)}{\lambda}\\
+			&= \frac{\#(w_j)\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)}{\sum^{|V|}_{i=1} \bigg(1 +\alpha_i\bigg(\lambda_p g_p(w_i) +\lambda_n g_n(w_i)\bigg)\bigg)\#(w_i)}
+		\end{align}
+		
+		Lot of ado about not much lol.
+		
+		What does $\alpha$ need to be for this to equal add-delta?
+		
+		\begin{align}
+			\model(w_j) = \frac{\#(w_j) + \delta}{|V|*\delta + \sum^{|V|}_{i=1} \#(w_i)}
+		\end{align}
+		
+		I guess We just need 
+		
+		\begin{align}
+			\#(w_j) + \delta &= \#(w_j)\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			&= \#(w_j) +\#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			 \delta &= \#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			 \frac{\delta}{\#(w_j)\big(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\big)} &= \alpha_j\\
+		\end{align}
+		
+		Huh.
+		
+		\begin{align}
+			\delta &=-\#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			\delta &= -\#(w_j)\alpha_j h(w_j)\\
+			\delta &= -\#(w_j)\alpha_j \bigg(\bigg(C - \frac{1}{N}\bigg)\#(w_j) + \delta C\bigg)\\
+			\frac{\delta}{\#(w_j)\bigg(\bigg(C - \frac{1}{N}\bigg)\#(w_j) + \delta C\bigg)} &= \alpha_j \\	
+		\end{align}
+		
+
+	\subsection{More Generally?}
+	
+		Complications:
+		
+		We want the smoothed probability in terms of smoothed counts and a normalizer, such that the normalizer is the sum of the smoothed counts. Sort of works by definition.
+		
+		In the case of add-delta We invented instances, so it was a little more complicated.
+		
+		What about Good-Turing?
+		
+		\begin{align}
+			\model(w_j) &= \frac{(r_{w_j}+1)S(N_{r_{w_j}+1})}{NS(N_{r_{w_j}})}
+		\end{align}
+		
+		But it's my understanding that the "total count" is still supposed to be $N$, so
+		
+		\begin{align}
+			\frac{(r_{w_j}+1)S(N_{r_{w_j}+1})}{S(N_{r_{w_j}})} &= \#(w_j)\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			\frac{(\#(w_j)+1)S(N_{r_{w_j}+1})}{S(N_{r_{w_j}})} &= \#(w_j)\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			\frac{(\#(w_j)+1)S(N_{r_{w_j}+1})}{S(N_{r_{w_j}})} &= \#(w_j) +\#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			\frac{(\#(w_j)+1)S(N_{r_{w_j}+1})}{S(N_{r_{w_j}})} - \#(w_j) &= \#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			\frac{\frac{(\#(w_j)+1)S(N_{r_{w_j}+1})}{S(N_{r_{w_j}})} - \#(w_j)}{\#(w_j)\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)} &= \alpha_j
+		\end{align}
+		
+		Beautiful lol. I think in general You can write:
+		
+		\begin{align}
+			\frac{\frac{(\#(w_j)+1)S(N_{r_{w_j}+1})}{S(N_{r_{w_j}})} - \#(w_j)}{\#(w_j)\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)} &= \alpha_j\\
+			\frac{p'(w_j) * z' + \tilde{p}(w_j)*N}{\#(w_j)\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)} &= \alpha_j
+		\end{align}
+		
+		Where $z'$ is the normalizer for $p'$, the smoothed probability.
+		
+	\subsection{General Formula}
+	
+		Without any assumptions (I think) We have:
+	
+		\begin{align}
+			\model(w_j)&= \frac{\#(w_j)\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)}{\sum^{|V|}_{i=1} \bigg(1 +\alpha_i\bigg(\lambda_p g_p(w_i) +\lambda_n g_n(w_i)\bigg)\bigg)\#(w_i)}
+		\end{align}
+		
+		We then simply need
+		
+		\begin{align}
+			p'(w_j)*z' = \#(w_j)\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)
+		\end{align}
+		
+		Where $z'$ is the normalizer for the new smoothed distribution (which is usually just $N$ if the count is "preserved", but it isn't always, like in add-$\delta$ smoothing for example). Then in general We can say
+		
+		\begin{align}
+			p'(w_j)*z' &= \#(w_j)\bigg(1 +\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\bigg)\\
+			p'(w_j)*z' - \#(w_j) &= \#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			p'(w_j)*z' - \tilde{p}*N &= \#(w_j)\alpha_j\bigg(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\bigg)\\
+			\frac{p'(w_j)*z' - \tilde{p}*N}{\#(w_j) \big(\lambda_p g_p(w_j) +\lambda_n g_n(w_j)\big)} &= \alpha_j
+		\end{align}
+		
+	\subsection{Checking Code}
+	
+		Okay so NoSmoother and AddLambda are just classes implementing the true smoothing counts.
+		
+		The main line:
+		
+		\begin{align}
+			KL(\tilde{p}\mid\mid p_\theta
+		\end{align}
+
+
+
+
+
+
 		
 		
 		

@@ -9,4 +9,10 @@
 \BOOKMARK [2][-]{subsection.1.8}{Cons/Pros of Shared-Nothing}{section.1}% 9
 \BOOKMARK [2][-]{subsection.1.9}{Shared Memory}{section.1}% 10
 \BOOKMARK [2][-]{subsection.1.10}{Shared Disk}{section.1}% 11
-\BOOKMARK [1][-]{section.2}{Storage Systems}{}% 12
+\BOOKMARK [2][-]{subsection.1.11}{Exericses - Process Models}{section.1}% 12
+\BOOKMARK [3][-]{subsubsection.1.11.1}{Thread v.s. Process}{subsection.1.11}% 13
+\BOOKMARK [2][-]{subsection.1.12}{Process per Worker}{section.1}% 14
+\BOOKMARK [2][-]{subsection.1.13}{Thread per worker}{section.1}% 15
+\BOOKMARK [1][-]{section.2}{Storage Management}{}% 16
+\BOOKMARK [2][-]{subsection.2.1}{An Evaluation of Buffer Management Strategies for Relational Database Systems}{section.2}% 17
+\BOOKMARK [1][-]{section.3}{Storage Systems}{}% 18
