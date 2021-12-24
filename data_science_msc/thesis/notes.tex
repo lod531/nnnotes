@@ -6,7 +6,6 @@
 \usepackage{amsmath}
 \usepackage{chngcntr}
 \usepackage{float}
-\usepackage{tabu}
 \usepackage{bm}
 \usepackage[lite]{amsrefs}
 \usepackage{amsthm}
@@ -2774,6 +2773,42 @@ by Leaving-One-Out}
 		&= \frac{\#(w)}{N} + \frac{D}{N}\bigg( N_{1+} (\bullet) \times \frac{N_{1+}(\bullet w))}{N_{1+}(\bullet \bullet)} - 1 \bigg)\\
 		&= \tilde{p}(w) + \underbrace{\frac{D}{N}\bigg( N_{1+} (\bullet) \times \frac{N_{1+}(\bullet w))}{N_{1+}(\bullet \bullet)} - 1 \bigg)}_{h(w)}
 	\end{align}
+	
+	All of  that is wrong lol. see overleaf.
+	
+	(The above works for bigrams, not for n-grams)
+	
+	
+\newpage
+\section{KenLM}
+
+	The core problem is
+	
+	\begin{align}
+		p(w_n|w_1^{n-1}) &= p(w_n|w^{n-1}_f)\prod^{f-1}_{i=1}b(w^{n-1}_i)
+	\end{align}
+	
+	So the probability of a word given all preceding words is the probability of a word given a fixed context window, dictated by $f$. I guess this is opting not to frame things purely in terms of n-grams?
+	
+	\subsection{Data Structures}
+	
+		You've got Your PROBING, and You TRIE.
+		
+		\subsubsection{Hash Tables and PROBING}
+		
+			Literally a normal hash table with linear probing.
+			
+			To avoid loops in linear probing, the number of empty buckets controlled by some $m$, such that the fraction of buckets that are empty is $(m-1)/m$.
+			
+			So then, to store n-grams, they use just a dense array for unigrams, and for $2\le n\le N$ they using a hash table.
+			
+			Doesn't mention what the keys are, but I guess they are also hashed, so whatever.
+			
+		\subsubsection{Sorted Arrays and TRIE}
+		
+			Sorted array - an array sorted by key lol.
+			
+			They use a binary search, great.
 
 		
 		

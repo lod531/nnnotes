@@ -37,6 +37,96 @@
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {1.11.1}Thread v.s. Process}{2}{subsubsection.1.11.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.12}Process per Worker}{2}{subsection.1.12}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.13}Thread per worker}{3}{subsection.1.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}Storage Management}{3}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}An Evaluation of Buffer Management Strategies for Relational Database Systems}{3}{subsection.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Storage Systems}{4}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Storage Management}{4}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Memory Hierarchy}{4}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Storage Goals}{4}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Logical and Physical Storage}{4}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.1}Tablespace}{4}{subsubsection.2.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Segments}{4}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Extents}{4}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Data Blocks}{5}{subsection.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}How to allocate extents?}{5}{subsection.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8}Where to find space}{5}{subsection.2.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.9}Tables ain't got order}{5}{subsection.2.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.10}The art of writing to disk}{6}{subsection.2.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.11}Shadow paging}{6}{subsection.2.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.12}Buffer Cache}{6}{subsection.2.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.13}Simple Structure}{6}{subsection.2.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.14}Problems}{6}{subsection.2.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.15}Solutions}{6}{subsection.2.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.16}Buffer manager: Hash Buckets}{7}{subsection.2.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.17}Buffer manager: Headers}{7}{subsection.2.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.18}Status of a block}{7}{subsection.2.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.19}What is in the linked list}{7}{subsection.2.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.20}Replacement Policies}{7}{subsection.2.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.21}Optimizations}{7}{subsection.2.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.22}Snowflake}{8}{subsection.2.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.23}Access Methods}{8}{subsection.2.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.1}Trade-offs}{8}{subsubsection.2.23.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.2}Finding pages}{8}{subsubsection.2.23.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.3}Bottlenecks and solutions}{8}{subsubsection.2.23.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.4}Finding tuples within a page}{9}{subsubsection.2.23.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.5}Free List v.s. Used List}{9}{subsubsection.2.23.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.6}Optimizing the record layout}{9}{subsubsection.2.23.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.7}Corner cases}{9}{subsubsection.2.23.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.8}Data layout}{9}{subsubsection.2.23.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.9}Partition Attributes Across}{9}{subsubsection.2.23.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.23.10}Compression}{10}{subsubsection.2.23.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.24}Frame of reference}{10}{subsection.2.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.1}Run length encoding}{10}{subsubsection.2.24.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.2}Bitmaps}{10}{subsubsection.2.24.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.3}Indexes}{10}{subsubsection.2.24.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.4}Hashing}{10}{subsubsection.2.24.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.5}Extensible Hashing}{10}{subsubsection.2.24.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.6}B-trees}{10}{subsubsection.2.24.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.7}Clustered Index}{11}{subsubsection.2.24.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.8}What to index}{11}{subsubsection.2.24.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.9}Index advantages}{11}{subsubsection.2.24.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.10}Inserting when full}{11}{subsubsection.2.24.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.11}Deleting}{11}{subsubsection.2.24.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.12}Concurrent access}{11}{subsubsection.2.24.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.13}Bulk Inserts}{11}{subsubsection.2.24.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.14}Optimizations}{11}{subsubsection.2.24.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.15}How indexes are stored}{12}{subsubsection.2.24.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.16}Query Selectivity}{12}{subsubsection.2.24.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.17}Clustered tables}{12}{subsubsection.2.24.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.18}Log structured file}{12}{subsubsection.2.24.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.19}Why no indexes for Snowflake}{12}{subsubsection.2.24.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.24.20}Database Cracking}{12}{subsubsection.2.24.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Query Processing}{13}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}An Evaluation of Buffer Management Strategies for Relational Database Systems}{15}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Snowflake Elastic Data Warehouse}{15}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Motivation}{15}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Key qualities}{15}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Storage v.s. Compute}{16}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Architecture}{16}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.1}Storage}{16}{subsubsection.5.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Virtual Warehouse}{16}{subsection.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Elasticity and Isolation}{16}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Local Caching and File Stealing}{17}{subsection.5.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Execution Engine}{17}{subsection.5.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Data page layouts for relational databases on deep memory hierarchies}{18}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Modern B-Tree Techniques}{19}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}B-Trees v.s. Hash Indexes}{19}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Normalized keys}{19}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Prefix trees}{19}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}The Design and Implementation of Modern Column-Oriented Database Systems}{20}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Intro}{20}{subsection.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}History}{20}{subsection.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Column-store Architectures}{20}{subsection.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.1}C-Store}{20}{subsubsection.8.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.2}MonetDB}{20}{subsubsection.8.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Column-store internals and advanced techniques}{21}{subsection.8.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.1}Vectorized Processing}{21}{subsubsection.8.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.2}Compression}{21}{subsubsection.8.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.3}Run-length Encoding}{21}{subsubsection.8.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.4}Bit Vector Encoding}{22}{subsubsection.8.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.5}Dictionary encoding}{22}{subsubsection.8.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.6}Frame of Reference}{22}{subsubsection.8.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.7}The Patching Technique}{22}{subsubsection.8.4.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.8}Computation without decompression}{22}{subsubsection.8.4.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.9}Late Materialization}{22}{subsubsection.8.4.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.10}Inserts/updates/deletes}{23}{subsubsection.8.4.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.4.11}Indexing, Adaptive Indexing and Database Cracking}{23}{subsubsection.8.4.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Storage Systems}{24}{section.9}\protected@file@percent }
+\gdef \@abspage@last{24}

@@ -6,7 +6,6 @@
 \usepackage{amsmath}
 \usepackage{chngcntr}
 \usepackage{float}
-\usepackage{tabu}
 \usepackage{bm}
 \usepackage[lite]{amsrefs}
 \usepackage{amsthm}
@@ -155,13 +154,827 @@
 			
 			Disadvantage is that it can become a real mess, and You get to maybe do Your own management of resources instead of it being handled by the OS.
 			
-		
+	
+\newpage	
 \section{Storage Management}
 
-	\subsection{An Evaluation of Buffer Management Strategies for
+	\subsection{Memory Hierarchy}
+	
+		Registers, caches, memory, disk, external storage, archive.
+		
+		Instant, 1ns, 100ns, 
+		
+	\subsection{Storage Goals}
+	
+		Enhance temporal and spatial locality in layout.
+		
+		Storage - contiguous storage, prefetching, caching.
+		
+		Write back changes from fast layers to slower layers.
+		
+	\subsection{Logical and Physical Storage}
+	
+		\subsubsection{Tablespace}
+		
+			Kay so it's a "logical data unit" so, it's \textit{a thing} within the database. Easiest example is a table or a cluster of tables - they are logical objects in the database. I suppose tablespace is supposed to be a really broad grouping.
+			
+			If something consists of a bunch of stuff and that something should be kept together, it's a tablespace. A space in which some related tables live?
+			
+			Table maps to table space which maps to further constructs which finally yield the physical pages.
+			
+			Logical locality.
+			
+		\subsection{Segments}
+		
+			A tablespace can have more than one segment, but usually has just one.
+			
+			Segment is virtual memory, so I guess the segment is providing a unified view of memory to the tablespace.
+			
+			Usually one segment per table, but You can partition these up.
+			
+			But generally an object in the schema corresponds to a segment.
+			
+		\subsection{Extents}
+		
+			Contiguous memory blocks, divided into data blocks.
+			
+			Not contiguous to each other.
+			
+			Contiguous for spatial locality obviously/sequential access.
+			
+			Extents are just straight up allocated - so say having extent size of 10GB might be wasteful.
+			
+			Has a header, which contains information about which extent this is, who it belongs to, where the next extent is, what is stored in this extent.
+			
+			We need an extent to contain blocks to manage space dynamically.
+			
+			Alternatives: static file mapping. Sucks because a small table will not use the full file. Efficient in performance since You call malloc once and everything is massively contiguous.
+			
+			Dynamic block mapping - allocate on a block level - shit for performance since everything is non-contiguous and You're calling malloc all the time. Great efficiency though.
+			
+			Extents are in between.
+			
+		\subsection{Data Blocks}
+		
+			Could consists of several OS pages, but from the perspective of the database, this is as small as it gets.
+			
+			Larger than OS page lol.
+			
+			Block starts with a header of important metadata - who this belongs to, time of last update, type of content or whatever.
+			
+			Table directory - structure of what is in the block. Homogenous items are stored in the block, for example rows of a particular table. The layout of that will be here.
+			
+			Row directory - the block itself has like empty spaces in it, slots, and the slow directory tells You which tuple is in which slot.
+			
+			Then some empty space,
+			
+			Then the tuples in slots.
+			
+			Percentage Free - how much of the data block is reserved to be free for updates.
+			
+			Percentage Used - no new updates until the percentage of the block that is used is below this value. Prevents thrashing. 
+			
+			Info on top, data down below.
+			
+			When to defragment? When there is sufficient free space in the block for insertion (so below percentage used), but everything is so fragmented that no insertion can be made.
+			
+		\subsection{How to allocate extents?}
+		
+			Simplest case: just manually set the size as a parameter.
+			
+			Can allocate the same size every time.
+			
+			Or maybe automate some changes, like repeated requests get more memory (*1.25).
+			
+		\subsection{Where to find space}
+		
+			The \textit{segment} keeps a list of free blocks? Wild. Could be a bunch of extents in a segment so they keep free space at the segment level.
+			
+			Ah okay segment is not tablespace, so segment contains extents contains blocks but segment keeps track of available blocks.
+			
+		\subsection{Tables ain't got order}
+		
+			Because maintaining it is expensive.
+			
+			But can be done lol.
+			
+		\subsection{The art of writing to disk}
+		
+			Keep several copies of free lists for parallelization.
+			
+		\subsection{Shadow paging}
+		
+			Instead of writing updates on data, create copy of data and update that.
+			
+			Once committed, mark the shadow block as the proper block and add the old unupdated block to the free list.
+			
+			Expensive for large updates.
+			
+			Complicates access.
+			
+			Destroys locality.
+			
+			Use when shadow paging is cheap i.e. on RAM.
+			
+			Delta file - make a copy of the original rather than the changed version. Then perform the update on the original page, so it's in place.
+			
+			Delta files favour commits.
+			
+		\subsection{Buffer Cache}
+		
+			We have stuff in memory, work with it there, when to move back to disk?
+			
+			Disaggregated resources - usually CPU, memory, disk are couples, disaggregation splits them apart, like in the cloud.
+			
+		\subsection{Simple Structure}
+		
+			So You have a block number.
+			
+			You has the number to get a hash bucket.
+			
+			Then You check the latch for that hash bucket.
+			
+			The has bucket will contain a link to a buffer header and then You can traverse that to try to find Your block.
+			
+			If it ain't there You raise an error and fetch the block from disk.
+			
+		\subsection{Problems}
+			
+			Hot blocks - if an item is hot it'll get hit all the time and latches will block.
+			
+			Scans block all the damn latches.
+			
+			Similar operations happening hitting the same blocks.
+			
+		\subsection{Solutions}
+		
+			Create more latches.
+			
+			Use multiple buffer pools.
+			
+			Reduce amount of data in a block to distribute the load.
+			
+			Use scans to avoid scans etc.
+			
+		\subsection{Buffer manager: Hash Buckets}
+		
+			So hashing the id yields a linked list of blocks.
+			
+			To make lists smaller, increase number of buckets.
+			
+		\subsection{Buffer manager: Headers}
+		
+			A block in a linked list in a hash bucket will have tons of information - what's in the block, what segment the block belongs to, is the block dirty, last time of access etc.
+			
+		\subsection{Status of a block}
+		
+			Blocks can be pinned to memory if that's a good idea.
+			
+			In some systems blocks will keep track of how often they've been accessed.
+			
+			And of course whether the block is clean or dirty.
+			
+			Gotta know all that stuff for replacement purposes.
+			
+		\subsection{What is in the linked list}
+		
+			Obviously You've got normal blocks.
+			
+			But You may also have dirty blocks as mentioned before, or maybe delta blocks or shadow blocks, pinned blocks as well.
+			
+		\subsection{Replacement Policies}
+		
+			Least Recently Used - LRU - stuff that has not been accessed in a while gets dropped.
+			
+			Every time an item is accessed it is put on top of the LRU list.
+			
+			If dirty when dropped off list and out of memory, write it back.
+			
+			Super shit for scans - Table Scan Flooding.
+			
+			Index range scan - index organizes data (e.g. by age), and You're looking over a range of values, which produces a random access pattern since the tree structure will be all over the map.
+			
+		\subsection{Optimizations}
+		
+			Keep different pools - LRU might be ok for some access patterns, but You may also want a 
+			
+			Keep Buffer Pool - stuff pinned to memory.
+			
+			Recycle buffer pool - stuff that don't matter.
+			
+			etc.
+			
+			Read ahead in blocks.
+			
+			If You're going to need A, B and C tables, order Your fetches such that those are sequential.
+			
+			You can do the same thing with a table that is out of order but contiguous.
+			
+			Evict clean pages over dirty pages.
+			
+			Ring buffers for scans.
+			
+			Have different buffers for different size blocks.
+			
+			Touch count. Weakness for touch count is that burst activity may make something look hot. Solution is to just update hotness periodically. Also periodically decrease counts with decay.
+			
+			Clock sweet/second chance: run a garbage collector over the stuff in memory - if something is currently at 1 set it to 0, if it's at 0 toss it.
+			
+			2Q: two queues. One is a first in first out queue, the other is least recently used. If something doesn't seem to be hot, it's put on the FIFO queue, and when memory is needed stuff from FIFO is dropped. 
+			
+			If a block is in FIFO and is accessed it's moved to LRU.
+			
+			When that block is added to LRU, the LRU block gets bounced to FIFO (or evicted).
+			
+			Can use automatic tuning to pin stuff that is often used.
+			
+		\subsection{Snowflake}
+		
+			Old systems designed to work with fixed hardware. Snowflake designed to work w/ cloud.
+			
+			Everything is on S3.
+			
+			Extents are replaced with micropartitions. Micropartitions contain tuples, but they are stored column-wise.
+			
+			Metadata enables checking what is in micropartition without downloading it.
+			
+			EC2 instances have local memory which can be used as a cache, and is used as an LRU cache.
+			
+		\subsection{Access Methods}
+		
+			\subsubsection{Trade-offs}
+			
+				Everything is depending on what You need.
+				
+				Computation v.s. space.
+				
+				Analytic v.s. transaction workloads etc.
+				
+			\subsubsection{Finding pages}
+			
+				Tuple ID - block ID + offset.
+				
+				Block ID - segment ID + offset.
+				
+			\subsubsection{Bottlenecks and solutions}
+			
+				So if You look for free space, first thing You'll need is a latch on the free list in the extent.
+				
+				Which is bad, if there is only one list.
+				
+				So then You can have a few and manage those etc.
+				
+				You can also sort the available blocks by size, fill in smallest holes first etc.
+				
+			\subsubsection{Finding tuples within a page}
+			
+				You have slotted pages, slots of different sizes generated when the table was created.
+				
+				Tuples will usually have a system-generated id which corresponds to the offset within the page.
+				
+			\subsubsection{Free List v.s. Used List}
+			
+				Free List contains addresses of blocks with less than \% used parameter, so You can write in that block.
+				
+				Used List contains blocks which are in memory and have stuff in them. So if You're looking for a tuple, You go to the used list and see if the block that has Your tuple is in memory.
+				
+			\subsubsection{Optimizing the record layout}
+			
+				Instead of storing tuples in length, item, length, item order, store offset, offset, offset, data order so that just the start of a tuple has to be accessed to get an attribute.
+				
+				Also put variable length things at the end to make prefetching easier on constant size stuff at the start.
+				
+			\subsubsection{Corner cases}
+			
+				So what if You have a big 'ole attribute:
+				
+				The idea is that they'll just sit there and not move, so just go ahead and store them, since to store them externally is to push away the complexity which can be annoying.
+				
+			\subsubsection{Data layout}
+			
+				If You are interested in reading a particular attribute that's like 4 bytes, You won't want to store row-wise since reading those 4 bytes will read 512 bytes at once, and all of that will be useless junk for You.
+				
+				Also good for SIMD/AVX instructions.
+				
+			\subsubsection{Partition Attributes Across}
+			
+				So like Snowflake, I think.
+				
+				Blocks contain the same tuples, but now it's just a column store within the block.
+				
+				I suppose a column store goes the full-way for columns - pages contain one type of attribute.
+				
+			\subsubsection{Compression}
+			
+				Primarily by dictionary:
+				
+				Just map items to integers and store the integers.
+				
+			\subsection{Frame of reference}
+			
+				Make everything relative to some base - if all numbers hover around a billion, just store billion as a base and store the numbers as differences from that base.
+				
+				You can go even farther and take every value as a delta.
+				
+			\subsubsection{Run length encoding}
+			
+				Instead of storing "2, 2, 2, 2", store that 2 happens 4 times.
+				
+			\subsubsection{Bitmaps}
+			
+				For every possible value an attribute can take, create a list as long as the table and store 1 if attribute is equal to one value and 0 otherwise. You'll get as many bitmaps as there are values.
+				
+			\subsubsection{Indexes}
+			
+				Our own data structures that We use to access data.
+				
+				Indexes produce random-access patterns.
+				
+			\subsubsection{Hashing}
+			
+				Produces random access
+				
+				Which can be good! If a "cluster" of blocks is hot, then breaking up that cluster will reduce congestion.
+				
+				Good for transactions, bad for scans - only supports point queries, as in "get me tuple X".
+				
+				So overall, You reserve some space with blocks, You hash the tuple id and that hash will tell You where in the block the tuple will go.
+				
+			\subsubsection{Extensible Hashing}
+			
+				Take the output and only look at the first few bits of the hash output.
+				
+				Then duplicate buckets?
+				
+				Gonna just skip this.
+				
+			\subsubsection{B-trees}
+			
+				If You have a bunch of duplicate values, do not hash on them lol.
+				
+				Anyway, order $k$, any non-leaf contains at most $k-1$ keys (I suppose for range indexing?)
+				
+				B trees are not used, B+ trees are used. The difference is that in B+ the data is at leaves only. Or rather, pointers to data.
+				
+				The leaves are blocks and are linked, so leaves can be traversed.
+				
+				The keys in leaves may not be actual data - e.g. if You are looking for strings, keys might correspond to the first letter.
+				
+			\subsubsection{Clustered Index}
+			
+				But the linked list of leaves doesn't have to be contiguous.
+				
+				But it will be if You use clustered indexing - basically forces leaves to be one after another in memory.
+				
+				Best for tables that aren't modified all the time.
+				
+				Maintaining indexes is expensive.
+				
+			\subsubsection{What to index}
+			
+				Stuff that has an ordering.
+				
+			\subsubsection{Index advantages}
+			
+				Yields data already sorted by index, and hopefully You don't have to go across the entire table.
+				
+			\subsubsection{Inserting when full}
+			
+				Add block, then split parent index.
+				
+			\subsubsection{Deleting}
+				
+				Delete tuple, balance with neighbour, and if neighbour half full and the current block is half full then merge.
+				
+			\subsubsection{Concurrent access}
+			
+				Lock coupling - lock parent.
+				
+				If that doesn't work then abandon and lock everything.
+				
+			\subsubsection{Bulk Inserts}
+			
+				Create tree bottom up - sort everything, then create inner nodes.
+				
+			\subsubsection{Optimizations}
+			
+				Don't use entire key.
+				
+				Reverse key to break the sequential relationship if applicable.
+				
+				Don't merge nodes when they are half empty - instead periodically rebuild entire index.
+				
+			\subsubsection{How indexes are stored}
+ 				
+				Same as tables really - segments, extents, blocks.
+				
+				Indexes can answer queries that are not dependent on the tuples themselves - only on the stuff that is in the index.
+				
+			\subsubsection{Query Selectivity}
+			
+				Is kinda self explanatory.
+				
+			\subsubsection{Clustered tables}
+			
+				Putting multiple tables on same segment - precomputed join really.
+				
+			\subsubsection{Log structured file}
+			
+				Just store changes as opposed to values, ish.
+				
+				Periodically compact.
+				
+				Or rather keep all versions of stuff, and point to the newest version?
+				
+			\subsubsection{Why no indexes for Snowflake}
+			
+				'cause Snowflake is for analytics, and indexes don't help there. They're massive.
+				
+				You'd fetch the index, then according to index fetch data from cloud, and it's bandwith that costs (remember everything is compressed because of just this), so it don't make sense.
+				
+			\subsubsection{Database Cracking}
+			
+				Don't build and maintain an index, instead incrementally build an index as You run queries.
+				
+				E.g. queries iteratively sort the table? e.g. get entries where some value is between 10 and 14, then sort those entries and so forth.
+				
+\newpage
+\section{Query Processing}
+
+	
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+                                                                                                                                   		
+			
+			
+			
+			
+			
+			
+\newpage\phantom{asd}
+\newpage
+\section{An Evaluation of Buffer Management Strategies for
 Relational Database Systems}
 
-		a	
+	Domain separation - give different stuff different buffers. This is inflexible and dumb.
+	
+	Hot set - stuff being looped over is hot, so keep it in memory.
+	
+	MRU - most recently used.
+	
+	Quary Locality Set Model - QLSM: You've got different query patterns. You've got Straight Sequential - ze SS, which is just a scan. Then You have a Clustered Sequential, where You might scan over some parts of the range multiple times, and then You have Looping Sequential which, well, are looped scans, and You want to keep everything that touches in memory, and not use LRU but instead opt for MRU. Looping Hierarchical is for looping over hierarchical structures, and You may access roots more often etc.
+	
+	DBMIN - gives buffers per file instance, as in per open file, even if the file is a duplicate. Locality set is the set of pages is buffer for a file.
+	
+	And I guess broadly speaking that's the main bit - it's individualizing buffers based on access pattern.
+	
+	Locality set - the set of pages allocated for a file.
+	
+	And now what does the locality set look like for each type of query:
+	
+	SS - size 1, since nothing will be reread.
+	
+	CS - Size of the maximum cluster, which makes sense, since it'll be clusters You'll be going back over, and replacement strategy is what - FIFO deletes old stuff and keeps new stuff in buffer, so when looping over a cluster it'll get rid of stuff before the cluster and LRU will preserve this, as it so happens.
+	
+	LS - as much as You can and MRU, since really You just want to keep max amount of stuff in memory and do as few shuffles as possible.
+	
+	
+	
+	
+	
+	
+
+\section{Snowflake Elastic Data Warehouse}
+
+	\subsection{Motivation}
+		Trad systems: fixed systems so tough time balancing all online power, just designed for a smaller scale, highly/complexly tuned. 
+		Basically the servers used to be smaller and fixed where as now  they are massive and ever growing.
+		
+		Change in data: data no longer just internal, no longer a semi-constant stream.
+	
+	\subsection{Key qualities}
+	
+		Snowflake not based on Hadoop, PostgreSQL etc.
+		
+		Snowflake: 100\% software as a service. No management required by the user.
+		
+		Relational support.
+		
+		Support for semi-structured data, so stuff  that breaks relational rules.
+		
+		Elastic obviously since it's on the cloud.
+		
+		Highly available, again the cloud.
+		
+		Durable.
+		
+		Cost-efficient - all table data is compressed! You pay for the storage and compute You use. 
+		
+		Secure - everything is end to end encrypted. Also has SQL-like users.
+		
+	\subsection{Storage v.s. Compute}
+	
+		Shared nothing - elegant, easy to scale, tightly couples storage with compute - You wanna compute something, it has to be on some node.
+		
+		Things shared-nothing fucks up:
+		
+		Heterogenous workload - the hardware is homogenous and partitioned, so.
+		
+		Changing stuff costs - if You take nodes offline to replace them or upgrade or whatever, You need to move the data that is on the node. This is again just another coupling consequence.
+		
+		On the cloud none of this holds - You have different nodes, nodes die all the damn time.
+		
+		So then separate storage into S3 and shared-nothing compute nodes that cache some stuff.
+		
+		So to avoid these drawbacks, Snowflake decouples storage from compute.
+		
+		Storage - S3, compute - Snowflake's own code.
+		
+	\subsection{Architecture}
+	
+		Storage - S3.
+		
+		Virtual Warehouse of I guess compute nodes.
+		
+		Cloud services - user facing API, basically all the other database stuff.
+		
+		\subsubsection{Storage}
+		
+			Table partitioned horizontally into blocks.
+			
+			Since S3 supports getting parts of files, stuff in blocks is grouped with the head the of the block containing metadata for offsets.
+			
+			S3 is also used for storage required by operators e.g. huge joins, so it's got an infinite amount of storage lol.
+			
+	\subsection{Virtual Warehouse}
+	
+		Clusters of EC2 clusters. Individuals in the EC2 cluster are called Worker Nodes.
+		
+	\subsection{Elasticity and Isolation}
+	
+		WVs are expendable - should only exist when queries are running.
+		
+		One node = one WV.
+		
+		Query comes in, gets a WV, then each worker in the EC2 cluster spawns a process for the query, which dies the moment the query is done.
+		
+		WV's give isolation, wee. So long as data not changed?
+		
+		Cloud elasticity is used - the price for 1 WV running 16 hours is the same as 16WV's running for 1 hour - if You parallelize, then You can improve performance without cost due to cloud resoruces being there anyway.
+		
+	\subsection{Local Caching and File Stealing}
+	
+		Worker nodes cache file headers and individual columns, so basically everything they  can lol.
+		
+		Caches live for the duration of worker node (so the query?). No, a WV can live longer than the duration of a query.
+		
+	\subsection{Execution Engine}
+	
+		Columnar - works on columns lol.
+		
+		Vectorized - works on many thousands of rows at a time.
+		
+		Push-based execution - so I guess instead of processes continuously polling or "pulling" for results, the generating processes pushes them, is what I'm getting.
+		
+		No transaction management since all files are immutable (what about race conditions?), no buffer pool due to scans.
+	
+	
+			
+\newpage
+\section{Data page layouts for relational databases on deep memory hierarchies}
+
+	NSM - n-ary Storage Model, A.K.A. slotted pages, stores tuples.
+	
+	PAX (Partition Attributes Across) simply keeps attributes together, so I suppose it's columnar.
+	
+	"Paradox" - the size of requested chunk of data by user is not what is loaded in by engine, and the stuff that is loaded is largely irrelevant (if You just want an attribute and You get a tuple).
+	
+	Decomposition storage model (DSM) splits everything into columns, but it sucks because You need to do joins to get tuples.
+	
+	PAX stores what they call "minipages", which are just columns lol. If You want a tuple, it'll still be in the same page/block.
+	
+	Each page is therefore split into minipages, where each page behaves as a slotted page in it's own right. Neat.
+	
+\newpage
+\section{Modern B-Tree Techniques}
+
+	B tree contains data in branch nodes as well as leaf nodes, B+ trees just in the leaves.
+	
+	Usually 100s of children so only like 1\% of nodes are branch nodes, so keep those together.
+	
+	Leaves use PCTFREE and PCTUSED type stuff - recall PCTFREE is the amount of space left for updating, and PCTUSED is the threshold such that when the amount of used space falls below it, the block is open for business again.
+
+	Insertion: in a normal tree, You might just replace a leaf with a branch when inserting. In B-trees, when the leaf is too full for an insert, the parent gets split (and then the parent's parent if necessary etc.), so the tree remains balanced.
+	
+	Underflow can be actively managed, but studies suggest period compacting is better.
+	
+	B trees great since there aren't that many branching nodes, and they can be kept in memory.
+	
+	Optimal node size is calculated by taking the bandwith with the latency.
+	
+	Interpolate between binary search and interpolation search.
+	
+	\subsection{B-Trees v.s. Hash Indexes}
+	
+		Branch nodes are few, getting to children is fast and B-Trees support ordering.
+		
+	\subsection{Normalized keys}
+	
+		Are interesting.
+		
+		So You get a key, and instead of just storing the item with that key You go through the key and set various relevant bits, e.g. if the first bit in they is set, then the value stored is legit, if the second bit is set then blah blah
+		
+	\subsection{Prefix trees}
+	
+		If all keys start with "okay", then don't store okay 1 million  times, just create a dictionary keeping track of prefixes. Basic compression.
+		
+\newpage
+\section{The Design and Implementation of Modern Column-Oriented Database Systems}
+
+	\subsection{Intro}
+	
+		Implicit IDs store fixed-size items, so the position of the item in memory is basically an ID.
+		
+		Late Materialization - don't join until You have to, since it's expensive in a column store, as in join columns to form tuples.
+		
+		Writing to these might suck, since a tuple will be split into entries and those entries will go off and touch a lot of blocks. Solution is just to pool them.
+		
+		Data is kept compressed.
+		
+		A lot of stuff in column DBs is mapped over from row DBs, but where as column stuff was kind of appended on to the row implementations, the column DBs were designed with columnar storage from the get-go.
+		
+	\subsection{History}
+	
+		N-ary storage model, NSM, a.k.a. slotted pages with points to tuples.
+		
+		DSM, decomposition storage model, splits columns into different pages, I think?l They get sub-keys in DSM, as in each sub-page now gets sub-keys which sub-keys map to tuples within the page, which increases space requirements.
+		
+		Memory became way slower than processors very quickly, and the time take to retrieve an item v.s. time taken to process it went from 1:1 to 100:1
+	
+	\subsection{Column-store Architectures}
+	
+		\subsubsection{C-Store}
+		
+			Each column gets a file, the columns are individually compressed based on data, and they are all sorted by the same attribute. Stuff stored like this is known as the Read Optimized Store, or ROS.
+			
+			There's also WOS, which is just an uncompressed row-store.
+			
+			WOS acts as a buffer, makes sense.
+			
+			Can store columns sorted by different attributes - these duplicates are called projections.
+			
+		\subsubsection{MonetDB}
+		
+			Execution engine works on column-at-a-time.
+			
+			Prioritizes avoid cache misses.
+			
+			Uses Database Cracking.
+			
+			They implement their own operators which saturate the CPU with sequential data, allowing for many in-flight instructions, increasing throughput.
+			
+			Uses BATs - Binary Association Table. Key value pairs, basically. Thing is, the ID is usually virtual - signified by position in memory.
+			
+			Operators consume and produce BATs.
+			
+			Operators themselves do not change in MonetDB - if You have some complicated join condition for example, the DB will just chain pre-made operators.
+			
+			"RISC approach to database query languages"
+			
+			Some people even want to compile custom queries at runtime - trim all "if/else" branches for example.
+			
+			MonetDB uses full materialization, wtf?
+			
+			Does not use compression, which is wild.
+			
+	\subsection{Column-store internals and advanced techniques}
+	
+		\subsubsection{Vectorized Processing}
+		
+			Okay so classically We have two ways of processing a information - all at once, as in the entire table or whatever, or just one tuple at a time.
+			
+			VectorWise uses vectorized execution, which instead of doing one tuple at a time does N tuples at a time.
+			
+			Great because it reduces  the number of function calls (since now there isn't a call per tuple).
+			
+			Obviously cache locality.
+			
+			Compiler optimizations thanks to optimizing loops
+			
+			Oooh it's better for checking blocking - if You're checking whether something is blocked once per tuple, You'll be doing that an awful lot. Checking it once ever N tuples addresses this.
+			
+			Computing N things at a time creates parallel cache misses, so the machine is aware of what is needed and can be fetching it (where as with iterative per-tuple execution, misses arrive sequentially so who knows what the next tuple will bring in terms of cache misses).
+			
+		\subsubsection{Compression}
+			
+			Compress one column at a time - exploits similarity of data in columns.
+			
+			Improves performance since more data can be fetched quicker.
+			
+			If compressed values can be processed, allows for parallel processing of a larger number of items.
+			
+			Savings in space due to compression can be used to store projections.
+			
+		\subsubsection{Run-length Encoding}
+		
+			Sort by some key, then compress by storing triples of (value, start position, frequency). Start position keeps track of what belongs where.
+			
+			Using RLE makes some things a little trickier - processing in blocks doesn't really work, since there isn't really data there, You're dealing with a more abstract representation.
+			
+		\subsubsection{Bit Vector Encoding}
+		
+			So, You have a column, and that column has some length.
+			
+			Then, for each unique value in the column, You create a sequence of bits of length equal to the length of the column.
+			
+			Then, for that unique value, set bitstring[i] = 1 if unique value occurs at index i in the column.
+			
+			Do this for all unique values and You've got Your encoding.
+			
+		\subsubsection{Dictionary encoding}
+			
+			Instead of storing values that occur all the time, make a dictionary and store references to the dictionary instead, e.g. the string "death" can just be replaced with an index to a dictionary for "death" lol.
+			
+			Main advantage is that it can take variable-length stuff and make it fixed-length, and all the good stuff that comes with that.
+			
+		\subsubsection{Frame of Reference}
+			
+			Ahh this is about storing a base - if all Your entries are five billion + stuff, just store  the five billion as a base and truncate and store offsets from that.
+			
+			A similar concept is delta-encoding, where to get the current value You take the value at the previous index and apply the current "delta" stored - so don't store the value, store the change needed to apply to the previous value to get current value.
+			
+		\subsubsection{The Patching Technique}
+		
+			Outliers mess with frame of reference as well as dictionaries, so split the data in two - stuff to be compressed and the wonky outlier block. Outliers just get to sit there uncompressed.
+	
+		\subsubsection{Computation without decompression}
+			
+			Upside is: more data, faster processing, more efficient cache utilization etc.
+			
+			Downside is: code more complex - operators have to be aware of compression schemes to be able to operate on them.
+			
+			The way this is done is that data properties are abstracted - get next item, get size etc.
+			
+		\subsubsection{Late Materialization}
+		
+			Naively, You can just store columns as columns and change nothing else if You load the data in column by column and join in memory, but that's crap since You're doing extra work. This is early materialization.
+			
+			If You want to process columns independently, You'll need to keep track of what belongs to what tuple.
+			
+			Good things about late materialization: if You delay things until You need them, You may avoid unnecessary intermediate completions. 
+			
+			Avoiding actual construction also permits data to remain compressed.
+			
+			Cache is more effectively utilized since it isn't clogged up with data from other tuples.
+			
+			And finally it's easier to parallelize execution of data in column form (which is yielded by delaying materialization).
+			
+			Not always the best thing to do, though, late materialization. Because You're avoiding joining things too early, You'll have to keep track of indexes as mentioned before, keeping track of what part of what column belongs to what tuple, and if You're just selecting most of everything, that overhead can become expensive.
+			
+			Multi-column blocks keeps various columns together, so again with the "not going all the way but staying in the middle" theme of storing rows v.s. storing columns.
+			
+			It's like PAX but You don't store all the attributes on a block.
+			
+			Multi-column blocks are good if You expect two attributes to be queried together often.
+			
+			Used in IBM blink lol.
+			
+		\subsubsection{Inserts/updates/deletes}
+		
+			Use buffers.
+			
+			Downside is that You need to combine them, upside is You can maybe avoid the buffers talking to each other until the end, a.k.a. delayed materialization.
+			
+		\subsubsection{Indexing}
+			
+			So, scans are very efficient in column DBs, but that doesn't mean improvements can't be made.
+			
+			Indexing - in C-Store called projections, columns ordered by different criteria. Doing this isn't as expensive as You might think, because the columns can be well compressed.
+		
+			"Zonemaps" are also used, which is just metadata for the page like min/max, stuff that can be used to skip over the block if applicable.
+			
+		\subsubsection{Database Cracking}
+		
+			Can't create all the indexes You want due to computational and storage constraints, so which ones should be made?
+			
+			Turns out things are becoming more and more unpredictable w.r.t. use cases, which makes this worse.
+			
+			So the idea is that the queries continuously create partial indexes, or optimize the current indexes for the current use, with the hope that it eventually converges.
+			
+			
+			
+			
+		
+	
+		
 		
 		
 		
