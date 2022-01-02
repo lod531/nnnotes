@@ -502,11 +502,11 @@
 				
 			\subsubsection{Extensible Hashing}
 			
-				Take the output and only look at the first few bits of the hash output.
+				You got two concepts, global depth and local depth.
 				
-				Then duplicate buckets?
+				Global depth is what dictates the number of possible values for the hash function. Global depth if two results in 4 possible values, depth of three in 8 and so forth.
 				
-				Gonna just skip this.
+				Local depth is associated with individual configurations of bits
 				
 			\subsubsection{B-trees}
 			
@@ -600,6 +600,58 @@
 				
 \newpage
 \section{Query Processing}
+
+	\subsection{Execution Models}
+	
+		\subsubsection{Caching}
+		
+			Almost everything lol. Every intermediate part of a query that can be reused should be reused.
+			
+			Client caching - cache results at the client.
+			
+			Intermediate caching - there may be intermediate stages in query execution, basically.
+			
+		\subsubsection{Threads/Processes/Pools}
+		
+			OS process - basically an application, so it gets its own address space, state etc. Scheduled and managed by the OS.
+			
+			Thread - belongs to a process, managed by kernel whatever that means.
+			
+			Process per worker - easiest thing to do, but expensive, more difficult to do parallel processes.
+			
+			Threads - gotta manage them, so more difficult, but lighter-weight and they can interact.
+			
+			Postgres uses processes!
+			
+			Can't have as many threads/processes as You want, instead create a pool to draw from. Makes it easier to parallelize since You just claim stuff from the pool.
+			
+		\subsubsection{Iterator Models}
+		
+			Iterator: scans one tuple at a time with next() calls originating one at a time from the root of the operator tree. Data flows up, control flows down. Generic interface, predictable access patterns
+			
+			Materialization: compute entire result of operator and pass that. Downside is huge buffers. MonetDB, I think.
+			
+			Vectorization Model: iterator model but with vectors, as in more than 1 tuple (vectors size of cache)
+			
+			Push mode: instead of calling next, operators call push to produce their results. Event based programming, potentially more efficient due to improved function call locality.
+			
+			For parallel execution introduce an EXCHANGE operator that pushes results to another process/machine.
+			
+		\subsubsection{Optimization 1: Heuristics and Rewriting}
+		
+			Views: materialized view meaning there's an actual table corresponding to the view. Virtual meaning the DB just replaces the view with relevant base table columns. 
+			
+			Rewriting: depending on how You write the query, the optimizer may catch on to simple optimizations.
+			
+			Predicate pushdown: rewrite queries with views to use base tables, yep.
+			
+			Heuristics: predicates are commutative and associative, selections are commutative and associative, filter then join is the same as join then filter
+			
+			
+			
+			
+			
+			
 
 	
 				
@@ -855,6 +907,38 @@ Relational Database Systems}
 			
 			Does not use compression, which is wild.
 			
+	\subsection{Column-store Architectures}
+	
+		\subsubsection{C-store}
+		
+			Stores data as column-files. One file is one column, individually compressed, and it's sorted by some table attribute.
+			
+			These column files are a Read Optimized Store.
+			
+			Write Optimized Store is where new data is stored, and it's uncompressed and it's stored as tuples.
+			
+			You can store columns sorted by different attributes in which case You have projections.
+			
+			Projections are written as (x, y, z|a) where x, y, z are attributes and a is the attribute to be sorted by.
+			
+			No secondary indices but does support sparse indexes, which basically just uses sorted indices to search through blocks - look at the top value in block, if no relevant then move on.
+			
+			Shared-nothing possible by horizontal partitioning.
+			
+		\subsubsection{MonetDB and VectorWise}
+		
+			MonetDB: column at a time, prioritizes avoiding cache misses, no indexing but is instead cracked over time, query optimization done at runtime, has transactions, uses BATs and column-oriented RISC style operators that are chained for more complex queries, stores updates in "pending" columns. Does not use compression wtf, fully materializes intermediate results.
+			
+			VectorWise: use vectors instead of tuples-at-a-time or column-at-a-time computation.
+			
+			Frequency partitioning: sort data such that compression of each block is maximally effective.
+			
+			
+			
+			
+			
+			
+			
 	\subsection{Column-store internals and advanced techniques}
 	
 		\subsubsection{Vectorized Processing}
@@ -968,6 +1052,14 @@ Relational Database Systems}
 			Turns out things are becoming more and more unpredictable w.r.t. use cases, which makes this worse.
 			
 			So the idea is that the queries continuously create partial indexes, or optimize the current indexes for the current use, with the hope that it eventually converges.
+			
+		\subsubsection{Summary and Design Principles Taxonomy}
+		
+			Good table on page 264 \href{https://stratos.seas.harvard.edu/files/stratos/files/columnstoresfntdbs.pdf}{here}.
+	
+	\subsection{Comparing MonetDB/VectorWise/C-store}
+	
+		C-store tries to do column at a time processing lol, VectorWise and C-store do blocks (though containing columns)
 			
 			
 			
