@@ -378,7 +378,7 @@
 			
 			Touch count. Weakness for touch count is that burst activity may make something look hot. Solution is to just update hotness periodically. Also periodically decrease counts with decay.
 			
-			Clock sweet/second chance: run a garbage collector over the stuff in memory - if something is currently at 1 set it to 0, if it's at 0 toss it.
+			Clock sweep/second chance: run a garbage collector over the stuff in memory - if something is currently at 1 set it to 0, if it's at 0 toss it.
 			
 			2Q: two queues. One is a first in first out queue, the other is least recently used. If something doesn't seem to be hot, it's put on the FIFO queue, and when memory is needed stuff from FIFO is dropped. 
 			
@@ -647,6 +647,163 @@
 			
 			Heuristics: predicates are commutative and associative, selections are commutative and associative, filter then join is the same as join then filter
 			
+		\subsubsection{Optimization 2: Cost estimates}
+		
+			Combine table cardinality with access pattern for cost estimate.
+			
+			Rule-based optimizer: no stats, just use transformation methods, schema.
+			
+			Heuristics are good, honed by time, but data is ignored so.
+			
+			System-R: consider only left deep join trees. Left deep keeps appending tables to the join result
+			
+\section{Transaction Processing}
+
+	
+
+	\subsection{Concurrency and Control}
+	
+		ACID:
+		
+		Atomicity, Consistency, Isolation, Durability.
+		
+		Consistent state: state of database is a result of correctly applying transactions. Up to use to issue correct commands.
+		
+		Correctly: satisfying constraints and as if though they executed independently.
+		
+		Operations: inserts, updates, deletes.
+		
+		Atomicity - transactions either occur or do not.
+			
+		Isolation - transactions execute as if they are the only ones taking place.
+			
+		Durability - persistentcy - power outage won't wreck things.
+		
+		Transaction: system commit - transaction has been comitted lol.
+		
+		Read: $r_1[x]$ writing item x by transaction $1$. Writing is $w_i[x]$.
+		
+		There's a whole history graph thing - higher items happen later.
+		
+	\subsection{History}
+	
+		Serial history - all operations from $T_i$ happen before any other $T_j$.
+		
+		Equivalent histories - same transactions and operations and if there are conflicts, then the ordering among conflicts is identical between histories. Aborted stuff can be ordered any way, since, yano, it's a-borted lol.
+		
+		Serializably history - equivalent to a serial history.
+		
+		A history is serializable if it's serializability graph is acyclic.
+		
+	\subsection{Recovery}
+	
+		Recovery procedures: just abort/undo transaction.
+		
+		Redo changes from committed transaction e.g. dirty page in memory was lost, use log to redo operation.
+		
+		Similarly maybe You have something in disk that needs to be undone.
+		
+		If lost disk - read snapshot, play out log on snapshot.
+		
+		SQL phenomena - dirty read - reading uncommitted stuff. Obviously bad.
+		
+		Non-repeatable read - within a transaction two read operations give different results.
+		
+		Phantom reads - affects aggregates. 
+		
+	\subsection{Transactions}
+	
+		2PL - 2 Phase Locking.
+		
+		Shared locks and exclusive locks.
+		
+		Growth and shrink of transactions. Those are the two phases. Ensures serializability basically.
+		
+		Transaction manager:
+		
+		Transaction table has a table containing all current transactions. Queries are elsewhere.
+	
+		Transaction table contains a pointer to a handler. The handler has a list of stuff to be locked, as well as a pointer to a log of the stuff that the transaction will execute.
+		
+		Lock table: hash table id, go to some bucket, You'll find a header and create a lock request. Your request will be added to a linked list. 
+		
+		Locking done at tuple level, ish. 
+		
+	\subsection{Recovery}
+	
+		Physical v.s. logical logging.
+		
+		Steal policy - dirty pages are allowed on persistent storage. Requires undo
+		
+		Force policy - transaction not committed before changes in persistent storage
+		
+		Steal requires redo, no force requires redo.
+		
+		So, write - create log entry with before and after images, then write.
+		
+		Commit - add commit to log.
+		
+		Abort - restore log images.
+		
+		Recovery - start at end of the log and sort all entries to undone and redone items. You're done when all items are in either category or You reached the beginning of the log.
+		
+		Kay so then because You keep before and after images, You go through the list backwards and if redone, put after image on the after image list, same for undo. You only need to do one restore per item.
+		
+		Advantages: easy buffer management, only forced IO in logs.
+		
+		More complicated recovery relative to other approaches.
+		
+		Undo no redo - as part of commit flush to disk.
+		
+		Transactions now take longer, smaller log, faster recovery.
+		
+		No undo, redo: read dirty pages from memory, otherwise read the entry from disk.
+		
+		On on write, do the write to some temporary buffer, flush only when committed.
+		
+		No undo no redo is a pipe dream since You can't atomically update 10 blocks.
+		
+		Log record: stored on small blocks, 512 bytes ish.
+		
+		SCN - timestamp.
+		
+		Log Sequence Number keeps track of all logged bits for a particular transaction.
+		
+		LSN orders transactions.
+		
+	\subsection{Types of locks}
+	
+		Shared lock - anyone who wants to read an item gets one.
+		
+		Update lock - only one person at a time gets to hold this one, and it says 'ey, I'm gonna update this value. Blocks all other locks I think.
+		
+		The scenario it prevents is that two transactions read the same item, and then both try to write and therefore secure a write lock, but ya can't get a write lock when there's a shared lock, so one gets the update lock and the other gets to wait, yeet.
+		
+		Exclusive lock - good 'ol write lock.
+		
+		Intent lock - transaction intends to get a shared/exclusive lock on table. Intent locks exist on the level of tables, so that if You want to know if something's going on in the table, You can just check this.
+		
+		Schema locks - don't change schema, obviously.
+		
+		Key-range locks - prevents anyone messing with a range of key values, e.g. You can't insert into locked range, so it prevents phantom reads. Imagine a transaction that reads the same range twice but someone has inserted into it.
+		
+	\subsection{Transaction Layer}
+	
+		Transaction table - keeps track of transactions, sure. 
+		
+		Transaction handler - honestly kind of ambiguous - information needed for transaction execution?
+		
+		Lock table with buckets, and log. 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 			
 			
 			
@@ -676,15 +833,45 @@
 \section{An Evaluation of Buffer Management Strategies for
 Relational Database Systems}
 
-	Domain separation - give different stuff different buffers. This is inflexible and dumb.
+	QLSM - query set locality model.
+
+	Domain separation - give different stuff different buffers. This is inflexible and dumb. It doesn't take into account relative priorities that may change dynamically.
+	
+	GLRU - grouped LRU - partitions buffers so that different partitions have different priority. If You're looking to evict someone, start w/ lowest priority and take it from there..
 	
 	Hot set - stuff being looped over is hot, so keep it in memory.
+	
+	Hot point - if You can't keep the hot set in memory, suddenly page faults come in and ruin the performance. These discontinuities are called hot points.
+	
+	Hot stuff only really applies to LRU though - MRU will just MRU.
 	
 	MRU - most recently used.
 	
 	Quary Locality Set Model - QLSM: You've got different query patterns. You've got Straight Sequential - ze SS, which is just a scan. Then You have a Clustered Sequential, where You might scan over some parts of the range multiple times, and then You have Looping Sequential which, well, are looped scans, and You want to keep everything that touches in memory, and not use LRU but instead opt for MRU. Looping Hierarchical is for looping over hierarchical structures, and You may access roots more often etc.
 	
+	Or once more:
+	
+	Quary Locality Set Model: basically analyzes each operation in a database and observed that they each have their localities. They just go through operations one by one to find access patterns lol. They've done this for a bunch of queries I suppose, and they've found common trends:
+	
+	Straight Sequential: reference once and move on to next page. Just a scan. Ideal strategy is MRU, or LRU or whatever - You only need one page at a time.
+	
+	Clustered Sequential: same as straight sequential but You jump back in the loop now and then. This means that some pages are re-used, and they form a cluster, so try to keep them in memory. LRU makes sense.
+	
+	Looped sequential: same as clustered sequential but the cluster is the entire object, whatever it may be. Either fit the file in memory, or use MRU and keep as much of it in memory as possible.
+	
+	Independent Random: what it says on the tin lol.
+	
+	Clustered random: random access but You bump into clusters occasionally.
+	
+	Straight Hierarchical - just get one tuple via traversing an index from root to leaf.
+	
+	Hierarchical with Straight Sequential and Hierarchical with Clustered Sequential are the same, but the starting point is found via index, so nothing much changes.
+	
+	Looping Hierarchical - You are finally looping over the index to find different leaves. Gotta keep the index nodes in memory of possible. Prioritize nodes closer to root.
+	
 	DBMIN - gives buffers per file instance, as in per open file, even if the file is a duplicate. Locality set is the set of pages is buffer for a file.
+	
+	So basically each file gets a buffer and that buffer is managed according to QLSM.
 	
 	And I guess broadly speaking that's the main bit - it's individualizing buffers based on access pattern.
 	
@@ -698,6 +885,13 @@ Relational Database Systems}
 	
 	LS - as much as You can and MRU, since really You just want to keep max amount of stuff in memory and do as few shuffles as possible.
 	
+	IR - forget about it.
+	
+	Clustered Random - same as clustered sequential.
+	
+	Straight Hierarchical - don't matter.
+	
+	Looping Hierarchical - as much of the tree as possible.
 	
 	
 	
@@ -707,6 +901,7 @@ Relational Database Systems}
 \section{Snowflake Elastic Data Warehouse}
 
 	\subsection{Motivation}
+	
 		Trad systems: fixed systems so tough time balancing all online power, just designed for a smaller scale, highly/complexly tuned. 
 		Basically the servers used to be smaller and fixed where as now  they are massive and ever growing.
 		
@@ -746,9 +941,11 @@ Relational Database Systems}
 		
 		So then separate storage into S3 and shared-nothing compute nodes that cache some stuff.
 		
-		So to avoid these drawbacks, Snowflake decouples storage from compute.
+		So to avoid these drawbacks, Snowflake decouples storage from compute. Both are scalable independently.
 		
 		Storage - S3, compute - Snowflake's own code.
+		
+		If data is on a compute node, it's hot, so in that sense it's efficient.
 		
 	\subsection{Architecture}
 	
@@ -762,6 +959,8 @@ Relational Database Systems}
 		
 			Table partitioned horizontally into blocks.
 			
+			Uses PAX to store stuff in chunks.
+			
 			Since S3 supports getting parts of files, stuff in blocks is grouped with the head the of the block containing metadata for offsets.
 			
 			S3 is also used for storage required by operators e.g. huge joins, so it's got an infinite amount of storage lol.
@@ -769,6 +968,10 @@ Relational Database Systems}
 	\subsection{Virtual Warehouse}
 	
 		Clusters of EC2 clusters. Individuals in the EC2 cluster are called Worker Nodes.
+		
+		Kay so You have VWs, which has a set of EC2 instances. New query comes in, and workers spawn a new process for that query. Process dies at end of query.
+		
+
 		
 	\subsection{Elasticity and Isolation}
 	
@@ -788,16 +991,38 @@ Relational Database Systems}
 		
 		Caches live for the duration of worker node (so the query?). No, a WV can live longer than the duration of a query.
 		
+		File stealing - overachiever worker nodes can do labour for lagging nodes.
+		
 	\subsection{Execution Engine}
 	
 		Columnar - works on columns lol.
 		
-		Vectorized - works on many thousands of rows at a time.
+		Vectorized - works on many thousands of rows at a time. Doesn't do intermediate materialization.
 		
 		Push-based execution - so I guess instead of processes continuously polling or "pulling" for results, the generating processes pushes them, is what I'm getting.
 		
 		No transaction management since all files are immutable (what about race conditions?), no buffer pool due to scans.
 	
+	\subsection{Cloud Services}
+	
+		Workers are ephemeral, so something has to stick around semi-permanently to handle the database stuff.
+		
+		Hence cloud services.
+		
+		Snowflake doesn't use indexes? 
+		
+		Keeps track of worker performance for monitoring.
+		
+	\subsection{Pruning}
+	
+		So indexes are indeed not used, since the access pattern doesn't fit and it goes against the whole "user doesn't need to do jack" approach since it's the user that would have to create the indexes.
+		
+		So these guys use zone mapping a.k.a. keeping coarse track of what is where.
+	
+	
+\newpage
+\section{Native Store Extension for SAP HANA}
+
 	
 			
 \newpage
@@ -1061,7 +1286,9 @@ Relational Database Systems}
 	
 		C-store tries to do column at a time processing lol, VectorWise and C-store do blocks (though containing columns)
 			
-			
+		
+		
+		
 			
 			
 		
@@ -1077,13 +1304,220 @@ Relational Database Systems}
 		
 		
 \newpage
-\section{Storage Systems}
-	
-	a
+\section{Sort vs. Hash Revisited }
 
+	Optimizations: You've got fan-in, which is the maximum number of like data collections that can be joined to create other runs (probably dictated by something like available blocks to store things). So then of course the larger the blocks You're dicking around with, the fewer of them You'll be able to afford, the smaller the fan-in. Turns out bigger blocks seem to work better, even if it results in smaller fan-in and consquently maybe more layers of fan-ins.
 		
+	Another one is to keep in mind what You actually have left to do. Merge smallest blocks available first, I suppose, is the deal. The example they give is neat.
+	
+	Early aggregation good.
+	
+	Choice between hashing and sorting depends on relative sizes of the tables. More equal size tables = sorting I think.
+	
+	Second, stuff depends on key distribution.
 		
+\newpage
+\section{Query Optimization}	
+
+	Two stages: rewriting and optimization.
+	
+	Rewriting changes the query text, ish. Replace view with base tables for example, flatten out base queries, write out possible permutations for predicates or whatever.
+	
+	Planner orders the operations.
+	
+	Algebraic space - space of possible operator orderings.
+	
+	Method-structure space - available implementations for an operation e.g. hash join v.s. sort and merge.
+	
+	Each implementation has a cost model associated with it.
+	
+	There's also a size-distribution estimator, basically trying to eyeball the size of query results via histogram.
 		
+\newpage
+\section{The State of the Art in Distributed Query Processing}
+
+	Challenges to distributes processing: heterogenous hardware, huge systems, rapid changes in workload, legacy systems.
+	
+	Advantages: cost and scalability.
+	
+	Parallel systems - just parallelizing execution I guess.
+	
+	\subsection{Architecture of a Query Processor}
+	
+		Parser - take string of query, translate it into code objects/queries.
+		
+		Query Rewrite - Redundant predicates, views, flattening queries, whatever.
+		
+		Optimizer - decides operation order, decides how much memory is required apparently.
+		
+		Code gen - generate assembly that executes query tree.
+		
+		Query execution engine - the bit that runs the assembly. Accepts calls to next() I suppose.
+		
+		Catalog - all the database shit - segments, extents, page locations, views, whatever. Logical information v.s. physical information
+		
+	\subsection{Query Optimization}
+	
+		Dynamic programming tries to find optimal solutions.
+		
+		Iterative to find iteratively better solutions.
+		
+		Construct plans bottom up, keeping track of possibilities.
+		
+		In centralized systems cost = CPU + IO.
+		
+		IO: seek + latency + transfer.
+		
+		Distributed systems have to take messaging costs, transfer costs (different IO I suppose), CPU costs to unpack/decompress maybe.
+		
+		Planner ought to maybe consider intra-query parallelism e.g. cache shit or reusing whatever.
+		
+		Cost does not account for response time.
+		
+	\subsection{Query Execution Techniques}
+	
+		Row blocking - send blocks okay lol.
+		
+		Optimization of multicasts - just optimize paths it sounds like, don't route the data through paris.
+		
+		Semijoin - start by shipping columns required for joining comparisons, then only send back stuff that is relevant.
+		
+		Pointer-based joins: foreign keys are pointers, so a lot of random access.
+		
+	\subsection{Client-Server database systems}
+	
+		Architectures:
+		
+		Peer to peer - everyone can act as a server and as a client.
+		
+		Strict - there are servers, and clients. Commercial I suppose.
+		
+		Middleware - hierarchical strict. A layer will act as a server for layers below and a client for layers above.
+		
+		Strict makes things cleaner - privileges, types of machines etc.
+		
+	\subsection{Exploiting Client Resources}
+	
+		Query shipping - send query to data, send back answer.
+		
+		Data shipping lol
+		
+		Hybrid shipping - allow to process queries and store data at both ends e.g. client cache
+		
+	\subsection{Query Optimization}
+	
+		1. Select where what will happen - query v.s. data shipping.
+		
+		Two-step optimization: at compile time generate operator tree. Then update just before running w/ site selection.
+		
+	\subsection{Heterogeneous Database Systems}
+	
+		Mediator figures what goes where, wrappers account for heterogeneity.
+		
+		Plan the same but change costs depending on hardware
+		
+		Calibration - estimate costs by running sample queries.
+		
+		Individual wrappers - just give them individual costs.
+		
+		Learning curve - learn at runtime.
+		
+		\subsection{DYNAMIC DATA PLACEMENT}
+		
+			\subsubsection{ Replication vs. Caching}
+			
+				Replication: explicit, benefits many, replicates a whole lot, stored on disk, removal explicit, updates instead of removal, is done by people.
+				
+				Caching: fine, on memory, removal implicit, replicates small amounts, is done by CPU lol.
+				
+			\subsubsection{Dynamic Replication Algorithms}
+			
+				Goals: reduce communications, spread hot blocks.
+				
+				ADR: replicate objects in replicant data must pass through venue.
+				
+				Expansion test: If more reads originate in neighbours and pass through node than writes, just add it to replication.
+				
+				Similarly: drop node if more writes and reads pass through
+				
+			\subsubsection{Cache investment}
+			
+				Once caching a.k.a. data shipping would have saved more data, make a copy.
+				
+				
+\newpage\phantom{asd}
+\newpage
+
+\section{Practice}
+
+	\subsection{Storage}
+
+		Physical independence - database hides how data is actually stored on disk - pages v.s. idk like the cloud or something.
+		
+		Logical independence - the same data can be viewed in different ways - the "logical" structure of the underlying table and the table presented to the user by the database are independent.
+		
+		When is shared nothing good?
+		
+		If You can partition the data cross nodes and most updates don't involve all data and queries can be parallelized i.e. queries don't require merging data across nodes.
+		
+		Shared memory - a sort of lower-level shared nothing where the nodes get to pretend the memory between nodes is the same, though actually it's being shuffled around.
+		
+		Shared disk - what it says on the tin. Lots of data shipping. Snowflake is in here somewhere.
+		
+		Tablespace - abstraction to keep track of objects like tables, indexes, whatever. Memory is allocated to tablespaces, which is interesting, and stuff in a tablespace is broadly speaking supposed to be spatially local.
+		
+		Segments are a collection of extents - they "look" contiguous, but the extents are allocated as needed so no dice.
+		
+		Partitioning a table will result in numerous segments.
+		
+		Size of extent allocated can change, ofc.
+		
+		Extents function as a sort of in between of individually managing the memory for each tuple and just allocating one huge file for the table.
+		
+		Slotted pages - header contains info about table and block, as well as points to tuples (depending on storage format).
+		
+		PCFREE - Percentage Free - percentage of block that is to be kept free for updates.
+		
+		PCUSED - if the percentage of space used in block falls below PCUSED, new tuples are allowed on the block.
+		
+		I think they sort of flip a bit someplace - hit the ceiling and take the block off the free list, hit PC used and 
+		
+		Free lists live on segments.
+		
+		Shadow paging - create duplicate tuples, modify those, on commit switch pointer. Good for recovery, concurrency. Bad for locality, book keeping.
+		
+		Delta file basically the same, except the changes are made in place.
+		
+		Buffer cache - area of memory reserved for caching blocks in memory.
+		
+		Latches for blocks in memory since things can go wrong if multiple queries/transactions are looking for an item, e.g. updating an item, removing an item from cache etc.
+		
+		Hash on block number, and a latch covers a number of hash buckets.
+		
+		Linked list contains buffer headers, so You go until You find Your block and then use the buffer header to get the block.
+		
+	\subsection{Access Methods}
+	
+		How is a tuple stored, anyway.
+		
+		It's got a header, which contains whatever, 
+		
+		Then You can store it attribute by attribute or store pointers at the start. Store long variable stuff at the end.
+		
+		If attributes v. large, the store a pointer to those and put the large objects someplace else (BLOBs a.k.a. Binary Large Objects).
+		
+		Decomposition storage model - split tables in columns (so each columns gets id + column) and store these new columns as before, thus getting columnar storage.
+		
+		Column stores tend to use the cache better since You're not loading in the irrelevant attributes.
+		
+		Extensible hashing: use first n bits for buckets, 
+				
+		
+			
+	
+		
+	
+	
 		
 		
 		

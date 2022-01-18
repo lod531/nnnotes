@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.8) (preloaded format=pdflatex 2021.9.13)  3 JAN 2022 16:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.8) (preloaded format=pdflatex 2021.9.13)  18 JAN 2022 12:52
 entering extended mode
 **./data_management_systems_notes.tex
 (data_management_systems_notes.tex
@@ -828,7 +828,13 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {C:/Users/abom/AppData/Local/MiKTeX/pdftex/config/pdftex.map}] [2] [3]
 [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19]
-[20] [21] [22] [23] [24] [25] [26] (data_management_systems_notes.aux)
+[20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34]
+Overfull \hbox (42.0562pt too wide) in paragraph at lines 1491--1492
+[]\OT1/cmr/m/n/10 Latches for blocks in mem-ory since things can go wrong if mu
+l-ti-ple queries/transactions
+ []
+
+[35] (data_management_systems_notes.aux)
 
 Package rerunfilecheck Warning: File `data_management_systems_notes.out' has ch
 anged.
@@ -837,28 +843,132 @@ anged.
 
 Package rerunfilecheck Info: Checksums for `data_management_systems_notes.out':
 
-(rerunfilecheck)             Before: E801B8E1F48F9A308B85680A5169F3B5;18710
-(rerunfilecheck)             After:  BCBF94C143998ED2E4036A492F8A90C7;19138.
+(rerunfilecheck)             Before: 27899EC31334147FCFC9BEBAD9C0F2E0;23144
+(rerunfilecheck)             After:  0C87CB4A5864A33891C925C9710E505B;23653.
  ) 
 Here is how much of TeX's memory you used:
- 22658 strings out of 478927
- 409015 string characters out of 2853009
- 708443 words of memory out of 3000000
- 39959 multiletter control sequences out of 15000+600000
+ 22752 strings out of 478927
+ 410493 string characters out of 2853009
+ 708454 words of memory out of 3000000
+ 39984 multiletter control sequences out of 15000+600000
  416550 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,6n,83p,565b,343s stack positions out of 5000i,500n,10000p,200000b,80000s
-<C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-mbx10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmbx12.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/publ
-ic/amsfonts/cm/cmmi10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/ty
-pe1/public/amsfonts/cm/cmr10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/abom/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/abom/AppData/Local/Pr
-ograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on data_management_systems_notes.pdf (26 pages, 216684 bytes).
+pdfTeX warning (dest): name{subsubsection.12.8.3} has been referenced but doe
+s not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.12.8.2} has been referenced but does 
+not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.12.8.1} has been referenced but does 
+not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.12.8} has been referenced but does not e
+xist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.12.7} has been referenced but does not e
+xist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.12.6} has been referenced but does not e
+xist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.12.5} has been referenced but does not e
+xist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.12.4} has been referenced but does not e
+xist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.12.3} has been referenced but does not e
+xist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.12.2} has been referenced but does not e
+xist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.12.1} has been referenced but does not e
+xist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.9.6} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.13} has been referenced but does 
+not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.12} has been referenced but does 
+not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.11} has been referenced but does 
+not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.10} has been referenced but does 
+not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.9} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.8} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.7} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.6} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.5} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.4} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.3} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.2} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.5.1} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.9.5} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.4.2} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.4.1} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.9.4} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.3.2} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.9.3.1} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.8.3} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.8.2} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.8.1} has been referenced but does not ex
+ist, replaced by a fixed one
+
+<C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmb
+x10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
+s/cm/cmbx12.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/amsfonts/cm/cmmi10.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmmi7.pfb><C:/Users/abom/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/abom/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/abom/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/abom/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/abom/AppDa
+ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on data_management_systems_notes.pdf (35 pages, 269979 bytes).
 PDF statistics:
- 652 PDF objects out of 1000 (max. 8388607)
- 145 named destinations out of 1000 (max. 500000)
- 941 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 846 PDF objects out of 1000 (max. 8388607)
+ 214 named destinations out of 1000 (max. 500000)
+ 1141 words of extra memory for PDF output out of 10000 (max. 10000000)
 
