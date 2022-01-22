@@ -1020,9 +1020,6 @@ Relational Database Systems}
 		So these guys use zone mapping a.k.a. keeping coarse track of what is where.
 	
 	
-\newpage
-\section{Native Store Extension for SAP HANA}
-
 	
 			
 \newpage
@@ -1030,7 +1027,7 @@ Relational Database Systems}
 
 	NSM - n-ary Storage Model, A.K.A. slotted pages, stores tuples.
 	
-	PAX (Partition Attributes Across) simply keeps attributes together, so I suppose it's columnar.
+	PAX (Partition Attributes Across) simply keeps attributes together, so I suppose it's columnar. Stores IDs for all of them, yuck.
 	
 	"Paradox" - the size of requested chunk of data by user is not what is loaded in by engine, and the stuff that is loaded is largely irrelevant (if You just want an attribute and You get a tuple).
 	
@@ -1038,7 +1035,11 @@ Relational Database Systems}
 	
 	PAX stores what they call "minipages", which are just columns lol. If You want a tuple, it'll still be in the same page/block.
 	
-	Each page is therefore split into minipages, where each page behaves as a slotted page in it's own right. Neat.
+	There are different kinds of minipages.
+	
+	For records of fixed length, You have an F-minipage. The header for the minipage stores a bit vector to indicate nulls. No need for pointers due since You know where things are since everything is fixed length.
+	
+	V minpage is basically just a page. Variable length entries, pointers to those entries.
 	
 \newpage
 \section{Modern B-Tree Techniques}
@@ -1094,7 +1095,10 @@ Relational Database Systems}
 		
 		DSM, decomposition storage model, splits columns into different pages, I think?l They get sub-keys in DSM, as in each sub-page now gets sub-keys which sub-keys map to tuples within the page, which increases space requirements.
 		
+		PAX, ze hybrid, has it's own paper, see above.
+		
 		Memory became way slower than processors very quickly, and the time take to retrieve an item v.s. time taken to process it went from 1:1 to 100:1
+		
 	
 	\subsection{Column-store Architectures}
 	
@@ -1106,15 +1110,37 @@ Relational Database Systems}
 			
 			WOS acts as a buffer, makes sense.
 			
-			Can store columns sorted by different attributes - these duplicates are called projections.
+			Can group columns and sort them by some other attribute - these are duplicate and called projections.
+			
+			In other words, everything is stored as a column, but if it turns out that two columns are sorted on the same attribute, they form a group.
+			
+			Usually at least one projection is just everything lol, as in all the columns.
+			
+			Projection notation $(a, b, c|d)$ means a projection containing a, b and c columns sorted on d.
+			
+			No secondary indexes, but does support sparse indexes - just metadata on starting value of attribute in page, given that the data is sorted.
 			
 		\subsubsection{MonetDB}
 		
 			Execution engine works on column-at-a-time.
 			
+			DOES NOT COMPRESS COLUMNS lol.
+			
+			Queries are optimized at runtime.
+			
 			Prioritizes avoid cache misses.
 			
 			Uses Database Cracking.
+			
+			Read-only queries bypass transaction management hence no overhead. 			
+			
+			They really do execute stuff column at a time, as in a whole ass column.
+			
+			Strength reduction - replace an operation with an equivalent and less costly version.
+			
+			Array blocking - I guess it's grouping parts of an array, which I guess in practice will be a column, such that it fits into a cache? Make array in cache friendly blocks.
+			
+			Loop pipelining - starting execution of the next before the current is finished? Basically loops are all waiting for each other to finish, but there is no need to wait for one to completely finish, You can use intermediate results and get started.			
 			
 			They implement their own operators which saturate the CPU with sequential data, allowing for many in-flight instructions, increasing throughput.
 			
@@ -1122,7 +1148,9 @@ Relational Database Systems}
 			
 			Operators consume and produce BATs.
 			
-			Operators themselves do not change in MonetDB - if You have some complicated join condition for example, the DB will just chain pre-made operators.
+			So basically BATs are just arrays lol. 
+			
+			Operators themselves do not change in MonetDB - if You have some complicated join condition for example, the DB will just chain pre-made operators. This improves efficiency, allegedly.
 			
 			"RISC approach to database query languages"
 			
@@ -1132,35 +1160,17 @@ Relational Database Systems}
 			
 			Does not use compression, which is wild.
 			
-	\subsection{Column-store Architectures}
-	
-		\subsubsection{C-store}
+			Full materialization of intermediate results.
+			
+		\subsubsection{VectorWise}
 		
-			Stores data as column-files. One file is one column, individually compressed, and it's sorted by some table attribute.
+			Almost nothing there really.
 			
-			These column files are a Read Optimized Store.
+			Late materialization, processing stuff blocks at a time.
 			
-			Write Optimized Store is where new data is stored, and it's uncompressed and it's stored as tuples.
-			
-			You can store columns sorted by different attributes in which case You have projections.
-			
-			Projections are written as (x, y, z|a) where x, y, z are attributes and a is the attribute to be sorted by.
-			
-			No secondary indices but does support sparse indexes, which basically just uses sorted indices to search through blocks - look at the top value in block, if no relevant then move on.
-			
-			Shared-nothing possible by horizontal partitioning.
-			
-		\subsubsection{MonetDB and VectorWise}
+		\subsection{Other}
 		
-			MonetDB: column at a time, prioritizes avoiding cache misses, no indexing but is instead cracked over time, query optimization done at runtime, has transactions, uses BATs and column-oriented RISC style operators that are chained for more complex queries, stores updates in "pending" columns. Does not use compression wtf, fully materializes intermediate results.
-			
-			VectorWise: use vectors instead of tuples-at-a-time or column-at-a-time computation.
-			
-			Frequency partitioning: sort data such that compression of each block is maximally effective.
-			
-			
-			
-			
+			Frequency Partitioning - arranging data so there is minimal heterogeniety per block.
 			
 			
 			
@@ -1170,11 +1180,15 @@ Relational Database Systems}
 		
 			Okay so classically We have two ways of processing a information - all at once, as in the entire table or whatever, or just one tuple at a time.
 			
-			VectorWise uses vectorized execution, which instead of doing one tuple at a time does N tuples at a time.
+			Or rather, operators call next() to get one tuple at a time, or You can have an operator consume everything and output one complete result. Downside is there may be large intermediate results.
+			
+			e.g. calculate average - tuple at a time will shove, well, one tuple at a time to the average calculator. Full materialization will perform a full scan and give all the relevant tuples and then average - the second will have a larger memory footprint (but might be faster?)
+			
+			VectorWise uses vectorized execution, which instead of doing one tuple at a time does N tuples at a time. Similar to doing BATs but at a small scale.
 			
 			Great because it reduces  the number of function calls (since now there isn't a call per tuple).
 			
-			Obviously cache locality.
+			Obviously cache locality, particularly L1 cache, L1 being fastest, L3 being slowest.
 			
 			Compiler optimizations thanks to optimizing loops
 			
@@ -1262,9 +1276,13 @@ Relational Database Systems}
 			
 			Downside is that You need to combine them, upside is You can maybe avoid the buffers talking to each other until the end, a.k.a. delayed materialization.
 			
+			Jive Join - if the join results in disordered 
+			
 		\subsubsection{Indexing}
 			
 			So, scans are very efficient in column DBs, but that doesn't mean improvements can't be made.
+			
+			Better to keep sorted arrays than to do a tree over memory, apparently.
 			
 			Indexing - in C-Store called projections, columns ordered by different criteria. Doing this isn't as expensive as You might think, because the columns can be well compressed.
 		
@@ -1285,6 +1303,12 @@ Relational Database Systems}
 	\subsection{Comparing MonetDB/VectorWise/C-store}
 	
 		C-store tries to do column at a time processing lol, VectorWise and C-store do blocks (though containing columns)
+		
+		
+\newpage
+\section{A hybrid page layout integrating PAX and NSM}
+
+	Stores things column-wise at the top of the page with pointers to variable-length stuff at the bottom of the page/
 			
 		
 		
@@ -1510,7 +1534,29 @@ Relational Database Systems}
 		
 		Column stores tend to use the cache better since You're not loading in the irrelevant attributes.
 		
-		Extensible hashing: use first n bits for buckets, 
+		Extensible hashing: use first n bits for buckets, then split when a bucket overfills.
+		
+		Linear hashing: just practice it before the exam.
+		
+		Composite index: just index on multiple attributes and define an order like in any other case - composite index on A, B means the tree will have something like A0 B10 $<$ A1 B0 or whatever.
+		
+		Range lookup in trees finds the starting leaf node and traverses the leaves - no need to do a Looping Hierarchical access pattern.
+		
+		There are a bunch of reasonable ways to deal with insertion and deletion. You can lock a child and parent and that way You know You'll be able to split a parent, but in theory You'll have to split all the way up to the root, so maybe try the first approach, if fail then lock entire tree.
+		
+		Bulk inserting into a B-Tree: don't just create an empty one and go to town. Sort entire data, then create nodes bottom up. Also may want to consider PCFREE when creating those blocks.
+		
+		B-trees suffer from hot blocks same as dictionaries. In order to avoid problems with say sequential inserts, reverse the sequence number to create a semi-random pattern.
+		
+		Then come smaller optimizations like store just the minimal amount of information needed to decide which node to take.
+		
+		Materialized aggregates - keep track of stats lol, like average, max etc.
+		
+		Denormalized tables - just tables with a join pre-applied.
+		
+		Clustered indexes - stuff in index is in order in memory.
+		
+		Clustered tables - stored different tables on the same segment I think? Data used together to be kept together.
 				
 		
 			
