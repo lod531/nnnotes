@@ -625,6 +625,10 @@
 			
 			Can't have as many threads/processes as You want, instead create a pool to draw from. Makes it easier to parallelize since You just claim stuff from the pool.
 			
+			Observe that database processes/threads can be OS processes or threads.
+			
+			Databases use cursors to keep track of what the next table will be delivered as part of query execution.
+			
 		\subsubsection{Iterator Models}
 		
 			Iterator: scans one tuple at a time with next() calls originating one at a time from the root of the operator tree. Data flows up, control flows down. Generic interface, predictable access patterns
