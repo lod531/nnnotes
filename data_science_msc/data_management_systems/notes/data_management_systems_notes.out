@@ -74,72 +74,74 @@
 \BOOKMARK [3][-]{subsubsection.3.1.1}{Caching}{subsection.3.1}% 74
 \BOOKMARK [3][-]{subsubsection.3.1.2}{Threads/Processes/Pools}{subsection.3.1}% 75
 \BOOKMARK [3][-]{subsubsection.3.1.3}{Iterator Models}{subsection.3.1}% 76
-\BOOKMARK [3][-]{subsubsection.3.1.4}{Optimization 1: Heuristics and Rewriting}{subsection.3.1}% 77
-\BOOKMARK [3][-]{subsubsection.3.1.5}{Optimization 2: Cost estimates}{subsection.3.1}% 78
-\BOOKMARK [1][-]{section.4}{Transaction Processing}{}% 79
-\BOOKMARK [2][-]{subsection.4.1}{Concurrency and Control}{section.4}% 80
-\BOOKMARK [2][-]{subsection.4.2}{History}{section.4}% 81
-\BOOKMARK [2][-]{subsection.4.3}{Recovery}{section.4}% 82
-\BOOKMARK [2][-]{subsection.4.4}{Transactions}{section.4}% 83
-\BOOKMARK [2][-]{subsection.4.5}{Recovery}{section.4}% 84
-\BOOKMARK [2][-]{subsection.4.6}{Types of locks}{section.4}% 85
-\BOOKMARK [2][-]{subsection.4.7}{Transaction Layer}{section.4}% 86
-\BOOKMARK [1][-]{section.5}{An Evaluation of Buffer Management Strategies for Relational Database Systems}{}% 87
-\BOOKMARK [1][-]{section.6}{Snowflake Elastic Data Warehouse}{}% 88
-\BOOKMARK [2][-]{subsection.6.1}{Motivation}{section.6}% 89
-\BOOKMARK [2][-]{subsection.6.2}{Key qualities}{section.6}% 90
-\BOOKMARK [2][-]{subsection.6.3}{Storage v.s. Compute}{section.6}% 91
-\BOOKMARK [2][-]{subsection.6.4}{Architecture}{section.6}% 92
-\BOOKMARK [3][-]{subsubsection.6.4.1}{Storage}{subsection.6.4}% 93
-\BOOKMARK [2][-]{subsection.6.5}{Virtual Warehouse}{section.6}% 94
-\BOOKMARK [2][-]{subsection.6.6}{Elasticity and Isolation}{section.6}% 95
-\BOOKMARK [2][-]{subsection.6.7}{Local Caching and File Stealing}{section.6}% 96
-\BOOKMARK [2][-]{subsection.6.8}{Execution Engine}{section.6}% 97
-\BOOKMARK [2][-]{subsection.6.9}{Cloud Services}{section.6}% 98
-\BOOKMARK [2][-]{subsection.6.10}{Pruning}{section.6}% 99
-\BOOKMARK [1][-]{section.7}{Data page layouts for relational databases on deep memory hierarchies}{}% 100
-\BOOKMARK [1][-]{section.8}{Modern B-Tree Techniques}{}% 101
-\BOOKMARK [2][-]{subsection.8.1}{B-Trees v.s. Hash Indexes}{section.8}% 102
-\BOOKMARK [2][-]{subsection.8.2}{Normalized keys}{section.8}% 103
-\BOOKMARK [2][-]{subsection.8.3}{Prefix trees}{section.8}% 104
-\BOOKMARK [1][-]{section.9}{The Design and Implementation of Modern Column-Oriented Database Systems}{}% 105
-\BOOKMARK [2][-]{subsection.9.1}{Intro}{section.9}% 106
-\BOOKMARK [2][-]{subsection.9.2}{History}{section.9}% 107
-\BOOKMARK [2][-]{subsection.9.3}{Column-store Architectures}{section.9}% 108
-\BOOKMARK [3][-]{subsubsection.9.3.1}{C-Store}{subsection.9.3}% 109
-\BOOKMARK [3][-]{subsubsection.9.3.2}{MonetDB}{subsection.9.3}% 110
-\BOOKMARK [3][-]{subsubsection.9.3.3}{VectorWise}{subsection.9.3}% 111
-\BOOKMARK [2][-]{subsection.9.4}{Other}{section.9}% 112
-\BOOKMARK [2][-]{subsection.9.5}{Column-store internals and advanced techniques}{section.9}% 113
-\BOOKMARK [3][-]{subsubsection.9.5.1}{Vectorized Processing}{subsection.9.5}% 114
-\BOOKMARK [3][-]{subsubsection.9.5.2}{Compression}{subsection.9.5}% 115
-\BOOKMARK [3][-]{subsubsection.9.5.3}{Run-length Encoding}{subsection.9.5}% 116
-\BOOKMARK [3][-]{subsubsection.9.5.4}{Bit Vector Encoding}{subsection.9.5}% 117
-\BOOKMARK [3][-]{subsubsection.9.5.5}{Dictionary encoding}{subsection.9.5}% 118
-\BOOKMARK [3][-]{subsubsection.9.5.6}{Frame of Reference}{subsection.9.5}% 119
-\BOOKMARK [3][-]{subsubsection.9.5.7}{The Patching Technique}{subsection.9.5}% 120
-\BOOKMARK [3][-]{subsubsection.9.5.8}{Computation without decompression}{subsection.9.5}% 121
-\BOOKMARK [3][-]{subsubsection.9.5.9}{Late Materialization}{subsection.9.5}% 122
-\BOOKMARK [3][-]{subsubsection.9.5.10}{Inserts/updates/deletes}{subsection.9.5}% 123
-\BOOKMARK [3][-]{subsubsection.9.5.11}{Indexing}{subsection.9.5}% 124
-\BOOKMARK [3][-]{subsubsection.9.5.12}{Database Cracking}{subsection.9.5}% 125
-\BOOKMARK [3][-]{subsubsection.9.5.13}{Summary and Design Principles Taxonomy}{subsection.9.5}% 126
-\BOOKMARK [2][-]{subsection.9.6}{Comparing MonetDB/VectorWise/C-store}{section.9}% 127
-\BOOKMARK [1][-]{section.10}{A hybrid page layout integrating PAX and NSM}{}% 128
-\BOOKMARK [1][-]{section.11}{Sort vs. Hash Revisited }{}% 129
-\BOOKMARK [1][-]{section.12}{Query Optimization}{}% 130
-\BOOKMARK [1][-]{section.13}{The State of the Art in Distributed Query Processing}{}% 131
-\BOOKMARK [2][-]{subsection.13.1}{Architecture of a Query Processor}{section.13}% 132
-\BOOKMARK [2][-]{subsection.13.2}{Query Optimization}{section.13}% 133
-\BOOKMARK [2][-]{subsection.13.3}{Query Execution Techniques}{section.13}% 134
-\BOOKMARK [2][-]{subsection.13.4}{Client-Server database systems}{section.13}% 135
-\BOOKMARK [2][-]{subsection.13.5}{Exploiting Client Resources}{section.13}% 136
-\BOOKMARK [2][-]{subsection.13.6}{Query Optimization}{section.13}% 137
-\BOOKMARK [2][-]{subsection.13.7}{Heterogeneous Database Systems}{section.13}% 138
-\BOOKMARK [2][-]{subsection.13.8}{DYNAMIC DATA PLACEMENT}{section.13}% 139
-\BOOKMARK [3][-]{subsubsection.13.8.1}{ Replication vs. Caching}{subsection.13.8}% 140
-\BOOKMARK [3][-]{subsubsection.13.8.2}{Dynamic Replication Algorithms}{subsection.13.8}% 141
-\BOOKMARK [3][-]{subsubsection.13.8.3}{Cache investment}{subsection.13.8}% 142
-\BOOKMARK [1][-]{section.14}{Practice}{}% 143
-\BOOKMARK [2][-]{subsection.14.1}{Storage}{section.14}% 144
-\BOOKMARK [2][-]{subsection.14.2}{Access Methods}{section.14}% 145
+\BOOKMARK [3][-]{subsubsection.3.1.4}{Access to base tables}{subsection.3.1}% 77
+\BOOKMARK [3][-]{subsubsection.3.1.5}{Sorting and Aggregation}{subsection.3.1}% 78
+\BOOKMARK [3][-]{subsubsection.3.1.6}{Optimization 1: Heuristics and Rewriting}{subsection.3.1}% 79
+\BOOKMARK [3][-]{subsubsection.3.1.7}{Optimization 2: Cost estimates}{subsection.3.1}% 80
+\BOOKMARK [1][-]{section.4}{Transaction Processing}{}% 81
+\BOOKMARK [2][-]{subsection.4.1}{Concurrency and Control}{section.4}% 82
+\BOOKMARK [2][-]{subsection.4.2}{History}{section.4}% 83
+\BOOKMARK [2][-]{subsection.4.3}{Recovery}{section.4}% 84
+\BOOKMARK [2][-]{subsection.4.4}{Transactions}{section.4}% 85
+\BOOKMARK [2][-]{subsection.4.5}{Recovery}{section.4}% 86
+\BOOKMARK [2][-]{subsection.4.6}{Types of locks}{section.4}% 87
+\BOOKMARK [2][-]{subsection.4.7}{Transaction Layer}{section.4}% 88
+\BOOKMARK [1][-]{section.5}{An Evaluation of Buffer Management Strategies for Relational Database Systems}{}% 89
+\BOOKMARK [1][-]{section.6}{Snowflake Elastic Data Warehouse}{}% 90
+\BOOKMARK [2][-]{subsection.6.1}{Motivation}{section.6}% 91
+\BOOKMARK [2][-]{subsection.6.2}{Key qualities}{section.6}% 92
+\BOOKMARK [2][-]{subsection.6.3}{Storage v.s. Compute}{section.6}% 93
+\BOOKMARK [2][-]{subsection.6.4}{Architecture}{section.6}% 94
+\BOOKMARK [3][-]{subsubsection.6.4.1}{Storage}{subsection.6.4}% 95
+\BOOKMARK [2][-]{subsection.6.5}{Virtual Warehouse}{section.6}% 96
+\BOOKMARK [2][-]{subsection.6.6}{Elasticity and Isolation}{section.6}% 97
+\BOOKMARK [2][-]{subsection.6.7}{Local Caching and File Stealing}{section.6}% 98
+\BOOKMARK [2][-]{subsection.6.8}{Execution Engine}{section.6}% 99
+\BOOKMARK [2][-]{subsection.6.9}{Cloud Services}{section.6}% 100
+\BOOKMARK [2][-]{subsection.6.10}{Pruning}{section.6}% 101
+\BOOKMARK [1][-]{section.7}{Data page layouts for relational databases on deep memory hierarchies}{}% 102
+\BOOKMARK [1][-]{section.8}{Modern B-Tree Techniques}{}% 103
+\BOOKMARK [2][-]{subsection.8.1}{B-Trees v.s. Hash Indexes}{section.8}% 104
+\BOOKMARK [2][-]{subsection.8.2}{Normalized keys}{section.8}% 105
+\BOOKMARK [2][-]{subsection.8.3}{Prefix trees}{section.8}% 106
+\BOOKMARK [1][-]{section.9}{The Design and Implementation of Modern Column-Oriented Database Systems}{}% 107
+\BOOKMARK [2][-]{subsection.9.1}{Intro}{section.9}% 108
+\BOOKMARK [2][-]{subsection.9.2}{History}{section.9}% 109
+\BOOKMARK [2][-]{subsection.9.3}{Column-store Architectures}{section.9}% 110
+\BOOKMARK [3][-]{subsubsection.9.3.1}{C-Store}{subsection.9.3}% 111
+\BOOKMARK [3][-]{subsubsection.9.3.2}{MonetDB}{subsection.9.3}% 112
+\BOOKMARK [3][-]{subsubsection.9.3.3}{VectorWise}{subsection.9.3}% 113
+\BOOKMARK [2][-]{subsection.9.4}{Other}{section.9}% 114
+\BOOKMARK [2][-]{subsection.9.5}{Column-store internals and advanced techniques}{section.9}% 115
+\BOOKMARK [3][-]{subsubsection.9.5.1}{Vectorized Processing}{subsection.9.5}% 116
+\BOOKMARK [3][-]{subsubsection.9.5.2}{Compression}{subsection.9.5}% 117
+\BOOKMARK [3][-]{subsubsection.9.5.3}{Run-length Encoding}{subsection.9.5}% 118
+\BOOKMARK [3][-]{subsubsection.9.5.4}{Bit Vector Encoding}{subsection.9.5}% 119
+\BOOKMARK [3][-]{subsubsection.9.5.5}{Dictionary encoding}{subsection.9.5}% 120
+\BOOKMARK [3][-]{subsubsection.9.5.6}{Frame of Reference}{subsection.9.5}% 121
+\BOOKMARK [3][-]{subsubsection.9.5.7}{The Patching Technique}{subsection.9.5}% 122
+\BOOKMARK [3][-]{subsubsection.9.5.8}{Computation without decompression}{subsection.9.5}% 123
+\BOOKMARK [3][-]{subsubsection.9.5.9}{Late Materialization}{subsection.9.5}% 124
+\BOOKMARK [3][-]{subsubsection.9.5.10}{Inserts/updates/deletes}{subsection.9.5}% 125
+\BOOKMARK [3][-]{subsubsection.9.5.11}{Indexing}{subsection.9.5}% 126
+\BOOKMARK [3][-]{subsubsection.9.5.12}{Database Cracking}{subsection.9.5}% 127
+\BOOKMARK [3][-]{subsubsection.9.5.13}{Summary and Design Principles Taxonomy}{subsection.9.5}% 128
+\BOOKMARK [2][-]{subsection.9.6}{Comparing MonetDB/VectorWise/C-store}{section.9}% 129
+\BOOKMARK [1][-]{section.10}{A hybrid page layout integrating PAX and NSM}{}% 130
+\BOOKMARK [1][-]{section.11}{Sort vs. Hash Revisited }{}% 131
+\BOOKMARK [1][-]{section.12}{Query Optimization}{}% 132
+\BOOKMARK [1][-]{section.13}{The State of the Art in Distributed Query Processing}{}% 133
+\BOOKMARK [2][-]{subsection.13.1}{Architecture of a Query Processor}{section.13}% 134
+\BOOKMARK [2][-]{subsection.13.2}{Query Optimization}{section.13}% 135
+\BOOKMARK [2][-]{subsection.13.3}{Query Execution Techniques}{section.13}% 136
+\BOOKMARK [2][-]{subsection.13.4}{Client-Server database systems}{section.13}% 137
+\BOOKMARK [2][-]{subsection.13.5}{Exploiting Client Resources}{section.13}% 138
+\BOOKMARK [2][-]{subsection.13.6}{Query Optimization}{section.13}% 139
+\BOOKMARK [2][-]{subsection.13.7}{Heterogeneous Database Systems}{section.13}% 140
+\BOOKMARK [2][-]{subsection.13.8}{DYNAMIC DATA PLACEMENT}{section.13}% 141
+\BOOKMARK [3][-]{subsubsection.13.8.1}{ Replication vs. Caching}{subsection.13.8}% 142
+\BOOKMARK [3][-]{subsubsection.13.8.2}{Dynamic Replication Algorithms}{subsection.13.8}% 143
+\BOOKMARK [3][-]{subsubsection.13.8.3}{Cache investment}{subsection.13.8}% 144
+\BOOKMARK [1][-]{section.14}{Practice}{}% 145
+\BOOKMARK [2][-]{subsection.14.1}{Storage}{section.14}% 146
+\BOOKMARK [2][-]{subsection.14.2}{Access Methods}{section.14}% 147
