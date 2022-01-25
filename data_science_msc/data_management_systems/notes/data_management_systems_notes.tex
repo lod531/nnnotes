@@ -631,27 +631,85 @@
 			
 		\subsubsection{Iterator Models}
 		
-			Iterator: scans one tuple at a time with next() calls originating one at a time from the root of the operator tree. Data flows up, control flows down. Generic interface, predictable access patterns
+			Iterator: scans one tuple at a time with next() calls originating one at a time from the root of the operator tree. Data flows up, control flows down. Generic interface, predictable access patterns. Also called "Volcano"
 			
 			Materialization: compute entire result of operator and pass that. Downside is huge buffers. MonetDB, I think.
 			
 			Vectorization Model: iterator model but with vectors, as in more than 1 tuple (vectors size of cache)
 			
-			Push mode: instead of calling next, operators call push to produce their results. Event based programming, potentially more efficient due to improved function call locality.
+			Push mode: instead of calling next, operators call push to produce their results. Event based programming, potentially more efficient due to improved function call locality. Hard to implement though.
 			
 			For parallel execution introduce an EXCHANGE operator that pushes results to another process/machine.
+			
+		\subsubsection{Access to base tables}
+		
+			Row id access - when You know You want a particular tuple and You go get it.
+			
+			Use index to get row id when the selectivity is very high.
+			
+			In composite indexing, things depend on predicate selectivity.
+			
+			In theory, slowest access pattern is a full table scan - one can cook up worse patterns, but none of them yield results additional to full table scan.
+			
+			When to use full scan - low selectivity of predicate, no relevant index available ofc, self joins.
+			
+			Full table scans can be improved by sharing scans across queries, compressing the data, and doing sample scans if approximate answers are good enough.
+			
+			Other considerations: scanning index may be esspessive, but it returns data in order, so that's nice.
+			
+		\subsubsection{Sorting and Aggregation}
+		
+			External sort - since tuples don't fit into memory.
+			
+			Also allows a larger number of queries to run in parallel, neat.
+			
+			Two phase external sort - phase 1 loads tuples into available buffers and sorts them, writing out the sorted version to disk. A sorted chunk is called a "run". Phase 2 then merge-sorts by reading from the runs.
+			
+			All fine and good unless the number of pages available as buffer is less than the square root of the number of pages of the input table, then multiple phases of merging will be necessary.
+			
+			Must reserve at least one block for writing stuff out, though in practice 2 is better.
+			
+			Sorting v.s. hashing - sorting is pretty expensive, hashing is cheaper, so unless You really need the sorted data it might be better to just hash it and aggregate it that way.
 			
 		\subsubsection{Optimization 1: Heuristics and Rewriting}
 		
 			Views: materialized view meaning there's an actual table corresponding to the view. Virtual meaning the DB just replaces the view with relevant base table columns. 
 			
+			Materialized views can be used as materialized results. 
+			
 			Rewriting: depending on how You write the query, the optimizer may catch on to simple optimizations.
+			
+			Predicate transformation: figure out what the predicates are actually looking for and rewrite it with that, for example analyze the actual ranges dictated by predicates.
+			
+			Predicate augmentation: add additional predicates that are logical consequences of the existing predicates to give the optimizer more options to work with. 
 			
 			Predicate pushdown: rewrite queries with views to use base tables, yep.
 			
 			Heuristics: predicates are commutative and associative, selections are commutative and associative, filter then join is the same as join then filter
 			
 		\subsubsection{Optimization 2: Cost estimates}
+		
+			Got to choose between a bunch of possible query execution plans. Goal is to choose fastest one (or least resource intensive?)
+			
+			So that means figuring out what implementation to use for each operator in the computation tree.
+			
+			Histograms: equi-width is Your standard histogram with equal sized buckets. Equi-height or equi-depth sizes the buckets such that each bucket gets the same number of entries. Equi-width is good for hotspots. 
+			
+			Frequency histogram is basically a scatterplot - each item in database gets a frequency.
+			
+			Zone maps are an interesting combo of the two centered around blocks lol. Sort of like equi-height histograms I suppose.
+			
+			Attribute cardinality - how many different unique values does the attribute have.
+			
+			Table cardinality - number of attributes in table.
+			
+			Operator cardinality - the number of tuples that have to be processed for the operator to yield a result. So the cardinality of a full scan is just the number of tuples?
+			
+			Predicate cardinality - how many tuples satisfy the predicate. So not unique values, just how many.
+			
+			Selectivity - fraction of total data that the operator will yield.
+			
+			Selectivity of disjunctions - sum indvidual selectivities and subtract conjunction.
 		
 			Combine table cardinality with access pattern for cost estimate.
 			
@@ -995,7 +1053,7 @@ Relational Database Systems}
 		
 		Caches live for the duration of worker node (so the query?). No, a WV can live longer than the duration of a query.
 		
-		File stealing - overachiever worker nodes can do labour for lagging nodes.
+		File stealing - overachiever worker nodes can do labour for lagging nodes. The peer downloads the data from S3 rather than from the lagging node, to avoid choking the node even further.
 		
 	\subsection{Execution Engine}
 	
@@ -1334,7 +1392,7 @@ Relational Database Systems}
 \newpage
 \section{Sort vs. Hash Revisited }
 
-	Optimizations: You've got fan-in, which is the maximum number of like data collections that can be joined to create other runs (probably dictated by something like available blocks to store things). So then of course the larger the blocks You're dicking around with, the fewer of them You'll be able to afford, the smaller the fan-in. Turns out bigger blocks seem to work better, even if it results in smaller fan-in and consquently maybe more layers of fan-ins.
+	Optimizations: You've got fan-in, which is the maximum number of like data collections that can be joined to create other runs (probably dictated by something like available blocks to store things). So then of course the larger the blocks You're dicking around with, the fewer of them You'll be able to afford, the smaller the fan-in. Or You could think of it in terms of: larger blocks, fewer of them needed to hold entire data. Turns out bigger blocks seem to work better, even if it results in smaller fan-in and consquently maybe more layers of fan-ins.
 		
 	Another one is to keep in mind what You actually have left to do. Merge smallest blocks available first, I suppose, is the deal. The example they give is neat.
 	
@@ -1360,6 +1418,8 @@ Relational Database Systems}
 	Each implementation has a cost model associated with it.
 	
 	There's also a size-distribution estimator, basically trying to eyeball the size of query results via histogram.
+	
+	
 		
 \newpage
 \section{The State of the Art in Distributed Query Processing}
@@ -1392,6 +1452,8 @@ Relational Database Systems}
 		
 		Construct plans bottom up, keeping track of possibilities.
 		
+		Can prune equivalent but worse plans, but must keep track of interesting orders.
+		
 		In centralized systems cost = CPU + IO.
 		
 		IO: seek + latency + transfer.
@@ -1402,11 +1464,17 @@ Relational Database Systems}
 		
 		Cost does not account for response time.
 		
+		There are cost models and response time models. They obviously keep track of different metrics.
+		
+		
+		
 	\subsection{Query Execution Techniques}
 	
 		Row blocking - send blocks okay lol.
 		
-		Optimization of multicasts - just optimize paths it sounds like, don't route the data through paris.
+		Optimization of multicasts - just optimize paths it sounds like, don't route the data through paris. Also maybe request forwarding of data rather than having one node send out tons of copies.
+		
+		You can horizontally partition joins.
 		
 		Semijoin - start by shipping columns required for joining comparisons, then only send back stuff that is relevant.
 		
@@ -1518,7 +1586,7 @@ Relational Database Systems}
 		
 		Buffer cache - area of memory reserved for caching blocks in memory.
 		
-		Latches for blocks in memory since things can go wrong if multiple queries/transactions are looking for an item, e.g. updating an item, removing an item from cache etc.
+		Latches for blocks in memory since things can go wrong if multiple queries or transactions are looking for an item, e.g. updating an item, removing an item from cache etc.
 		
 		Hash on block number, and a latch covers a number of hash buckets.
 		

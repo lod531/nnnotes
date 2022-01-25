@@ -1,0 +1,1153 @@
+tensor([   7,   14,   32,   39,   10,   60, 1838,  125,    4,   29,  208,  524,
+          17,    5,    2]) 
+
+
+
+bsub -o "tmp.txt" -R "rusage[ngpus_excl_p=1,mem=4500]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+    --optimizer nag --lr 0.25 --clip-norm 0.1 --dropout 0.2 --max-tokens 4000 \
+    --arch fconv_iwslt_de_en --save-dir checkpoints/fconv
+
+bsub -I  -R "rusage[ngpus_excl_p=1,mem=4500]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 0.25 --clip-norm 0.1 --dropout 0.2 --max-tokens 4000 \
+--arch fconv_iwslt_de_en --save-dir checkpoints/fconv
+
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4500]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+    --optimizer nag --lr 0.25 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --max-tokens 4000 \
+    --arch unigram --criterion good_turing --save-dir /scratch/andriusb/unigram
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4500]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 0.25 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --max-tokens 4000 \
+--arch unigram --criterion add_delta_smoothing --label-smoothing 10000 --save-dir /cluster/scratch/andriusb/unigram
+
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=8192]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 0.25 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --max-tokens 4000 \
+--arch unigram --criterion good_turing_smoothing  --save-dir /cluster/scratch/andriusb/unigram
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=8192]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 0.25 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --max-tokens 4000 \
+--arch unigram --criterion katz_smoothing  --save-dir /cluster/scratch/andriusb/unigram
+
+
+
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 0.25 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --max-tokens 4000000000 --max-sentences 4000000000 \
+--arch unigram --criterion katz_smoothing --save-dir /cluster/scratch/andriusb/unigram
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 1 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --max-tokens 4000  \
+--arch unigram --criterion add_delta_smoothing --label-smoothing 10000 --save-dir /cluster/scratch/andriusb/unigram
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 1 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --sentence-avg --max-sentences 1 --disable-validation  \
+--arch unigram --criterion add_delta_smoothing --label-smoothing 10000 --save-dir /cluster/scratch/andriusb/unigram/kl_emp_kl_loss
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 1 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --sentence-avg --max-sentences 1 --disable-validation  \
+--arch unigram --criterion add_delta_smoothing --label-smoothing 10000 --save-dir /cluster/scratch/andriusb/unigram/nll_plus_kl_loss
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 1 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --sentence-avg --max-sentences 1 --disable-validation  \
+--arch unigram --criterion add_delta_smoothing --label-smoothing 10000 --save-dir /cluster/scratch/andriusb/unigram/test
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 0.001 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --max-tokens 4000   \
+--arch unigram --criterion add_delta_smoothing --label-smoothing 10000 --save-dir /cluster/scratch/andriusb/unigram
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en \
+--optimizer nag --lr 0.25 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --max-tokens 4000  \
+--arch unigram --criterion cross_entropy  --save-dir /cluster/scratch/andriusb/unigram
+
+
+(Pdb) where
+  /cluster/home/andriusb/fq/env/bin/fairseq-train(33)<module>()
+-> sys.exit(load_entry_point('fairseq', 'console_scripts', 'fairseq-train')())
+  /cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py(517)cli_main()
+-> distributed_utils.call_main(cfg, main)
+  /cluster/home/andriusb/fq/fairseq/fairseq/distributed/utils.py(369)call_main()
+-> main(cfg, **kwargs)
+  /cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py(190)main()
+-> valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
+  /cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/contextlib.py(75)inner()
+-> return func(*args, **kwds)
+  /cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py(301)train()
+-> log_output = trainer.train_step(samples)
+  /cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/contextlib.py(75)inner()
+-> return func(*args, **kwds)
+  /cluster/home/andriusb/fq/fairseq/fairseq/trainer.py(754)train_step()
+-> loss, sample_size_i, logging_output = self.task.train_step(
+  /cluster/home/andriusb/fq/fairseq/fairseq/tasks/fairseq_task.py(492)train_step()
+-> loss, sample_size, logging_output = criterion(model, sample)
+  /cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/torch/nn/modules/module.py(1102)_call_impl()
+-> return forward_call(*input, **kwargs)
+  /cluster/home/andriusb/fq/fairseq/fairseq/criterions/cross_entropy.py(35)forward()
+-> net_output = model(**sample["net_input"])
+  /cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/torch/nn/modules/module.py(1102)_call_impl()
+-> return forward_call(*input, **kwargs)
+> /cluster/home/andriusb/fq/fairseq/fairseq/models/ngram.py(69)forward()
+
+
+Okay so in forward We get torch.Size([48, 76]), and for the target We had torch.Size([48, 74])
+
+(Pdb) type(net_output)
+<class 'tuple'>
+(Pdb) type(net_output[0])
+<class 'torch.Tensor'>
+(Pdb) net_output[0].shape
+torch.Size([48, 74, 6632])
+(Pdb) type(net_output[1])
+<class 'NoneType'>
+(Pdb) net_output[1]
+(Pdb) sample["net_input"]
+{'src_tokens': tensor([[   6,   40,   65,  ...,   70,    5,    2],
+        [ 529,  645,  156,  ...,  320,  153,    2],
+        [ 436,  486, 4762,  ..., 2572,    5,    2],
+        ...,
+        [   6, 1834,    8,  ...,  216,    5,    2],
+        [   9,  505,    4,  ...,   41,    5,    2],
+        [  15,  905, 3969,  ...,  720,    5,    2]], device='cuda:0'), 'src_lengths': tensor([76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76,
+        76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76,
+        76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76], device='cuda:0'), 'prev_output_tokens': tensor([[   2,   20,  305,  ...,  462,    5,    1],
+        [   2,   16,   86,  ...,  368,    1,    1],
+        [   2,  344, 3548,  ...,    5,    1,    1],
+        ...,
+        [   2,    7,   55,  ...,    1,    1,    1],
+        [   2,    6,  582,  ...,    1,    1,    1],
+        [   2,   13,  607,  ...,    5,    1,    1]], device='cuda:0')},
+(Pdb) sample["net_input"]["src_tokens"].shape
+torch.Size([48, 76])
+
+Input has shape torch.Size([48, 76]), but output has shape torch.Size([48, 74, 6632])
+
+What's the shape of the target? torch.Size([48, 74])
+
+So target just dictates the correct shape
+
+Are the first two tokens in the source padding maybe?
+
+Is it always just two less?
+
+sample["net_input"]["src_tokens"].shape
+sample["target"].shape
+
+test = x.repeat(2, 2, 1) 
+
+(Pdb) net_output[0].shape
+torch.Size([48, 74, 6632])c
+
+File "/cluster/home/andriusb/fq/fairseq/fairseq/models/fairseq_model.py", line 92, in get_normalized_probs_scriptable
+
+Doesn't look like the model is "learning" lol.
+
+  /cluster/home/andriusb/fq/env/bin/fairseq-train(33)<module>()
+-> sys.exit(load_entry_point('fairseq', 'console_scripts', 'fairseq-train')())
+  /cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py(517)cli_main()
+-> distributed_utils.call_main(cfg, main)
+  /cluster/home/andriusb/fq/fairseq/fairseq/distributed/utils.py(369)call_main()
+-> main(cfg, **kwargs)
+  /cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py(190)main()
+-> valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
+  /cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/contextlib.py(75)inner()
+-> return func(*args, **kwds)
+  /cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py(301)train()
+-> log_output = trainer.train_step(samples)
+  /cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/contextlib.py(75)inner()
+-> return func(*args, **kwds)
+  /cluster/home/andriusb/fq/fairseq/fairseq/trainer.py(754)train_step()
+-> loss, sample_size_i, logging_output = self.task.train_step(
+  /cluster/home/andriusb/fq/fairseq/fairseq/tasks/fairseq_task.py(492)train_step()
+-> loss, sample_size, logging_output = criterion(model, sample)
+  /cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/torch/nn/modules/module.py(1102)_call_impl()
+-> return forward_call(*input, **kwargs)
+  /cluster/home/andriusb/fq/fairseq/fairseq/criterions/cross_entropy.py(37)forward()
+-> net_output = model(**sample["net_input"], target=sample["target"])
+  /cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/torch/nn/modules/module.py(1102)_call_impl()
+-> return forward_call(*input, **kwargs)
+> /cluster/home/andriusb/fq/fairseq/fairseq/models/ngram.py(72)forward()
+
+
+Token: 20 Count: 23537                                                                                                                                   
+Token: 21 Count: 22866                                                                                                                                   
+Token: 22 Count: 21065                                                                                                                                   
+Token: 23 Count: 19120                                                                                                                                   
+Token: 24 Count: 18925                                                                                                                                   
+Token: 25 Count: 18918                                                                                                                                   
+Token: 26 Count: 18906                                                                                                                                   
+Token: 27 Count: 17926                                                                                                                                   
+Token: 28 Count: 17301                                                                                                                                   
+Token: 29 Count: 17106                                                                                                                                   
+Token: 30 Count: 16795                                                                                                                                   
+Token: 31 Count: 15947                                                                                                                                   
+Token: 32 Count: 15341                                                                                                                                   
+Token: 33 Count: 14216                                                                                                                                   
+Token: 34 Count: 14069                                                                                                                                   
+Token: 35 Count: 13690                                                                                                                                   
+Token: 36 Count: 13604                                                                                                                                   
+Token: 37 Count: 13168                                                                                                                                   
+Token: 38 Count: 13115                                                                                                                                   
+Token: 39 Count: 12900 
+
+torch.max(model.weights)
+torch.min(model.weights) 
+
+Well the loss is identical in every case so what's that about
+
+torch.max(target)
+
+torch.argmax(target)
+
+Okay so for NLL loss We want what
+
+for the target they just get all the tokens and flatten it into a 1D array
+
+There's a conversion here between the general formula and a per-token loss
+
+Like if for each token We add a KL loss will that just result in an absurd number of KL losses being added?
+
+I... Think it's per term.
+
+
+Two people better than one
+
+Make a tiktok
+
+Repost maybe
+
+Make the larger structure clearer
+
+4738.9367999999995 is the mass relocated by good-turing
+
+196 items are allocated for 0 count items lol
+
+Kay so We have good-turing stats, now what
+
+We had to divide the coefficient of the uniform distribution by the number of tokens, and I bet We have to do
+the same here. 
+
+
+
+I think We need a KL loss?
+
+We need a KL loss.
+
+ Found dtype Float but expected Double
+
+About the order of arguments
+
+In the derivations We have KL(stuff | model), so 
+
+target is y_true
+
+3949114/6632 = 595.463510253 is the expected count but We're not getting anything close to it FUCK
+
+the max value in r_pos_g is what ends up being the max in the distribution
+
+(Pdb) torch.argmax(r_pos_g)
+tensor(6436, device='cuda:0')
+
+
+(Pdb) lambda_neg_g
+tensor([-0.2305], device='cuda:0')
+
+So it isn't working.
+
+The probabilities are correct
+
+Now how to balance them. 
+
+What did We do to go from one equation for the empirical KL to a per-token KL loss?
+
+1198723/3949114 = 0.30354226289
+
+So I'd guess there are the top earners in there
+
+Things I can do -   optimize the KL loss instead of log-likelihood
+
+                    Derive counts for KL loss
+
+
+Things that could be wrong?0
+
+sample["target"].shape
+
+
+> /cluster/home/andriusb/fq/fairseq/fairseq/criterions/add_delta_smoothing.py(195)compute_loss()
+-> return loss, loss
+(Pdb) where
+  /cluster/home/andriusb/fq/env/bin/fairseq-train(33)<module>()
+-> sys.exit(load_entry_point('fairseq', 'console_scripts', 'fairseq-train')())
+  /cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py(568)cli_main()
+-> distributed_utils.call_main(cfg, main)
+  /cluster/home/andriusb/fq/fairseq/fairseq/distributed/utils.py(369)call_main()
+-> main(cfg, **kwargs)
+  /cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py(241)main()
+-> valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
+  /cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/contextlib.py(75)inner()
+-> return func(*args, **kwds)
+  /cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py(352)train()
+-> log_output = trainer.train_step(samples)
+  /cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/contextlib.py(75)inner()
+-> return func(*args, **kwds)
+  /cluster/home/andriusb/fq/fairseq/fairseq/trainer.py(754)train_step()
+-> loss, sample_size_i, logging_output = self.task.train_step(
+  /cluster/home/andriusb/fq/fairseq/fairseq/tasks/fairseq_task.py(492)train_step()
+-> loss, sample_size, logging_output = criterion(model, sample)
+  /cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/torch/nn/modules/module.py(1102)_call_impl()
+-> return forward_call(*input, **kwargs)
+  /cluster/home/andriusb/fq/fairseq/fairseq/criterions/add_delta_smoothing.py(49)forward()
+-> loss, _ = self.compute_loss(model, net_output, sample, reduce=reduce)
+> /cluster/home/andriusb/fq/fairseq/fairseq/criterions/add_delta_smoothing.py(195)compute_loss()
+
+    import traceback;
+
+
+
+
+
+Okay so We have a smoother which defines the optimal counts
+
+And We have a regularizer which defines the loss
+
+And the optimize function in the regularizer takes a smoother to compare to
+
+So it's optimize that I'll change
+
+Regularizer has counts so I need to iterate over those.
+
+Fucking shit. If I do them one at a time it isn't going to work. 
+
+
+Okay so first let's change the convergence check.
+
+Seems to check out
+
+GT shifts around 0.01 mass and 33000 out ouf 3435968
+
+Katz shifts 0.006055353251255464 and 20806.00000000973 tokens out of 3435968
+
+F.kl_div(torch.log(emp_dist), add_delta_dist, reduce="sum")
+
+F.kl_div(torch.log(add_delta_dist), emp_dist, reduce="sum")
+
+F.kl_div(torch.log(katz_dist), katz_dist, reduce="sum")
+
+F.kl_div(torch.log(emp_dist), add_delta_dist, reduce="sum") = tensor(5.4196e-05, device='cuda:0')
+
+F.kl_div(torch.log(emp_dist), gt_dist, reduce="sum") = tensor(-9.5923e-08, device='cuda:0')
+
+F.kl_div(torch.log(gt_dist), emp_dist, reduce="sum") = tensor(1.3367e-07, device='cuda:0')
+
+F.kl_div(torch.log(katz_dist), emp_dist, reduce="sum") = tensor(1.3900e-07, device='cuda:0')
+
+F.kl_div(torch.log(emp_dist), katz_dist, reduce="sum") = tensor(-9.1789e-08, device='cuda:0')
+
+
+
+F.kl_div(torch.log(gt_dist), emp_dist, reduce="sum")
+
+
+
+F.kl_div(torch.log(add_delta_dist), emp_dist, reduce="sum")
+
+F.kl_div(torch.log(emp_dist), add_delta_dist, reduce="sum")
+
+F.kl_div(torch.log(add_delta_dist[add_delta_dist>0]), emp_dist[add_delta_dist>0], reduce="mean")
+
+F.kl_div(torch.log(emp_dist[emp_dist>0]), add_delta_dist[emp_dist>0], reduce="mean")
+
+F.kl_div(torch.log(gt_dist), emp_dist, reduce="sum")
+
+
+eps = 0.000001 passed by 
+
+If We predict GT 
+
+So, a problem: divergence between gt_dist and empirical is negative. 
+
+test = torch.gather(input=lprobs, dim=1, index=flat_samples)
+
+test_samples = sample["target"].view(-1, lprobs.size(-1))
+
+model_test = model.get_normalized_probs(net_output, log_probs=True)
+
+test = torch.unsqueeze(input=sample["target"], dim=-1)
+
+test = lprobs[range(lprobs.shape[0]), flat_samples]
+
+lprobs[1, flat_samples[1]]
+
+list(self.fqs.keys(
+
+
+loss=202.723 in case of sentence-avg and max-sentences=40
+
+thursday 25th 10:20
+
+
+
+With max-sentences 1 and avg-sentence
+Okay so loss = torch.sum(test) 
+
+
+
+Just NLL
+
+2021-11-22 13:47:22 | INFO | fairseq_cli.train | end of epoch 176 (average epoch stats below)
+2021-11-22 13:47:22 | INFO | train | epoch 176 | loss 190.61 | nll_loss 8.802 | ppl 446.2 | wps 1411.8 | ups 65.19 | wpb 21.7 | bsz 1 | num_updates 427500 | lr 0.0967302 | gnorm 4.524 | clip 100 | train_wall 33 | gb_free 7.9 | wall 6605
+EMP PASSED, DIVERGENCE = 9.019829121825751e-06
+ADD_DELTA NOT PASSED DIVERGENCE = 0.00027276945183984935
+GT NOT PASSED DIVERGENCE = 4.487884552872856e-07
+2021-11-22 13:47:22 | INFO | fairseq.trainer | begin training epoch 177
+
+KL EMP + LAMBDA KL
+
+2021-11-22 13:48:25 | INFO | train | epoch 278 | loss 269.887 | nll_loss 12.462 | ppl 5642.87 | wps 2609.8 | ups 120.51 | wpb 21.7 | bsz 1 | num_updates 695000 | lr 0.0758643 | gnorm 0 | clip 0 | train_wall 18 | gb_free 10.8 | wall 5827
+EMP NOT PASSED, DIVERGENCE = 0.0004503214731812477
+ADD_DELTA PASSED DIVERGENCE = -1.466380865622341e-07
+GT NOT PASSED DIVERGENCE = 0.0004531005979515612
+
+NLL + LAMBDA KL
+
+2021-11-22 13:48:44 | INFO | train | epoch 263 | loss 664.189 | nll_loss 30.669 | ppl 1.70768e+09 | wps 2586.7 | ups 119.44 | wpb 21.7 | bsz 1 | num_updates 657500 | lr 0.0779978 | gnorm 4.472 | clip 100 | train_wall 18 | gb_free 10.8 | wall 5502
+EMP NOT PASSED, DIVERGENCE = 0.3577854335308075
+ADD_DELTA NOT PASSED DIVERGENCE = 0.0018871680367738008
+GT NOT PASSED DIVERGENCE = 0.35696229338645935
+
+
+
+LANGUAGE_MODELLING{
+
+  TEXT=examples/language_model/wikitext-103
+  fairseq-preprocess \
+      --only-source \
+      --trainpref $TEXT/wiki.train.tokens \
+      --validpref $TEXT/wiki.valid.tokens \
+      --testpref $TEXT/wiki.test.tokens \
+      --destdir data-bin/wikitext-103 \
+      --workers 20
+
+  
+  fairseq-train --task language_modeling \
+  data-bin/wikitext-103 \
+  --save-dir checkpoints/transformer_wikitext-103 \
+  --arch transformer_lm --share-decoder-input-output-embed \
+  --dropout 0.1 \
+  --optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+  --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+  --tokens-per-sample 512 --sample-break-mode none \
+  --max-tokens 2048 --update-freq 16 \
+  --fp16 \
+  --max-update 50000
+
+  bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0 
+  fairseq-train data-bin/iwslt14.tokenized.de-en \
+  --optimizer nag --lr 1 --clip-norm 0.1 --lr-scheduler inverse_sqrt --reset-optimizer --sentence-avg --max-sentences 1 --disable-validation  \
+  --arch unigram --criterion add_delta_smoothing --label-smoothing 10000 --save-dir /cluster/scratch/andriusb/unigram/kl_emp_kl_loss
+  
+  bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0  \
+  fairseq-train --task language_modeling \
+    data-bin/wikitext-103 \
+    --save-dir /cluster/scratch/andriusb/unigram/lm \
+    --arch unigram  \
+    --optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+    --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+    --criterion add_delta_smoothing --label-smoothing 10000 \
+    --sentence-avg --max-sentences 1 --disable-validation
+
+
+    from fairseq.tasks.translation import TranslationTask
+
+    (Pdb) task.datasets["train"]
+    <fairseq.data.monolingual_dataset.MonolingualDataset object at 0x2b27e726f1f0>
+
+
+
+
+
+TEXT=examples/language_model/synth_data
+fairseq-preprocess \
+--only-source \
+--trainpref $TEXT/train.tokens \
+--validpref $TEXT/valid.tokens \
+--testpref $TEXT/test.tokens \
+--destdir data-bin/synth_data \
+--workers 20
+
+
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/synth_data \
+--save-dir /cluster/scratch/andriusb/unigram/lm/turing_test \
+--arch unigram  \
+--optimizer nag  --clip-norm 0.01 \
+--lr 0.5 --lr-scheduler inverse_sqrt \
+--criterion add_delta_smoothing --label-smoothing 10000  \
+--max-sentences 20 --disable-validation
+
+
+F.kl_div(torch.log(emp_dist), gt_dist, reduce="sum")
+
+F.kl_div(input=torch.log(gt_dist), target=emp_dist, reduce="sum") = tensor(0.0002, device='cuda:0')
+
+F.kl_div(input=torch.log(emp_dist), target=gt_dist, reduce="sum") = tensor(-2.2864e-05, device='cuda:0') 
+
+
+Okay so the point is that the model cannot predict a not-distribution, so, it's a bit fucked.
+
+for _ in range(0, int(self.counts[token].item())):
+
+
+
+import os
+from pathlib import Path
+from collections import defaultdict as dd
+
+
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+
+#Path("./synth_data").mkdir(parents=True, exist_ok=True)
+
+cc = {1:1000, 2:2, 3:3, 5:4, 6:5, 7:6}
+
+t=0
+res=[]
+for n_x, r in cc.items():
+    for _ in range(0, r):
+        for _ in range(0, n_x):
+            res.append(t)
+        t+=1
+
+# sanity check:
+# calculate frequencies of tokens
+fqs=dd(int)
+for token in res:
+    fqs[token]+=1
+# calculate frequencies of frequencies
+t_cc=dd(int)
+for _, fq in fqs.items():
+    t_cc[fq]+=1
+# assert frequencies of frequencies match
+for fq, fqfq in t_cc.items():
+    assert(t_cc[fq] == cc[fq])
+
+TOKENS_PER_SENTENCE = 10
+#dataset = list(chunks(res, TOKENS_PER_SENTENCE))
+
+V = max(res)+1
+
+counts = np.zeros(shape=max(res)+1)
+for token in res:
+  counts[token] += 1
+
+smoother = SimpleGoodTuring(V, counts)
+regularizer = h_w_Regularizer(V, counts, smoother.smoothed())
+import pdb; pdb.set_trace()
+if regularizer.optimize(smoother, eps=0.0001):
+  print("Passed")
+
+
+torch.max(torch.abs(smoother.smoothed() - self.forward()))
+
+
+KL(smoother.smoothed(), output)
+KL(self.counts, (1-self.reserved_mass_fraction)/output)
+
+tensor(-3515.2701, dtype=torch.float64, grad_fn=<AddBackward0>)
+
+0.001367807388305664
+
+abs(KL(smoother.smoothed(), smoother.smoothed()))
+
+So why wouldn't this converge?
+
+torch.sum(torch.abs(smoother.smoothed() - self.probs())) = tensor(0.0208, grad_fn=<SumBackward0>)
+
+torch.sum(torch.abs(smoother.smoothed()[:500] - self.probs()[500])) = tensor(0.1394, grad_fn=<SumBackward0>)
+
+0.1735554337501526 is the reserved_mass_fraction
+
+
+KL(self.counts, self.probs()) + self.lambda_pos*KL(self.r_pos, self.probs()) + self.lambda_neg*KL(self.r_neg, self.probs())
+
+KL_o(self.counts/torch.sum(self.counts()), self.forward()) + self.lambda_neg*KL_o(self.r_neg, self.forward())
+
+
+
+
+
+Kay so I can either changed the smoothed() thing or the h_w code
+
+I'll also need to change the shape of the model output.
+
+I suppose I ought to just reserve an index, say 0, for 
+
+KL(self.probs()[1:], smoother.smoothed()[1:])
+KL(smoother.smoothed()[1:], self.probs()[1
+
+0 in list(counts_dict.values())
+
+
+((2*2)/500 - 16/500)/(484/500) = -0.02479338842
+
+((3*3)/(2*2)-16/500)/(484/500) = 2.29132231405
+
+((4*4)/(3*3) - 16/500)/(484/500) = 1.80348943985
+
+
+500*(1-(-12/484)) + (1-(1109/484))*4 + (1-(7856/4356))*9 = 500
+
+
+Working through code:
+
+for fq 1:
+
+rstar = 2*2/500
+
+500*(1-self.dist[1].item()*N) + 4*(1-self.dist[501].item()*N/2) + 9*(1-self.dist[505].item()*N/3)
+
+
+
+So! We are doing what? Porting all the losses.
+
+So in the criterion file We can calculate the individual statistics and then pass them off to calculate h_w?
+
+
+
+
+
+
+TEXT=examples/language_model/synth_data
+fairseq-preprocess \
+--only-source \
+--trainpref $TEXT/train.tokens \
+--validpref $TEXT/valid.tokens \
+--testpref $TEXT/test.tokens \
+--destdir data-bin/synth_data \
+--workers 20
+}
+
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/synth_data \
+--save-dir /cluster/scratch/andriusb/unigram/crit_testing \
+--arch unigram  \
+--optimizer nag  --clip-norm 0.01 \
+--lr 0.5 --lr-scheduler inverse_sqrt \
+--criterion add_delta_smoothing --label-smoothing 10000  \
+--max-sentences 20 --disable-validation
+
+
+
+
+self.non_zero_indexes.sort()[:10]
+self.non_zero_indexes[:10]
+
+I want to find the task dictionary.
+
+bos = 0, pad = 1, eos = 2, unk = 3
+
+
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/synth_data \
+--save-dir /cluster/scratch/andriusb/unigram/crit_testing \
+--arch unigram  \
+--optimizer nag  --clip-norm 0.01 \
+--lr 0.5 --lr-scheduler inverse_sqrt \
+--criterion good_turing_smoothing  \
+--max-sentences 20 --disable-validation
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=4000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/synth_data \
+--save-dir /cluster/scratch/andriusb/unigram/crit_testing \
+--arch unigram  \
+--optimizer nag  --clip-norm 0.01 \
+--lr 0.5 --lr-scheduler inverse_sqrt \
+--criterion katz_smoothing --katz-k 3  \
+--max-sentences 20 --disable-validation
+
+
+TEXT=examples/language_model/wikitext-2
+fairseq-preprocess \
+    --only-source \
+    --trainpref $TEXT/wiki.train.tokens \
+    --validpref $TEXT/wiki.valid.tokens \
+    --testpref $TEXT/wiki.test.tokens \
+    --destdir data-bin/wikitext-2-truncated_1000 \
+    --workers 20
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=10000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-truncated_1000 \
+--save-dir /cluster/scratch/andriusb/checkpoints/transformer_wikitext-2-truncated_2000 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion kneser_ney_smoothing --kneser-d 0.9 --kneser-n 3 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--fp16 \
+--max-update 50000
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/synth_data  \
+--save-dir /cluster/scratch/andriusb/checkpoints/kneser_test_synth \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion kneser_ney_smoothing --kneser-d 0.9 --kneser-n 3 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--fp16 \
+--max-update 50000
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=8000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext_2_full_cross_entropy \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy --reset-optimizer \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--fp16 \
+--max-update 50000
+
+-o "out.txt"
+data-bin/wikitext-2
+data-bin/synth_data
+
+/cluster/scratch/andriusb/pickled_kl/kneser_n_3.pickle
+
+for n=2 in kneser ney:
+
+number of tokens = 2088628
+
+number of contexts = 33278
+
+number of words vocabulary = 33280
+
+33278 * 33280 * 4 = 4429967360
+
+print(self.ngrams.score('this is a sentence .', bos = True, eos = True))
+
+test = torch.tensor([40, 50, 60, 70, 80, 90, 1000, 2000, 3000])
+
+context, amount of memory used in MB
+78305 14077.86328125 
+
+bytes for a single smoothed dist: 133120
+
+Number of contexts for n=2
+
+618872 * 0.13312 * 2 = 
+
+82384MB fucking helll
+
+
+
+SYNTH DATA cc = {1:10000, 2:2, 3:3, 5:4, 6:5, 7:6}
+
+number of contxts: 10021
+
+dict size: 10024
+
+4 * 10024 * 10021 = 401802016 or 0.4GB
+
+fairseq-eval-lm data-bin/synth_data \
+--path  /cluster/scratch/andriusb/checkpoints/kneser_test/checkpoint_best.pt \
+--max-sentences 2 \
+--tokens-per-sample 512 \
+--context-window 511
+
+fairseq-eval-lm data-bin/synth_data \
+--path  /cluster/scratch/andriusb/checkpoints/kneser_test_cross_entropy/checkpoint_best.pt \
+--max-sentences 2 \
+--tokens-per-sample 512 \
+--context-window 400
+
+
+
+
+
+
+
+
+So! How do this.
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=24000]" -R "select[gpu_model0== NVIDIATITANRTX]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2 \
+--save-dir /cluster/scratch/andriusb/checkpoints/transformer_wikitext-2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion kneser_ney_smoothing --kneser-d 0.9 --kneser-n 3 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--fp16 \
+--max-update 50000
+
+bsub -I -R "rusage[ngpus_excl_p=1,mem=24000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2 \
+--save-dir /cluster/scratch/andriusb/checkpoints/transformer_wikitext-2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion kneser_ney_smoothing --kneser-d 0.9 --kneser-n 3 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--fp16 \
+--max-update 50000
+
+
+Some simple memory debugging I suppose:
+
+(Pdb) get_size(tets.keys())
+67940
+(Pdb) len(tets.keys())
+2425
+
+
+28 bytes per key
+Which is too many.
+
+28*1400*618872=24259782400=22.5937 Gigabytes
+
+22 gigs in just fucking indexes
+
+vs
+
+4*1400*618872=3.2277 Gigabytes
+
+Kay so We have
+
+17340 bytes per 5000 entries so 
+
+618872 contexts 
+
+17340*123.7744
+
+618872 * 1400 * 4
+
+Back to testing.
+
+
+For wikitext-2 with 2500 sentences:
+
+2021-12-17 14:56:07 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 64.0
+2021-12-17 14:56:45 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 32.0                          
+2021-12-17 14:57:22 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 16.0 
+
+
+
+
+OKAY so for wikitext-2 truncated to 1000 lines We get
+
+time per token in seconds0.00010751446138448376
+
+Time per Epoch: 
+08:36:49 | INFO | valid | epoch 004 
+08:36:03 | INFO | valid | epoch 003
+So like 40 seconds
+
+(Pdb) self.N
+54614
+
+
+
+AVERAGE DENSITY :151.76971340290694, so on average per context We have 151 entries
+
+Wikitext 2 truncated to 2000 lines We get 
+
+time per token in seconds0.00011184303562263103 
+
+Time per Epoch: 
+2021-12-20 08:46:50 | INFO | valid | epoch 003
+2021-12-20 08:48:56 | INFO | valid | epoch 004
+
+2021-12-20 09:03:43 | INFO | valid | epoch 011
+2021-12-20 09:01:37 | INFO | valid | epoch 010
+So like 120 seconds
+
+AVERAGE DENSITY :267.17510900230826
+
+(Pdb) self.N
+119015
+
+Backward takes only like 0:00:01.247946 
+
+
+Wikitext 2 truncated to 4000 lines We get 
+AVERAGE DENSITY :404.0690767519466
+
+Wikitext 2 truncated to 4000 lines We get 
+
+time per token in seconds0.00011520581473214283
+
+2021-12-20 09:55:47 | INFO | valid | epoch 002
+2021-12-20 09:50:31 | INFO | valid | epoch 001
+300 seconds, 
+
+(Pdb) self.N
+229591
+
+Backward: 0:00:02.223800
+
+Wikitext 2 truncated to 8000 lines We get 
+AVERAGE DENSITY :635.1314250247217
+
+2021-12-20 12:53:49 | INFO | train | epoch 006 | loss 12.489 | ppl 5747.04 | wps 619.9 | ups 0.02 | wpb 32166.9 | bsz 62.9 | num_updates 80 | lr 1.0098e-05 | gnorm 2.004 | loss_scale 8 | train_wall 724 | gb_free 7.3 | wall 4366
+2021-12-20 12:41:43 | INFO | train | epoch 005 | loss 12.955 | ppl 7939.02 | wps 618.4 | ups 0.02 | wpb 32166.9 | bsz 62.9 | num_updates 66 | lr 8.34835e-06 | gnorm 2.728 | loss_scale 8 | train_wall 726 | gb_free 7.3 | wall 3639
+600ish seconds, so yep, doubling.
+
+
+Pdb) self.N
+450336
+
+
+and for reference, with cross entropy We have
+
+with 1000 tokens in wikitext-2
+
+time per token in seconds 7.07862056902985e-08
+
+2021-12-20 10:20:15 | INFO | valid | epoch 007 | valid on 'valid' subset | loss 13.75 | ppl 13773.7 | wps 213307 | wpb 1997.7 | bsz 3.9 | num_updates 10 | best_loss 13.75
+
+2021-12-20 10:20:12 | INFO | valid | epoch 006 | valid on 'valid' subset | loss 13.782 | ppl 14081.8 | wps 209474 | wpb 1997.7 | bsz 3.9 | num_updates 8 | best_loss 13.782 
+
+3 seconds
+
+
+
+
+
+
+Where as in cross entropy it's 0:00:00.005498, so 225 times slower
+
+But 
+
+
+with 2000 tokens:
+
+time per token in seconds8.36911651234569e-08
+
+2021-12-20 11:05:48 | INFO | valid | epoch 009 | valid on 'valid' subset | loss 13.249 | ppl 9735.99 | wps 184376 | wpb 2019.8 | bsz 3.9 | num_updates 32 | best_loss 13.249
+2021-12-20 11:05:45 | INFO | valid | epoch 008 | valid on 'valid' subset | loss 13.461 | ppl 11277.6 | wps 186602 | wpb 2019.8 | bsz 3.9 | num_updates 28 | best_loss 13.461
+
+
+With 4000  tokens:
+
+time per token in seconds3.540823412698373e-08
+2021-12-20 11:09:34 | INFO | valid | epoch 009 | valid on 'valid' subset | loss 11.678 | ppl 3275.88 | wps 192861 | wpb 2034.1 | bsz 4 | num_updates 68 | best_loss 11.678
+2021-12-20 11:09:28 | INFO | valid | epoch 008 | valid on 'valid' subset | loss 12.007 | ppl 4116.45 | wps 201072 | wpb 2034.1 | bsz 4 | num_updates 60 | best_loss 12.007
+6 seconds
+
+Backward: 0:00:00.005092 so the same
+
+
+
+
+
+Well shit. Like with full wikitext2 it'll take 233 seconds just to iterate over shit (N=2088628)
+
+
+2022-01-03 14:45:05 | INFO | fairseq.tasks.language_modeling | dictionary: 33280 types
+2022-01-03 14:45:05 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/transformer_wikitext-2_cross_entropy/checkpoint_best.pt
+2022-01-03 14:45:15 | INFO | fairseq_cli.eval_lm | num. model params: 35,953,664
+2022-01-03 14:45:15 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2/test
+2022-01-03 14:45:15 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2 test 122,785 examples
+2022-01-03 14:58:08 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 733.5s (334.77 tokens/s)
+2022-01-03 14:58:08 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9644, Perplexity: 124.88
+
+
+2022-01-03 15:04:06 | INFO | fairseq.tasks.language_modeling | dictionary: 33280 types
+2022-01-03 15:04:06 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/transformer_wikitext-2/checkpoint_best.pt
+2022-01-03 15:04:16 | INFO | fairseq_cli.eval_lm | num. model params: 35,953,664
+2022-01-03 15:04:16 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2/test
+2022-01-03 15:04:16 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2 test 122,785 examples
+2022-01-03 15:17:05 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 730.0s (336.39 tokens/s)
+2022-01-03 15:17:05 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.3006, Perplexity: 157.65
+
+
+2022-01-04 06:08:24 | INFO | fairseq.tasks.language_modeling | dictionary: 33280 types
+2022-01-04 06:08:24 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/transformer_wikitext-2_uniform_smoothing/checkpoint_best.pt
+2022-01-04 06:08:34 | INFO | fairseq_cli.eval_lm | num. model params: 35,953,664
+2022-01-04 06:08:34 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2/test
+2022-01-04 06:08:34 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2 test 122,785 examples
+2022-01-04 06:20:55 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 703.2s (349.20 tokens/s)
+2022-01-04 06:20:55 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.0063, Perplexity: 128.56
+
+kneser 0.1 n=3 after 106 epochs
+2022-01-04 16:55:59 | INFO | fairseq.tasks.language_modeling | dictionary: 33280 types
+2022-01-04 16:55:59 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/wikitext_2_kneser2/checkpoint_best.pt
+2022-01-04 16:56:10 | INFO | fairseq_cli.eval_lm | num. model params: 35,953,664
+2022-01-04 16:56:10 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2/test
+2022-01-04 16:56:10 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2 test 122,785 examples
+2022-01-04 17:08:32 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 705.8s (347.92 tokens/s)
+2022-01-04 17:08:32 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.0253, Perplexity: 130.26
+
+
+
+
+
+
+
+Let's try to simplify the code I suppose.
+
+14:11:22 14:11:50 takes 30 seconds for cross entropy
+
+07:30:49 07:29:05
+two minutes ish for smoothed
+
+12:24:55 12:27:03 
+Same for ours!
+
+
+What the fuck am I doing
+
+
+Need a dictionary that given context yields distribution
+
+len(self.dists[1][()].keys())
+self.dists[1].keys()
+
+
+
+So You achieve optimum and reserve mass for UNK.
+
+But You don't want to predict UNK, You wa
+
+
+
+What are We actually doing?
+
+We have a distribution over vocabulary given a context.
+
+In n-grams, probability is given by a count, and so unseen combinations have zero count and zero probability.
+
+So We take the existing probability given context, take some of the mass away and redistribute it across the vocabulary.
+
+So really then it ought to be that I take the reserved mass, take the "smoother" lower order distributions and take it from there?
+
+
+
+Is it true that We can't recover the original distribution?
+
+So in the simple counts case, We're doing
+
+ln(p(word|context)) + KL(model)
+
+
+
+
+
+
+What is smoothed - empirical?
+
+
+need to do 0.01 for label smoothing
+
+
+redo 0.01 and 0.1 for kneser
+
+different ns for katz
+
+
+
+GT done
+
+jelinek done
+
+katz
+
+
+
+list(self.kl_terms[self.n-j-1].keys())[:10]
+
+GT fired off
+
+label smoothing
+
+
+Given a context, We shave mass
+
+
+Katz done, GT done, cross entropy the same actually, label smoothing the same! sweet
+kneser
+
+
+for n=1, GT is undefined since We have 0 tokens occuring once, and zero tokens occuring twice.
+
+On average 60 tokens, none of them over 100 tokens with n=2 in GT lol.
+
+
+For katz, on average of 0.5251287351963069 of mass is reassigned to unigram distribution
+
+I guess let's make a unigram test lol
+
+0.01 0.1 and 0.2
+
+0.2_0.8
+
+0.15_0.85 0.25_0.75
+
+
+for wikitext 3, it's around 385 tokens per context 
+
+wikitext 2 tokens given context n=3 3.374894970203855
+
+
+
+Herrrrre We go again
+
+Wikitext 3: N: 103227021, dict_size: 267744, n_contexts: 267735, words per context: 385
+
+Wikitext 2: N: 2088628, dict_size: 33280, n_contexts: 33278 or 618872, words per context: 62.7 or 3.37
+
+
+katz is realocating like 0.1 of the total mass to unigram
+
+5616252
+
+3769662
+
+1846590 values in ken lm for 5-gram
+
+76624 dict_size for raw
+
+so that's 24 full distributions wooooow
+
+40284 after pruning per context so
+
+2026105/76624
+
+
+(Pdb) lprobs.shape
+torch.Size([2048, 76624])
+
+Kay so what is happening in label smoothing
+
+He's taking epsilon, which is just the total amount of mass saved for uniform distribution, and dividing it by the dict_size. 
+
+Doesn't that make it not a proper distribution? 
+
+Okay so 
