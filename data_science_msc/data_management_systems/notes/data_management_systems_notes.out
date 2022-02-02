@@ -145,3 +145,11 @@
 \BOOKMARK [1][-]{section.14}{Practice}{}% 145
 \BOOKMARK [2][-]{subsection.14.1}{Storage}{section.14}% 146
 \BOOKMARK [2][-]{subsection.14.2}{Access Methods}{section.14}% 147
+\BOOKMARK [2][-]{subsection.14.3}{Exercise 6}{section.14}% 148
+\BOOKMARK [2][-]{subsection.14.4}{Transaction Model}{section.14}% 149
+\BOOKMARK [2][-]{subsection.14.5}{Concurrency Control}{section.14}% 150
+\BOOKMARK [2][-]{subsection.14.6}{Recovery}{section.14}% 151
+\BOOKMARK [2][-]{subsection.14.7}{2 Phase Locking}{section.14}% 152
+\BOOKMARK [2][-]{subsection.14.8}{Transaction Manager}{section.14}% 153
+\BOOKMARK [2][-]{subsection.14.9}{Snapshot Isolation}{section.14}% 154
+\BOOKMARK [2][-]{subsection.14.10}{Recovery}{section.14}% 155

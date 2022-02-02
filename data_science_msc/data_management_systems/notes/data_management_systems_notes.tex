@@ -90,7 +90,7 @@
 		
 		User does not care about how the data is stored, and what format it's stored in memory - is it on RAM, is it NTFS, whatever.
 		
-		Logical independence means the data is the data, and You can have different views of it. 
+		Logical independence is about independence of middle-tier representation from user views. Base tables can be arranged however, basically, without changing views for the user.
 		
 		I guess physical independence is nuts and bolts of actual storage, logical is how the data is presented to the user.
 	
@@ -380,6 +380,8 @@
 			
 			Clock sweep/second chance: run a garbage collector over the stuff in memory - if something is currently at 1 set it to 0, if it's at 0 toss it.
 			
+			Second chance actually is binary, where as clock sweep keeps a counter. Counter is incremented with every access, decremented with every sweep. 
+			
 			2Q: two queues. One is a first in first out queue, the other is least recently used. If something doesn't seem to be hot, it's put on the FIFO queue, and when memory is needed stuff from FIFO is dropped. 
 			
 			If a block is in FIFO and is accessed it's moved to LRU.
@@ -624,10 +626,6 @@
 			Postgres uses processes!
 			
 			Can't have as many threads/processes as You want, instead create a pool to draw from. Makes it easier to parallelize since You just claim stuff from the pool.
-			
-			Observe that database processes/threads can be OS processes or threads.
-			
-			Databases use cursors to keep track of what the next table will be delivered as part of query execution.
 			
 		\subsubsection{Iterator Models}
 		
@@ -1029,7 +1027,7 @@ Relational Database Systems}
 			
 	\subsection{Virtual Warehouse}
 	
-		Clusters of EC2 clusters. Individuals in the EC2 cluster are called Worker Nodes.
+		Clusters of EC2. Individuals in the EC2 cluster are called Worker Nodes.
 		
 		Kay so You have VWs, which has a set of EC2 instances. New query comes in, and workers spawn a new process for that query. Process dies at end of query.
 		
@@ -1629,7 +1627,192 @@ Relational Database Systems}
 		Clustered indexes - stuff in index is in order in memory.
 		
 		Clustered tables - stored different tables on the same segment I think? Data used together to be kept together.
-				
+		
+	\subsection{Exercise 6}
+	
+		So, We select id, name, dept, age and we have a predicate on grade, so it's 90 bytes total per tuple if We were to execute on the client side.
+		
+		The server side has the advantage that it already has the predicate required, so it only needs to transmit the result, which is 80 bytes per tuple. 
+		
+		At what point would it be better to do data shipping?
+		
+		Query 1 returns 500 tuples. 40000
+		
+		Q2 returns 200 tuples. 16000
+		
+		Q3 returns 50 tuples. 4000
+		
+		Q4 returns 250 tuples 20000
+		
+		Q5 returns 700 tuples 56000
+		
+		Q6 returns returns 300 tuples.
+		
+		So after Q5? 
+		
+	\subsection{Transaction Model}
+	
+		Pretty simple - start of transaction, either commit or abort, update, read, etc.
+		
+	\subsection{Concurrency Control}
+	
+		Serial history - a history is serial if given two transactions $i$ and $j$, all operations from $i$ precede $j$ or vice-versa. Basically a perfect, unambiguous ordering.
+		
+		A serial history with only committed transactions is then consistent by definition - it's a series of serial transactions that took the database from consistent state to consistent state.
+		
+		Histories are equivalent if: they contain the same transactions, obviously, and conflicting operations are ordered in the same way. So there are multiple ways to resolve conflicts, and if You want equivalent histories, You better pick the same way in both cases.
+		
+		A history is serializable if and only if it is equivalent to a serial history.
+		
+		A history is serializable if it's serializability graph is acyclic.
+		
+		To construct the graph simply jot down the transactions as nodes, and add directed edges between them that correspond to orderings in transactions e.g. W1(X), R2(X) will have an arrow from T1 to T2.
+		
+	\subsection{Recovery}
+	
+		Undo/redo by restoring before and after images of transactions.
+		
+		So! Now for like recovery properties? I guess history properties that make them recoverable.
+		
+		\textbf{Recoverable}: if $T_i$ reads from $T_j$, then $c_j < c_i$, which is to say that $j$ must have committed before $i$.
+		
+		So why is this important? Well, if You didn't have this guarantee, then $i$ could commit before $j$, and $j$ could get cancelled, and then the committed $i$ would be invalid. No good.
+		
+		Usually ensured by waiting for $j$ to commit before committing $i$.
+		
+		\textbf{Avoid Cascading Aborts}: if $i$ reads from $j$, then $j$ must have committed before the read: $c(j), R_i(x)$.
+		
+		Does what it says on the tin - if You only read committed values then You won't get aborted if $j$ gets aborted. This can also cascade since there's no real limit on how many reads on uncommitted values You can stack.
+		
+		\textbf{Strict}: if $i$ reads or overwrites a value from $j$, then $j$ committed before those operations (or aborted before those operations).
+		
+		To do with recovery - $j$ writes to X, then $i$ writes to X but then $j$ aborts, and restores the value which didn't have $i$'s write in it.
+		
+		So recoverable allows dirty reads but ensures that the dirty reads don't really matter?
+		
+		And ACA doesn't allow dirty reads
+		
+		Non-Repeatable Read is when within the scope of one transaction, reading the same item twice will result in different values, breaking I in ACID.
+		
+		Phantom reads - occur at table level and affect aggregates. If a transaction inserts a tuple, that tuple will change aggregate value. ACA prevents this I think?
+		
+		SQL phenomena: dirty read. Read from uncommitted values. Avoided by Read Committed.
+		
+		Read Committed doesn't address repeatable reads though. If other stuff commits, then the value gets updated.
+		
+		Repeatable read does what it says - specifies that a value read by transaction cannot be updated.
+		
+		And serializable I guess locks everything and their Mom to prevent Phantom Reads.
+		
+	\subsection{2 Phase Locking}
+		
+		Growing and shrinking phase.
+		
+		Read committed - short duration locks, read repeatable long locks and serializable locking everything.
+		
+		Strict 2PL - keep locks until committed or aborted.
+		
+		In practice deadlocks are solved by just using timers. Constructing deadlock detection possible but expensive.
+		
+	\subsection{Transaction Manager}
+	
+		It's got a bunch of stuff.
+		
+		You've got a table of transactions. The contents of the table are pointers to everything You need to know to manage the transaction.
+		
+		One is a list of locks the transaction currently has and those locks point to entries in the lock hash table.
+		
+		In the lock list, a bucket will contain a lock header which will tell You which item is being locked, and that header will have an associated queue. 
+		
+		Transaction handler will also have a pointer to the first entry in the log for that transaction, and the log record will itself be a linked list, so only have to store the pointer to the first one.
+		
+		Transaction manager will begin a transaction by creating an entry in the table of transactions. No log stuff yet unless explicitly requested.
+		
+		Read - will go through the whole lock shebang.
+		
+		Write - so it's the transaction manager that'll create a log entry, alright. So upon a write in the transaction the manager will add an entry to the log, sure. 
+		
+		Commit - do all the things needed do commit lol. Flush log to disk, release all locks, notify waiting processes that locks have been released, and depending on REDO/UNDO config write stuff to memory instead of disk.
+		
+		Abort - same as commit but do the undo protocol depending on recovery strategy.
+		
+		Cursor locking - cursors are pointers used to traverse table, and this can be locked heh
+		
+		Useful for locking complex predicates - You don't even know what to lock, so You traverse the table one tuple at a time and lock the cursor to do Your processing. If relevant, do stuff, else move on.
+		
+		If multiple cursors then prevent one cursor getting ahead of another to resolve conflicts.
+		
+	\subsection{Snapshot Isolation}
+	
+		Each transaction has a timestamp.
+		
+		Transaction does not access items newer than it's timestamp.
+		
+		Writes are resolved by first-committer-wins policy - if T2 commits in between T1 starting and ending then abort T1.
+		
+		Not serializable in that snapshot isolation assumes reads and writes do not conflict, but they could depending on transaction interpretation. Case where it's fine: booking cinema seats where You read all seats and pick some seat. Case where it's bad: two doctors have to be ready for emergency.
+		
+		Uncommitted reads do not exist!
+		
+		Repeatable reads there by default.
+		
+		Serializable also by definition - no phantoms. Wack.
+		
+		Log Sequence Number - if transaction commits at 10AM, then the tuple has timestamp of 10AM. 
+		
+		Writes - create copy of data to operate on, then on write check if someone else committed in between.
+		
+		System Change Number - the timestamp at the start of a transaction.
+		
+		Implementation: You're reading a series of blocks from some extent. Each block has a log sequence number, and if that number is later than Your SCM, then it's too new 4 u. 
+		
+		So then You go to another part of memory, the Undo Segment, where old versions of the tuples are stored. So some stuff in the block in the normal extent might be 2 new 4 u, but not everything in there is fresh (probably), so only stuff required to reconstruct the old version is kept in the undo segment.
+		
+		Undo segment is a ring.
+		
+		That's the undo version. You can also just keep several versions of the same tuple on the block, at the expense of space.
+		
+		Undo segment: every transaction gets a block to keep track of changes for maybe undoing stuff. Organized as a ring.
+		
+		Read consistency: ANSI read committed - read committed data, does not guarantee repeatable reads since commits can happen mid transaction. 
+		
+		Read consistency in Oracle is kinda magic compared to SQL server.
+		
+		Flashback queries - queries from the past. Obviously old data must be accessible whether through undo segment or just storage.
+		
+	\subsection{Recovery}
+	
+		Transaction failure, system failure, media failure. 
+		
+		Before/after image.
+		
+		Physical logging - store actual before after images, logical logging - store SQL operations.
+		
+		Various storage: You got memory buffer, You got data on disk, You got log in memory and log on disk.
+		
+		Since tuples live in blocks, writing one transaction may write dirty stuff from another transaction.
+		
+		From perspective of the buffer: steal policy means dirty stuff in memory may be pushed to permanent storage, and force policy means all changes made by transaction must be pushed to permanent storage before committing.
+		
+		If locking occurs at tuple level and IO is at block level, You automatically have a steal policy.
+		
+		
+		UNDO AND REDO: read: nothin lol, create log entry with before and after image in persistent log, write to buffer cache but not persistent disk? Commit: create persistent log entry with commit. Abort: restore before image using log.
+		
+		Recovery Procedure: go through log and keep a list of committed transactions. Easy to do since committed ones have log commits. Each log entry will either belong to a committed or uncommitted transaction. If committed, write after image to disk/memory, if uncommitted write before image to disk/memory. Having done this, add the tuple to a list of items that have already been undone/redone. If You come across stuff happening to the same tuple that You've already undone/redone, You can ignore the log entry since execution is strict and before/after images are consistent.
+		
+		Advantages of UNDO and REDO: only forced IO is logs, which are small, so neat.
+		
+		Lots of freedom for buffer cache
+		
+		Recovery complicated, but normal operation is basically unaffected, log stuff aside.
+		
+		UNDO, no REDO:
+		
+		Read whatever lol, write: create log entry with before image (no after image), write to memory, commit: flush to disk, write to log, abort: restore before images
+		
+		
+			
 		
 			
 	
