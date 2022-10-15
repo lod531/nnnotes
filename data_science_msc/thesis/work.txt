@@ -241,20 +241,251 @@ data-bin/wikitext-2-raw-full \
 --save-interval 40 \
 --max-update 50000
 
+bsub -J w2_jelinek_0.09_0.01_0.9 -W 1200 -o runs/w2_jelinek_0.09_0.01_0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.09_0.01_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.09, 0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
 
+bsub -J w2_jelinek_0.08_0.02_0.9 -W 1200 -o runs/w2_jelinek_0.08_0.02_0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.08_0.02_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.08, 0.02, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+bsub -J w2_jelinek_00.07_0.03_0.9 -W 1200 -o runs/w2_jelinek_0.07_0.030.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.07_0.03_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.07, 0.03, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.06_0.04_0.9 -W 1200 -o runs/w2_jelinek_0.06_0.04.0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.06_0.04_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.06, 0.04, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 500000.05_0.05
+
+bsub -J w2_jelinek_0.05_0.05_0.9 -W 1200 -o runs/w2_jelinek_0.05_0.05_0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.05_0.05_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.05, 0.05, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+
+bsub -J w2_jelinek_0.11_-0.01_0.9 -W 1200 -o runs/w2_jelinek_0.11_-0.01_0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.11_-0.01_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.11, -0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.12_-0.02_0.9 -W 1200 -o runs/w2_jelinek_0.12_-0.02_0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.12_-0.02_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.12, -0.02, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.13_-0.03_0.9 -W 1200 -o runs/w2_jelinek_0.13_-0.03_0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.13_-0.03_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.13, -0.03, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.14_-0.04_0.9 -W 1200 -o runs/w2_jelinek_0.14_-0.04_0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek0.14_-0.04_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.14, -0.04, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.15_-0.05_0.9 -W 1200 -o runs/w2_jelinek_0.15_-0.05_0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek0.15_-0.05_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.15, -0.05, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.16_-0.06_0.9 -W 1200 -o runs/w2_jelinek_0.16_-0.06_0.9.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.16_-0.06_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.16, -0.06, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+-J w2_jelinek_0.25_0.75 -W 1200 -o runs/w2_jelinek_0.25_0.75.txt
+
+bsub  -I -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw_1000 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_test \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.1, 0.0, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.11_-0.01_0.9_#4 -W 1200 -o runs/w2_jelinek_0.11_-0.01_0.9_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.11_-0.01_0.9_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.11, -0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--seed 402 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.1_0.0_0.9_#4 -W 1200 -o runs/w2_jelinek_0.1_0.0_0.9_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.0_0.9_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.1, 0.0, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--seed 4002 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.09_0.01_0.9_#4 -W 1200 -o runs/w2_jelinek_0.09_0.01_0.9_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.09_0.01_0.9_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.09, 0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--seed 40002 \
+--max-update 50000
 
 EVALUATION
 
 bsub -I  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
 fairseq-eval-lm data-bin/wikitext-2-raw-full \
---path /cluster/scratch/andriusb/checkpoints/w2_unigram_smoothing_0.14/checkpoint_best.pt \
+--path /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.0_0.9_#4/checkpoint_best.pt \
 --max-sentences 2 \
 --tokens-per-sample 512 \
 --context-window 510
 
-w2_cross_entropy      w2-jelinek_0.2_0.8    w2_label_smoothing_0.001  w2_label_smoothing_0.1    w2_label_smoothing_test_test  w2_n2_kneser_0.32           w2_unigram_smoothing_0.06
-w2_good_turing_n1     w2-jelinek_0.25_0.75  w2_label_smoothing_0.01   w2_label_smoothing_0.125  w2_n2_kneser_0.01             w2_n2_kneser_0.64           w2_unigram_smoothing_0.08
-w2_good_turing_n2     w2_katz_k2_n2         w2_label_smoothing_0.02   w2_label_smoothing_0.15   w2_n2_kneser_0.02             w2_unigram_smoothing_0.005  w2_unigram_smoothing_0.1
-w2-jelinek_0.05_0.95  w2_katz_k3_n2         w2_label_smoothing_0.04   w2_label_smoothing_0.175  w2_n2_kneser_0.04             w2_unigram_smoothing_0.01   w2_unigram_smoothing_0.12
-w2-jelinek_0.1_0.9    w2_katz_k4_n2         w2_label_smoothing_0.06   w2_label_smoothing_0.2    w2_n2_kneser_0.08             w2_unigram_smoothing_0.02   w2_unigram_smoothing_0.14
-w2-jelinek0.15_0.85   w2_katz_k5_n2         w2_label_smoothing_0.08   w2_label_smoothing_test   w2_n2_kneser_0.16             w2_unigram_smoothing_0.04
+w2_cross_entropy              w2-jelinek_0.11_-0.01_0.9_#3  w2_label_smoothing_0.15
+w2_good_turing_n1             w2-jelinek_0.11_-0.01_0.9_#4  w2_label_smoothing_0.175
+w2_good_turing_n2             w2-jelinek_0.12_-0.02_0.9     w2_label_smoothing_0.2
+w2-jelinek_0.0_0.1_0.9        w2-jelinek_0.13_-0.03_0.9     w2_label_smoothing_kl_test
+w2-jelinek_0.05_0.05_0.9      w2-jelinek0.14_-0.04_0.9      w2_label_smoothing_test
+w2-jelinek_0.05_0.95          w2-jelinek0.15_-0.05_0.9      w2_label_smoothing_test_test
+w2-jelinek_0.06_0.04_0.9      w2-jelinek0.15_0.85           w2_n2_kneser_0.01
+w2-jelinek_0.07_0.03_0.9      w2-jelinek_0.16_-0.06_0.9     w2_n2_kneser_0.02
+w2-jelinek_0.08_0.02_0.9      w2-jelinek_0.2_0.8            w2_n2_kneser_0.04
+w2-jelinek_0.09_0.01_0.9      w2-jelinek_0.25_0.75          w2_n2_kneser_0.08
+w2-jelinek_0.09_0.01_0.9_#1   w2-jelinek_test               w2_n2_kneser_0.16
+w2-jelinek_0.09_0.01_0.9_#2   w2_katz_k2_n2                 w2_n2_kneser_0.32
+w2-jelinek_0.09_0.01_0.9_#3   w2_katz_k3_n2                 w2_n2_kneser_0.64
+w2-jelinek_0.09_0.01_0.9_#4   w2_katz_k4_n2                 w2_unigram_smoothing_0.005
+w2-jelinek_0.1_0.0_0.9        w2_katz_k5_n2                 w2_unigram_smoothing_0.01
+w2-jelinek_0.1_0.0_0.9_#1     w2_label_smoothing_0.001      w2_unigram_smoothing_0.02
+w2-jelinek_0.1_0.0_0.9_#2     w2_label_smoothing_0.01       w2_unigram_smoothing_0.04
+w2-jelinek_0.1_0.0_0.9_#3     w2_label_smoothing_0.02       w2_unigram_smoothing_0.06
+w2-jelinek_0.1_0.0_0.9_#4     w2_label_smoothing_0.04       w2_unigram_smoothing_0.08
+w2-jelinek_0.1_0.9            w2_label_smoothing_0.06       w2_unigram_smoothing_0.1
+w2-jelinek_0.11_-0.01_0.9     w2_label_smoothing_0.08       w2_unigram_smoothing_0.12
+w2-jelinek_0.11_-0.01_0.9_#1  w2_label_smoothing_0.1        w2_unigram_smoothing_0.14
+w2-jelinek_0.11_-0.01_0.9_#2  w2_label_smoothing_0.125
