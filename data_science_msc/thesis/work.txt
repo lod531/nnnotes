@@ -1,25 +1,66 @@
-TEXT=examples/language_model/wikitext-2
+TEXT=examples/language_model/wikitext-103-raw
 fairseq-preprocess \
-    --only-source \
-    --trainpref $TEXT/wiki.train.tokens \
-    --validpref $TEXT/wiki.valid.tokens \
-    --testpref $TEXT/wiki.test.tokens \
-    --destdir data-bin/wikitext-2-truncated_1000 \
-    --workers 20
+--only-source \
+--trainpref $TEXT/wiki.train.raw \
+--validpref $TEXT/wiki.valid.raw \
+--testpref $TEXT/wiki.test.raw \
+--destdir data-bin/wikitext-103-raw-size-0.03125 \
+--workers 20
 
+TEXT=examples/language_model/wikitext-2-raw-bpe
+fairseq-preprocess \
+--only-source \
+--trainpref $TEXT/wiki.train.raw \
+--validpref $TEXT/wiki.valid.raw \
+--testpref $TEXT/wiki.test.raw \
+--destdir data-bin/wikitext-2-raw-bpe-full \
+--workers 20
+
+TEXT=examples/language_model/wikitext-2-cleaned-bpe
+fairseq-preprocess \
+--only-source \
+--trainpref $TEXT/wiki.train.tokens \
+--validpref $TEXT/wiki.valid.tokens \
+--testpref $TEXT/wiki.test.tokens \
+--destdir data-bin/wikitext-2-cleaned-bpe-full \
+--workers 20
+
+TEXT=examples/language_model/wikitext-2-cleaned-full_bpe_test
+fairseq-preprocess \
+--only-source \
+--trainpref $TEXT/wiki.train.tokens_bpe \
+--validpref $TEXT/wiki.valid.tokens_bpe \
+--testpref $TEXT/wiki.test.tokens_bpe \
+--destdir data-bin/wikitext-2-cleaned-bpe-full-test \
+--workers 20
+
+TEXT=examples/language_model/wikitext-103-bpe-0.0625
+fairseq-preprocess \
+--only-source \
+--trainpref $TEXT/wiki.train.tokens_bpe \
+--validpref $TEXT/wiki.valid.tokens_bpe \
+--testpref $TEXT/wiki.test.tokens_bpe \
+--destdir data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--workers 20
+
+TEXT=examples/translation/iwslt14.tokenized.de-en
+fairseq-preprocess --source-lang en --target-lang de \
+--trainpref $TEXT/train --validpref $TEXT/valid --testpref $TEXT/test \
+--destdir data-bin/iwslt14.tokenized.en-de \
+--workers 20
 
 ######################################################################################################
 ######################################################################################################
 kneser :
 
-bsub -J w2_n2_kneser_0.8 -W 1200 -o runs/w2_n2_kneser_0.8.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" -R "select[gpu_mtotal0>=12240]" CUDA_VISIBLE_DEVICES=0  \
+bsub -J w2_n2_kneser_0.8 -W 1200 -o runs/w2_n2_kneser_0.8.txt  -R "rusage[ngpus_excl_p=1,mem=20000]"  CUDA_VISIBLE_DEVICES=0  \
 fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2_n2_kneser_0.8 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion kneser_ney_smoothing --kneser-d 0.8 --kneser-n 2 \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -36,9 +77,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2_cross_entropy \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion cross_entropy \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -54,9 +95,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2_label_smoothing_0.1 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -70,9 +111,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2_label_smoothing_test_test \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion label_smoothed_test --label-smoothing 0.1 \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -86,9 +127,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2_label_smoothing_kl_test \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion label_smoothed_KL --label-smoothing 0.1 \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -99,14 +140,16 @@ data-bin/wikitext-2-raw-full \
 ######################################################################################################
 Good turing:
 
-bsub -J w2_good_turing_n1 -o runs/w2_good_turing_n1.txt -W 1200 -R "rusage[ngpus_excl_p=1,mem=20000]"  CUDA_VISIBLE_DEVICES=0  \
+-o runs/w2_good_turing_n1.txt -W 1200
+
+bsub -J w2_good_turing_n1 -I  -R "rusage[ngpus_excl_p=1,mem=20000]"  CUDA_VISIBLE_DEVICES=0  \
 fairseq-train --task language_modeling \
-data-bin/wikitext-2-raw-full \
+data-bin/wikitext-103-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2_good_turing_n1 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion good_turing_smoothing --good-turing-n 1 \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -120,9 +163,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2 \
 --save-dir /cluster/scratch/andriusb/checkpoints/wikitext2_good_turing_test \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion good_turing_smoothing --good-turing-n 2 \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -131,21 +174,21 @@ data-bin/wikitext-2 \
 
 -o runs/wikitext2_good_turing_n3.txt
 -J good_turing 
--R "select[gpu_mtotal0>=12240]"
+
 
 
 ######################################################################################################
 ######################################################################################################
 Katz
 
-bsub -J w2_katz_k5_n2 -o runs/w2_katz_k5_n2.txt -W 1200 -R "rusage[ngpus_excl_p=1,mem=20000]" -R "select[gpu_mtotal0>=12240]"  CUDA_VISIBLE_DEVICES=0  \
+bsub -J w2_katz_k5_n2 -o runs/w2_katz_k5_n2.txt -W 1200 -R "rusage[ngpus_excl_p=1,mem=20000]"   CUDA_VISIBLE_DEVICES=0  \
 fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2_katz_k5_n2 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion katz_smoothing --katz-k 5 --katz-n 2 \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -158,9 +201,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-4000 \
 --save-dir /cluster/scratch/andriusb/checkpoints/transformer_wikitext-2-katz_test \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion katz_smoothing --katz-k 3 --katz-n 3 \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -176,9 +219,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.05_0.95 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.05, 0.95)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -190,9 +233,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.1, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -204,9 +247,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek0.15_0.85 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.15, 0.85)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -218,23 +261,23 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.2_0.8 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.2, 0.8)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
 --save-interval 40 \
 --max-update 50000
 
-bsub -J w2_jelinek_0.25_0.75 -W 1200 -o runs/w2_jelinek_0.25_0.75.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+bsub -J w2_jelinek_0.03125_0.75 -W 1200 -o runs/w2_jelinek_0.03125_0.75.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
 fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
---save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.25_0.75 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.03125_0.75 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
---criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.25, 0.75)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.03125, 0.75)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -246,9 +289,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.09_0.01_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.09, 0.01, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -260,9 +303,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.08_0.02_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.08, 0.02, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -274,9 +317,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.07_0.03_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.07, 0.03, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -288,9 +331,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.06_0.04_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.06, 0.04, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -302,9 +345,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.05_0.05_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.05, 0.05, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -317,9 +360,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.11_-0.01_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.11, -0.01, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -331,9 +374,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.12_-0.02_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.12, -0.02, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -345,9 +388,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.13_-0.03_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.13, -0.03, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -359,9 +402,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek0.14_-0.04_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.14, -0.04, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -373,9 +416,9 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek0.15_-0.05_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.15, -0.05, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
@@ -387,105 +430,2775 @@ fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.16_-0.06_0.9 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.16, -0.06, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
 --save-interval 40 \
 --max-update 50000
 
--J w2_jelinek_0.25_0.75 -W 1200 -o runs/w2_jelinek_0.25_0.75.txt
+-J w2_jelinek_0.03125_0.75 -W 1200 -o runs/w2_jelinek_0.03125_0.75.txt
 
 bsub  -I -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
 fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw_1000 \
 --save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_test \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.1, 0.0, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
 --save-interval 40 \
 --max-update 50000
 
-bsub -J w2_jelinek_0.11_-0.01_0.9_#4 -W 1200 -o runs/w2_jelinek_0.11_-0.01_0.9_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+bsub -J w2_jelinek_0.11_-0.01_0.9_#10 -W 1200 -o runs/w2_jelinek_0.11_-0.01_0.9_#10.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
 fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
---save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.11_-0.01_0.9_#4 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.11_-0.01_0.9_#10 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.11, -0.01, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
 --save-interval 40 \
---seed 402 \
+--seed 10102 \
 --max-update 50000
 
-bsub -J w2_jelinek_0.1_0.0_0.9_#4 -W 1200 -o runs/w2_jelinek_0.1_0.0_0.9_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+bsub -J w2_jelinek_0.1_0.0_0.9_#10 -W 1200 -o runs/w2_jelinek_0.1_0.0_0.9_#10.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
 fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
---save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.0_0.9_#4 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.0_0.9_#10 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.1, 0.0, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
 --save-interval 40 \
---seed 4002 \
+--seed 5482610 \
 --max-update 50000
 
-bsub -J w2_jelinek_0.09_0.01_0.9_#4 -W 1200 -o runs/w2_jelinek_0.09_0.01_0.9_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+bsub -J w2_jelinek_0.09_0.01_0.9_#10 -W 1200 -o runs/w2_jelinek_0.09_0.01_0.9_#10.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
 fairseq-train --task language_modeling \
 data-bin/wikitext-2-raw-full \
---save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.09_0.01_0.9_#4 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.09_0.01_0.9_#10 \
 --arch transformer_lm --share-decoder-input-output-embed \
---dropout 0.5 \
+--dropout 0.1 \
 --criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.09, 0.01, 0.9)' \
---optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.5 --clip-norm 0.0 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
 --tokens-per-sample 512 --sample-break-mode none \
 --max-tokens 2048 --update-freq 16 \
 --save-interval 40 \
---seed 40002 \
+--seed 548261045610 \
 --max-update 50000
+
+bsub -J w2_jelinek_0.095_0.005_0.9_#5 -W 1200 -o runs/w2_jelinek_0.095_0.005_0.9_#5.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.095_0.005_0.9_#5 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.095, 0.015, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--seed 5482610456105 \
+--max-update 50000
+
+bsub -J w2_jelinek_0.105_-0.005_#5 -W 1200 -o runs/w2_jelinek_0.105_-0.005_#5.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.105_-0.005_0.9_#5 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.095, 0.015, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--seed 548266826105 \
+--max-update 50000
+
+bsub -J w103_jelinek_0.1_0.0_0.9_#5 -W 1200 -o runs/w103_jelinek_0.1_0.0_0.9_#5.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103-jelinek_0.1_0.0_0.9_#5 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.1, 0.0, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--save-interval 40 \
+--seed 1352165 \
+--max-update 50000
+
+
+
+
+bsub -J w103_fp16_label_smoothing_0.1_#4 -W 7200  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16-label_smoothing_0.1_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 13521654 \
+--fp16 \
+--max-update 50000
+
+data-bin/wikitext-2-raw-full \
+data-bin/wikitext-103-raw-full \
+bsub -J w103_fp16_jelinek_0.1_0.0_0.9_#3 -W 7200 -o runs/w103_fp16_jelinek_0.1_0.0_0.9_#3.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16-jelinek_0.1_0.0_0.9_#3 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.1, 0.0, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 1024 --update-freq 64 \
+--seed 13521653 \
+--fp16 \
+--max-update 50000
+
+
+
+bsub -J w103_fp16_jelinek_0.09_0.01_0.9_#3 -W 7200 -o runs/w103_fp16_jelinek_0.09_0.01_0.9_#3.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16-jelinek_0.09_0.01_0.9_#3 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.09, 0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 1024 --update-freq 64 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 458753 \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_jelinek_0.11_-0.01_0.9_#3 -o runs/w103_fp16_jelinek_0.11_-0.01_0.9_#3.txt -W 7200  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16-jelinek_0.11_-0.01_0.9_#3 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.11, -0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 1024 --update-freq 64 \
+--seed 6897213 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_cross_entropy_#4 -W 7200 -o runs/w103_fp16_cross_entropy_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16-cross_entropy_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 1024 --update-freq 64 \
+--seed 6658484 \
+--fp16 \
+--max-update 50000
+
+
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+Wikitext 103 size 0.5
+
+
+-W 7200 -o runs/w103_size_0.5_fp16_cross_entropy_#1.txt 
+
+bsub -J w103_size_0.5_fp16_cross_entropy_#3 -W 2880 -o runs/w103_size_0.5_fp16_cross_entropy_#3.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-cross_entropy_#3 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575613 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+-W 2880 -o runs/w103_size_0.5_fp16_jelinek_0.09_0.01_0.9_#2.txt
+
+bsub -J w103_size_0.5_fp16_jelinek_0.09_0.01_0.9_#2 -I -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-jelinek_0.09_0.01_0.9_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.09, 0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints \
+--seed 458752 \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_size_0.5_fp16_label_smoothing_0.1_#1 -W 2880 -o runs/w103_size_0.5_fp16-label_smoothing_0.1_#1 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.1_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 1321671 \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_size_0.5_fp16_label_smoothing_0.01_#1 -W 2880 -o runs/w103_size_0.5_fp16-label_smoothing_0.01_#1 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.01_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.01 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 1321671 \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_size_0.5_fp16_label_smoothing_0.02_#1 -W 2880 -o runs/w103_size_0.5_fp16-label_smoothing_0.02_#1 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.02_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.02 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 1321671 \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_size_0.5_fp16_label_smoothing_0.04_#2 -W 2880 -o runs/w103_size_0.5_fp16-label_smoothing_0.04_#2 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.04_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.04 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 1321672 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.5_fp16_label_smoothing_0.08_#1 -W 2880 -o runs/w103_size_0.5_fp16-label_smoothing_0.08_#1 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.08_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.08 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 1321671 \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_jelinek_0.032_0.008_0.96_#1 -W 2880 -o runs/w103_fp16_size_0.5_jelinek_0.032_0.008_0.96_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.032_0.008_0.96_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.032, 0.008, 0.96)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321671 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_jelinek_0.034_0.006_0.96_#1 -W 2880 -o runs/w103_fp16_size_0.5_jelinek_0.034_0.006_0.96_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.034_0.006_0.96_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.034, 0.006, 0.96)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321671 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_jelinek_0.036_0.004_0.96_#1 -W 2880 -o runs/w103_fp16_size_0.5_jelinek_0.036_0.004_0.96_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.036_0.004_0.96_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.036, 0.004, 0.96)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321671 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_jelinek_0.036_0.004_0.96_#4 -W 2880 -o runs/w103_fp16_size_0.5_jelinek_0.036_0.004_0.96_#4.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.036_0.004_0.96_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.036, 0.004, 0.96)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321674 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_jelinek_0.038_0.002_0.96_#2 -W 4000 -o runs/w103_fp16_size_0.5_jelinek_0.038_0.002_0.96_#2.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.038_0.002_0.96_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.038, 0.002, 0.96)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321672 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_jelinek_0.038_0.002_0.96_#7 -W 4000 -o runs/w103_fp16_size_0.5_jelinek_0.038_0.002_0.96_#7.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.038_0.002_0.96_#7 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.038, 0.002, 0.96)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321677 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_good-turing-n1 -W 7200 -o runs/w103_fp16_size_0.5_good-turing-n1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-good-turing-n1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion good_turing_smoothing --good-turing-n 1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321672 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_good-turing-n2 -W 7200 -o runs/w103_fp16_size_0.5_good-turing-n2.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-good-turing-n2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion good_turing_smoothing --good-turing-n 2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321672 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_katz_k2 -W 7200 -o runs/w103_fp16_size_0.5_katz_k2.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-katz_k2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion katz_smoothing --katz-k 2 --katz-n 2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321672 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.5_kneser_0.2 -W 7200 -o runs/w103_fp16_size_0.5_kneser_0.2.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.5 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-kneser_0.2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion kneser_ney_smoothing --kneser-d 0.2 --kneser-n 2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321672 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+Wikitext 103 size 0.03125
+
+bsub -J w103_size_0.03125_fp16_cross_entropy_#4 -W 2880 -o runs/w103_size_0.03125_fp16_cross_entropy_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-cross_entropy_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.1_#4 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.1_#4  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.1_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 1321614 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.01_#1 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.01_#1  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.01_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.01 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 1321671 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.02_#1 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.02_#1  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.02_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.02 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 1321671 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.04_#1 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.04_#1  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.04_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.04 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 1321671 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.08_#1 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.08_#1  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.08_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.08 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 1321671 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.09_0.01_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.09_0.01_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.09_0.01_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.09, 0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.08_0.02_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.08_0.02_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.08_0.02_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.08, 0.02, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.06_0.04_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.06_0.04_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.06_0.04_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.06, 0.04, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.04_0.06_0.9_#4 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.04_0.06_0.9_#4.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.04_0.06_0.9_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.04, 0.06, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321664 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.02_0.08_0.9_#3 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.02_0.08_0.9_#3.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.02_0.08_0.9_#3 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.02, 0.08, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321673 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.0_0.1_0.9_#3 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.0_0.1_0.9_#3.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.0_0.1_0.9_#3 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.0, 0.1, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 1321673 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+Wikitext 103 size 0.125
+
+bsub -J w103_size_0.125_fp16_cross_entropy_#4 -W 2880 -o runs/w103_size_0.125_fp16_cross_entropy_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-cross_entropy_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.125_fp16_label_smoothing_0.01_#2 -W 2880 -o runs/w103_size_0.125_fp16-label_smoothing_0.01_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.01_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.01 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.125_fp16_label_smoothing_0.02_#2 -W 2880 -o runs/w103_size_0.125_fp16-label_smoothing_0.02_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.02_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.02 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.125_fp16_label_smoothing_0.04_#2 -W 2880 -o runs/w103_size_0.125_fp16-label_smoothing_0.04_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.04_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.04 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.125_fp16_label_smoothing_0.06_#2 -W 2880 -o runs/w103_size_0.125_fp16-label_smoothing_0.06_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.06_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.06 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.125_fp16_label_smoothing_0.08_#2 -W 2880 -o runs/w103_size_0.125_fp16-label_smoothing_0.08_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.08_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.08 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.125_fp16_label_smoothing_0.1_#2 -W 2880 -o runs/w103_size_0.125_fp16-label_smoothing_0.1_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.1_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+
+bsub -J w103_fp16_size_0.125_jelinek_0.09_0.01_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.125_jelinek_0.09_0.01_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.125-jelinek_0.09_0.01_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.09, 0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints  \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+bsub -J w103_fp16_size_0.125_jelinek_0.08_0.02_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.125_jelinek_0.08_0.02_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.125-jelinek_0.08_0.02_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.08, 0.02, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints  \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.125_jelinek_0.06_0.04_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.125_jelinek_0.06_0.04_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.125-jelinek_0.06_0.04_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.06, 0.04, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints  \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.125_jelinek_0.04_0.06_0.9_#4 -W 4000 -o runs/w103_fp16_size_0.125_jelinek_0.04_0.06_0.9_#4.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.125-jelinek_0.04_0.06_0.9_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.04, 0.06, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints  \
+--seed 1321664 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.125_jelinek_0.02_0.08_0.9_#3 -W 4000 -o runs/w103_fp16_size_0.125_jelinek_0.02_0.08_0.9_#3.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.125-jelinek_0.02_0.08_0.9_#3 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.02, 0.08, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints  \
+--seed 1321673 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+bsub -J w103_fp16_size_0.125_jelinek_0.0_0.1_0.9_#3 -W 4000 -o runs/w103_fp16_size_0.125_jelinek_0.0_0.1_0.9_#3.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.125-jelinek_0.0_0.1_0.9_#3 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.0, 0.1, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints \
+--seed 1321673 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+Wikitext 103 size 0.0625
+
+bsub -J w103_size_0.0625_fp16_cross_entropy_#4 -W 2880 -o runs/w103_size_0.0625_fp16_cross_entropy_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-cross_entropy_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.0625_fp16_label_smoothing_0.01_#2 -W 2880 -o runs/w103_size_0.0625_fp16-label_smoothing_0.01_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.01_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.01 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.0625_fp16_label_smoothing_0.02_#2 -W 2880 -o runs/w103_size_0.0625_fp16-label_smoothing_0.02_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.02_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.02 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.0625_fp16_label_smoothing_0.04_#2 -W 2880 -o runs/w103_size_0.0625_fp16-label_smoothing_0.04_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.04_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.04 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.0625_fp16_label_smoothing_0.06_#2 -W 2880 -o runs/w103_size_0.0625_fp16-label_smoothing_0.06_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.06_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.06 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.0625_fp16_label_smoothing_0.08_#2 -W 2880 -o runs/w103_size_0.0625_fp16-label_smoothing_0.08_#2 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.08_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.08 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.0625_fp16_label_smoothing_0.1_#2 -W 2880 -o runs/w103_size_0.0625_fp16-label_smoothing_0.1_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.1_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+
+bsub -J w103_fp16_size_0.0625_jelinek_0.09_0.01_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.0625_jelinek_0.09_0.01_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.0625-jelinek_0.09_0.01_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.09, 0.01, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints  \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+bsub -J w103_fp16_size_0.0625_jelinek_0.08_0.02_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.0625_jelinek_0.08_0.02_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.0625-jelinek_0.08_0.02_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.08, 0.02, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints  \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.0625_jelinek_0.06_0.04_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.0625_jelinek_0.06_0.04_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.0625-jelinek_0.06_0.04_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.06, 0.04, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints  \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.0625_jelinek_0.04_0.06_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.0625_jelinek_0.04_0.06_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.0625-jelinek_0.04_0.06_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.04, 0.06, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints  \
+--seed 1321661 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.0625_jelinek_0.02_0.08_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.0625_jelinek_0.02_0.08_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.0625-jelinek_0.02_0.08_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.02, 0.08, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints  \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+bsub -J w103_fp16_size_0.0625_jelinek_0.0_0.1_0.9_#1 -W 4000 -o runs/w103_fp16_size_0.0625_jelinek_0.0_0.1_0.9_#1.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.0625-jelinek_0.0_0.1_0.9_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.0, 0.1, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+Wikitext 103 size 0.03125
+
+
+bsub -J w103_size_0.03125_fp16_cross_entropy_#4 -W 2880 -o runs/w103_size_0.03125_fp16_cross_entropy_#4.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-cross_entropy_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.01_#2 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.01_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.01_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.01 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575622 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.02_#2 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.02_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.02_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.02 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575622 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.04_#2 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.04_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.04_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.04 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575622 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.06_#2 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.06_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.06_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.06 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575622 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.08_#2 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.08_#2 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.08_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.08 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575622 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_size_0.03125_fp16_label_smoothing_0.1_#2 -W 2880 -o runs/w103_size_0.03125_fp16-label_smoothing_0.1_#2  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.1_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575622 \
+--fp16 \
+--no-epoch-checkpoints \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.07_0.01_0.92_#2 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.07_0.01_0.92_#2.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.07_0.01_0.92_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.07, 0.01, 0.92)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 66575622 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.06_0.02_0.92_#2 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.06_0.02_0.92_#2.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.06_0.02_0.92_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.06, 0.02, 0.92)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 66575622 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.04_0.04_0.92_#6 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.04_0.04_0.92_#6.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.04_0.04_0.92_#6 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.04, 0.04, 0.92)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 66575626 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.02_0.06_0.92_#2 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.02_0.06_0.92_#2.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.02_0.06_0.92_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.02, 0.06, 0.92)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 66575622 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+bsub -J w103_fp16_size_0.03125_jelinek_0.0_0.08_0.92_#2 -W 4000 -o runs/w103_fp16_size_0.03125_jelinek_0.0_0.08_0.92_#2.txt   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-raw-size-0.03125 \
+--save-dir /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.0_0.08_0.92_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.0, 0.08, 0.92)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--seed 66575622 \
+--no-epoch-checkpoints \
+--fp16 \
+--max-update 50000
+
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+dataset checks:
+
+bsub -J test -Is -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/test \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J w2_cross_entropy_default_config_#1 -W 2880 -o runs/w2_cross_entropy_default_config_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_default_config_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J w2_cross_entropy_dropout_0.3_#1 -W 2880 -o runs/w2_cross_entropy_dropout_0.3_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+bsub -J w2_cross_entropy_decoder_attention_heads4_#1 -W 2880 -o runs/w2_cross_entropy_decoder_attention_heads4_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_decoder_attention_heads4_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-attention-heads 4 \
+--max-update 50000
+
+bsub -J w2_cross_entropy_ffn_embed_dim_1024_#1 -W 2880 -o runs/w2_cross_entropy_ffn_embed_dim_1024_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_ffn_embed_dim_1024_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-ffn-embed-dim 1024 \
+--max-update 50000
+
+bsub -J w2_cross_entropy_all_clara_mods_#1 -W 2880 -o runs/w2_cross_entropy_all_clara_mods_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_all_clara_mods_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-ffn-embed-dim 1024 \
+--decoder-attention-heads 4 \
+--max-update 50000
+
+
+bsub -J w2_cross_entropy_arch_lm_gpt_#1 -W 2880 -o runs/w2_cross_entropy_arch_lm_gpt_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_arch_lm_gpt_#1 \
+--arch transformer_lm_gpt --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+
+
+
+
+bsub -J w2_cleaned_full_cross_entropy_default_config_#1 -W 2880 -o runs/w2_cleaned_full_cross_entropy_default_config_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_default_config_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J w2_cleaned_full_cross_entropy_dropout_0.3_#1 -W 2880 -o runs/w2_cleaned_full_cross_entropy_dropout_0.3_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+bsub -J w2_cleaned_full_cross_entropy_decoder_attention_heads4_#1 -W 2880 -o runs/w2_cleaned_full_cross_entropy_decoder_attention_heads4_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_decoder_attention_heads4_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-attention-heads 4 \
+--max-update 50000
+
+bsub -J w2_cleaned_full_cross_entropy_ffn_embed_dim_1024_#1 -W 2880 -o runs/w2_cleaned_full_cross_entropy_ffn_embed_dim_1024_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_ffn_embed_dim_1024_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-ffn-embed-dim 1024 \
+--max-update 50000
+
+bsub -J w2_cleaned_full_cross_entropy_all_clara_mods_#1 -W 2880 -o runs/w2_cleaned_full_cross_entropy_all_clara_mods_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_all_clara_mods_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-ffn-embed-dim 1024 \
+--decoder-attention-heads 4 \
+--max-update 50000
+
+
+bsub -J w2_cleaned_full_cross_entropy_arch_lm_gpt_#1 -W 2880 -o runs/w2_cleaned_full_cross_entropy_arch_lm_gpt_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_arch_lm_gpt_#1 \
+--arch transformer_lm_gpt --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+
+
+
+bsub -J w2_cleaned_full_label_smoothing_0.1_default_config_#1 -W 2880 -o runs/w2_cleaned_full_label_smoothing_0.1_default_config_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_label_smoothing_0.1_default_config_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+
+bsub -J w2_cleaned_full_label_smoothing_0.1_dropout_0.3_default_config_#1 -W 2880 -o runs/w2_cleaned_full_label_smoothing_0.1_dropout_0.3_default_config_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_label_smoothing_0.1_dropout_0.3_default_config_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+
+
+
+
+bsub -J w2_cleaned_bpe_full_cross_entropy_default_config_#1 -W 2880 -o runs/w2_cleaned_bpe_full_cross_entropy_default_config_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_cross_entropy_default_config_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J w2_cleaned_bpe_full_cross_entropy_dropout_0.3_#1 -W 2880 -o runs/w2_cleaned_bpe_full_cross_entropy_dropout_0.3_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_cross_entropy_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+bsub -J w2_cleaned_bpe_full_cross_entropy_decoder_attention_heads4_#1 -W 2880 -o runs/w2_cleaned_bpe_full_cross_entropy_decoder_attention_heads4_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_cross_entropy_decoder_attention_heads4_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-attention-heads 4 \
+--max-update 50000
+
+bsub -J w2_cleaned_bpe_full_cross_entropy_ffn_embed_dim_1024_#1 -W 2880 -o runs/w2_cleaned_bpe_full_cross_entropy_ffn_embed_dim_1024_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_cross_entropy_ffn_embed_dim_1024_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-ffn-embed-dim 1024 \
+--max-update 50000
+
+bsub -J w2_cleaned_bpe_full_cross_entropy_all_clara_mods_#1 -W 2880 -o runs/w2_cleaned_bpe_full_cross_entropy_all_clara_mods_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_cross_entropy_all_clara_mods_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-ffn-embed-dim 1024 \
+--decoder-attention-heads 4 \
+--max-update 50000
+
+
+
+
+
+
+
+bsub -J w2_raw_bpe_full_cross_entropy_default_config_#1 -W 2880 -o runs/w2_raw_bpe_full_cross_entropy_default_config_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_raw_bpe_full_cross_entropy_default_config_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J w2_raw_bpe_full_cross_entropy_dropout_0.3_#1 -W 2880 -o runs/w2_raw_bpe_full_cross_entropy_dropout_0.3_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_raw_bpe_full_cross_entropy_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J w2_raw_bpe_full_cross_entropy_decoder_attention_heads4_#1 -W 2880 -o runs/w2_raw_bpe_full_cross_entropy_decoder_attention_heads4_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_raw_bpe_full_cross_entropy_decoder_attention_heads4_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-attention-heads 4 \
+--max-update 50000
+
+bsub -J w2_raw_bpe_full_cross_entropy_ffn_embed_dim_1024_#1 -W 2880 -o runs/w2_raw_bpe_full_cross_entropy_ffn_embed_dim_1024_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_raw_bpe_full_cross_entropy_ffn_embed_dim_1024_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-ffn-embed-dim 1024 \
+--max-update 50000
+
+bsub -J w2_raw_bpe_full_cross_entropy_all_clara_mods_#1 -W 2880 -o runs/w2_raw_bpe_full_cross_entropy_all_clara_mods_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_raw_bpe_full_cross_entropy_all_clara_mods_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--decoder-ffn-embed-dim 1024 \
+--decoder-attention-heads 4 \
+--max-update 50000
+
+
+
+
+
+
+bsub -J w2_cleaned_bpe_full_label_smoothing_0.02_dropout_0.3_#2 -W 240 -o runs/w2_cleaned_bpe_full_label_smoothing_0.02_dropout_0.3_#2.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.02_dropout_0.3_#2 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.02 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 128 \
+--seed 66575612 \
+--fp16 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J w2_cleaned_bpe_full_kneser_n2_d0.01_default_config_#1 -W 2880 -o runs/w2_cleaned_bpe_full_kneser_n2_d0.01_default_config_#1.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_kneser_n2_d0.01_default_config_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.1 \
+--criterion kneser_ney_smoothing --kneser-d 0.01 --kneser-n 2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+
+bsub -J w2_cleaned_bpe_full_cross_entropy_dropout_0.4_#1 -W 2880 -o runs/w2_cleaned_bpe_full_cross_entropy_dropout_0.4_#1.txt -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_cross_entropy_dropout_0.4_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.4 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J w2_cleaned_bpe_jelinek_0.0_0.1_0.9 -W 1200 -o runs/w2_cleaned_bpe_jelinek_0.0_0.1_0.9.txt -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.0_0.1_0.9 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.0, 0.1, 0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints \
+--patience 3 \
+--fp16 \
+--max-update 50000
+
+
+
+
+bsub -J w2_cleaned_bpe_kneser_n2_d0.12 -W 1200 -o runs/w2_cleaned_bpe_kneser_n2_d0.12.txt -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-cleaned-bpe-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-kneser_n2_d0.12 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion kneser_ney_smoothing --kneser-d 0.12 --kneser-n 2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints \
+--patience 3 \
+--fp16 \
+--max-update 50000
+
+
+
+wikitext-103-cleaned-bpe-size0.0625
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.3_#4 -W 2880 -o runs/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.3_#4.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.3_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_label_smoothing_0.12_dropout_0.3_#1 -W 2880 -o runs/wikitext-103-cleaned-bpe-size0.0625_label_smoothing_0.12_dropout_0.3_#1.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_label_smoothing_0.12_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.12 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.2_dropout_0.3_#1 -W 2880 -o runs/wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.2_dropout_0.3_#1.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.2_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion kneser_ney_smoothing --kneser-d 0.2 --kneser-n 2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+
+bsub -J en_cross_entropy_dropout_0.4_#1 -W 2880 -o runs/en_cross_entropy_dropout_0.4_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/en \
+--save-dir /cluster/scratch/andriusb/checkpoints/en_cross_entropy_dropout_0.4_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.4 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+bsub -J de_cross_entropy_dropout_0.4_#1 -W 2880 -o runs/de_cross_entropy_dropout_0.4_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/de \
+--save-dir /cluster/scratch/andriusb/checkpoints/de_cross_entropy_dropout_0.4_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.4 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J ru_cross_entropy_dropout_0.4_#1 -W 2880 -o runs/ru_cross_entropy_dropout_0.4_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/ru \
+--save-dir /cluster/scratch/andriusb/checkpoints/ru_cross_entropy_dropout_0.4_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.4 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+
+-W 2880 -o runs/translation_test
+bsub -J translation_test -I -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/translation_test \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.3 --weight-decay 0.0001 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.1 \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+bsub -J translation_test -I -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-generate data-bin/iwslt14.tokenized.de-en \
+--path /cluster/scratch/andriusb/checkpoints/translation_test/checkpoint_best.pt \
+--batch-size 1024 --beam 5 --remove-bpe
+
+
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.4_#1 -W 2880 -o runs/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.4_#1.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.4_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.4 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J de_label_smoothing_0.15_dropout_0.3_#1 -W 5760 -o runs/de_label_smoothing_0.15_dropout_0.3_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/de \
+--save-dir /cluster/scratch/andriusb/checkpoints/de_label_smoothing_0.15_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.15 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J ru_label_smoothing_0.2_dropout_0.3_#1 -W 5760 -o runs/ru_label_smoothing_0.2_dropout_0.3_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/ru \
+--save-dir /cluster/scratch/andriusb/checkpoints/ru_label_smoothing_0.2_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J de_kneser_n2_d0.9_dropout_0.3_#1 -W 10080 -o runs/de_kneser_n2_d0.9_dropout_0.3_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/de \
+--save-dir /cluster/scratch/andriusb/checkpoints/de_kneser_n2_d0.9_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion kneser_ney_smoothing --kneser-d 0.9 --kneser-n 2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+208071453 andriusb RUN   gpu.120h   eu-login-45 eu-g2-10de_kneser_n2_d0.025_dropout_0.3_#1 Mar 13 12:26
+208071455 andriusb RUN   gpu.120h   eu-login-45 eu-g2-09de_kneser_n2_d0.05_dropout_0.3_#1 Mar 13 12:26
+208071459 andriusb RUN   gpu.120h   eu-login-45 eu-g2-03de_kneser_n2_d0.1_dropout_0.3_#1 Mar 13 12:26
+208071460 andriusb RUN   gpu.120h   eu-login-45 eu-g2-02de_kneser_n2_d0.15_dropout_0.3_#1 Mar 13 12:26
+208071462 andriusb RUN   gpu.120h   eu-login-45 eu-g2-02de_kneser_n2_d0.2_dropout_0.3_#1 Mar 13 12:27
+208071467 andriusb RUN   gpu.120h   eu-login-45 eu-g3-002   de_kneser_n2_d0.5_dropout_0.3_#1 Mar 13 12:27
+208071470 andriusb RUN   gpu.120h   eu-login-45 eu-g2-01de_kneser_n2_d0.9_dropout_0.3_#1 Mar 13 12:27
+208071456 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06de_kneser_n2_d0.075_dropout_0.3_#1 Mar 13 12:26
+
+bsub -J ru_kneser_n2_d0.9_dropout_0.3_#1 -W 10080 -o runs/ru_kneser_n2_d0.9_dropout_0.3_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/ru \
+--save-dir /cluster/scratch/andriusb/checkpoints/ru_kneser_n2_d0.9_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion kneser_ney_smoothing --kneser-d 0.9 --kneser-n 2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+208071525 andriusb RUN   gpu.120h   eu-login-45 eu-g2-02ru_kneser_n2_d0.1_dropout_0.3_#1 Mar 13 12:28
+208071533 andriusb RUN   gpu.120h   eu-login-45 eu-g2-02ru_kneser_n2_d0.15_dropout_0.3_#1 Mar 13 12:28
+208071507 andriusb RUN   gpu.120h   eu-login-45 eu-g2-01ru_kneser_n2_d0.025_dropout_0.3_#1 Mar 13 12:28
+208071508 andriusb RUN   gpu.120h   eu-login-45 eu-g2-01ru_kneser_n2_d0.05_dropout_0.3_#1 Mar 13 12:28
+208071620 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06ru_kneser_n2_d0.2_dropout_0.3_#1 Mar 13 12:29
+208071705 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06ru_kneser_n2_d0.5_dropout_0.3_#1 Mar 13 12:29
+208071770 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06ru_kneser_n2_d0.9_dropout_0.3_#1 Mar 13 12:29
+208071512 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06ru_kneser_n2_d0.075_dropout_0.3_#1 Mar 13 12:28
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_label_smoothing_0.15_dropout_0.3_#1 -W 2880 -o runs/wikitext-103-cleaned-bpe-size0.0625_label_smoothing_0.15_dropout_0.3_#1.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_label_smoothing_0.15_dropout_0.3_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.15 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.0, 0.1, 0.9)' \
+
+-W 2880 -o runs/translation_test
+bsub -J iwslt14_de_en_dropout_0.1_#4  -o runs/iwslt14_de_en_dropout_0.1_#4   -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.1_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.1 --weight-decay 0.0001 \
+--criterion cross_entropy \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+bsub -J iwslt14_de_en_dropout_0.2_#4  -o runs/iwslt14_de_en_dropout_0.2_#4   -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.2_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.2 --weight-decay 0.0001 \
+--criterion cross_entropy \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+bsub -J iwslt14_de_en_dropout_0.3_#4  -o runs/iwslt14_de_en_dropout_0.3_#4   -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.3_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.3 --weight-decay 0.0001 \
+--criterion cross_entropy \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.06_0.015_0.925_#1 -W 4000 -o runs/wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.06_0.015_0.925_#1.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.06_0.015_0.925_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.06, 0.015, 0.925)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints \
+--seed 1321671 \
+--no-epoch-checkpoints \
+--patience 3 \
+--fp16 \
+--max-update 50000
+
+
+bsub -J iwslt14_de_en_dropout_0.4_label_smoothing_0.3_#5 -W 1440 -o runs/iwslt14_de_en_dropout_0.4_label_smoothing_0.3_#5 -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.4_label_smoothing_0.3_#5 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.4 --weight-decay 0.0001 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.3 \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575615 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+--max-tokens 4096 \
+
+bsub -J iwslt14_de_en_dropout_0.4_jelinek_0.06_0.14_0.80_#4 -W 240 -o runs/iwslt14_de_en_dropout_0.4_jelinek_0.06_0.14_0.80_#4 -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.4_jelinek_0.06_0.14_0.80_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.4 --weight-decay 0.0001 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.06,0.14,0.80)' \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+
+
+
+bsub -J de_dropout_0.3_jelinek_0.04_0.01_0.95_#1 -W 5760 -o runs/de_dropout_0.3_jelinek_0.04_0.01_0.95_#1.txt  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/de \
+--save-dir /cluster/scratch/andriusb/checkpoints/de_dropout_0.3_#1_jelinek_0.04_0.01_0.95 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.04,0.01, 0.95)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 512 --update-freq 128 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J ru_dropout_0.3_jelinek_0.0225_0.0025_0.975_#1 -W 5760 -o runs/ru_dropout_0.3_jelinek_0.0225_0.0025_0.975_#1.txt -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/ru \
+--save-dir /cluster/scratch/andriusb/checkpoints/ru_dropout_0.3_#1_jelinek_0.0225_0.0025_0.975 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.3 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.0225,0.0025,0.975)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+-R "select[gpu_mtotal0>=12240]"
+
+bsub -J iwslt14_en_de_dropout_0.55_#4 -W 480 -o runs/iwslt14_en_de_dropout_0.55_#4 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.en-de \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_en_de_dropout_0.55_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.55 --weight-decay 0.0001 \
+--criterion cross_entropy \
+--max-tokens 4096 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+bsub -J iwslt14_en_de_dropout_0.325_label_smoothing_0.5_#4 -W 480 -o runs/iwslt14_en_de_dropout_0.325_label_smoothing_0.5_#4 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.en-de \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_en_de_dropout_0.325_label_smoothing_0.5_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.325 --weight-decay 0.0001 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.5 \
+--max-tokens 8192 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+bsub -J iwslt14_en_de_dropout_0.325_jelinek_0.0_0.2_0.8_#4 -W 480 -o runs/iwslt14_en_de_dropout_0.325_jelinek_0.0_0.2_0.8_#4 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.en-de \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_en_de_dropout_0.325_jelinek_0.0_0.2_0.8_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.325 --weight-decay 0.0001 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.0,0.2,0.8)' \
+--max-tokens 8192 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+bsub -J iwslt14_en_de_dropout_0.325_kneser_n2_d0.95_#4 -W 1440 -o runs/iwslt14_en_de_dropout_0.325_kneser_n2_d0.95_#4 -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.en-de \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_en_de_dropout_0.325_kneser_n2_d0.95_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.325 --weight-decay 0.0001 \
+--criterion kneser_ney_smoothing --kneser-d 0.95 --kneser-n 2 \
+--max-tokens 4096 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+bsub -J iwslt14_de_en_dropout_0.45_#4 -W 1440 -o runs/iwslt14_de_en_dropout_0.45_#4   -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.45_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.45 --weight-decay 0.0001 \
+--criterion cross_entropy \
+--max-tokens 4096 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+bsub -J iwslt14_de_en_dropout_0.4_kneser_n2_d0.9_#4 -W 1440 -o runs/iwslt14_de_en_dropout_0.4_kneser_n2_d0.9_#4  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.4_kneser_n2_d0.9_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.4 --weight-decay 0.0001 \
+--criterion kneser_ney_smoothing --kneser-d 0.9 --kneser-n 2 \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.5_#4 -W 240 -o runs/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.5_#4.txt -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.5_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.5 \
+--criterion cross_entropy \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--max-update 50000
+
+
+bsub -J iwslt14_de_en_dropout_0.3_label_smoothing_0.5_#4 -W 240 -o runs/iwslt14_de_en_dropout_0.3_label_smoothing_0.5_#4 -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.3_label_smoothing_0.5_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.3 --weight-decay 0.0001 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.5 \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+
+bsub -J iwslt14_de_en_dropout_0.3_jelinek_0.3375_0.0125_0.65_#4 -W 240 -o runs/iwslt14_de_en_dropout_0.3_jelinek_0.3375_0.0125_0.65_#4 -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.3_jelinek_0.3375_0.0125_0.65_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.3 --weight-decay 0.0001 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.3375,0.0125,0.65)' \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_label_smoothing_0.25_dropout_0.35_#4 -W 1440 -o runs/wikitext-103-cleaned-bpe-size0.0625_label_smoothing_0.25_dropout_0.35_#4.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_label_smoothing_0.25_dropout_0.35_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.35 \
+--criterion label_smoothed_cross_entropy --label-smoothing 0.25 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575614 \
+--fp16 \
+--no-epoch-checkpoints \
+--patience 3 \
+--max-update 50000
+
+bsub -J iwslt14_de_en_dropout_0.3_kneser_n2_d0.95_#4 -W 1440 -o runs/iwslt14_de_en_dropout_0.3_kneser_n2_d0.95_#4 -R "select[gpu_mtotal0>=12240]" -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train \
+data-bin/iwslt14.tokenized.de-en \
+--save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.3_kneser_n2_d0.95_#4 \
+--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+--dropout 0.3 --weight-decay 0.0001 \
+--criterion kneser_ney_smoothing --kneser-d 0.95 --kneser-n 2 \
+--max-tokens 32768 \
+--eval-bleu \
+--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+--eval-bleu-detok moses \
+--eval-bleu-remove-bpe \
+--eval-bleu-print-samples \
+--fp16 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--patience 3 \
+--seed 66575614 \
+--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.16_dropout_0.35_#1 -W 1440 -o runs/wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.16_dropout_0.35_#1.txt -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.16_dropout_0.35_#1 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.35 \
+--criterion kneser_ney_smoothing --kneser-d 0.16 --kneser-n 2 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--seed 66575611 \
+--fp16 \
+--no-epoch-checkpoints  \
+--patience 3 \
+--max-update 50000
+
+210918443 andriusb RUN   gpuhe.24h  eu-login-20 eu-g3-065   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.16_dropout_0.35_#1 Mar 24 20:49
+210918608 andriusb RUN   gpuhe.24h  eu-login-20 eu-g3-063   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.32_dropout_0.35_#1 Mar 24 20:50
+210919193 andriusb RUN   gpuhe.24h  eu-login-20 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.64_dropout_0.35_#4 Mar 24 20:52
+210919283 andriusb RUN   gpuhe.24h  eu-login-20 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#1 Mar 24 20:53
+210919300 andriusb RUN   gpuhe.24h  eu-login-20 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#2 Mar 24 20:53
+210919321 andriusb RUN   gpuhe.24h  eu-login-20 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#3 Mar 24 20:53
+210919354 andriusb RUN   gpuhe.24h  eu-login-20 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#4 Mar 24 20:53
+
+
+bsub -J wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.0_0.1_0.9_#4 -W 1440 -o runs/wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.0_0.1_0.9_#4 -R "select[gpu_mtotal0>=12240]"  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-train --task language_modeling \
+data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+--save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.0_0.1_0.9_#4 \
+--arch transformer_lm --share-decoder-input-output-embed \
+--dropout 0.35 \
+--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.0,0.1,0.9)' \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 32 \
+--no-epoch-checkpoints \
+--seed 66575614 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--patience 3 \
+--fp16 \
+--max-update 50000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 EVALUATION
 
+data-bin/wikitext-103-raw-size-0.5
+wikitext-2-cleaned-bpe-full
+wikitext-103-cleaned-bpe-size0.0625
+-R "select[gpu_mtotal0>=12240]"
+data-bin/iwslt14.tokenized.de-en
+
 bsub -I  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
-fairseq-eval-lm data-bin/wikitext-2-raw-full \
---path /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.0_0.9_#4/checkpoint_best.pt \
+fairseq-generate data-bin/iwslt14.tokenized.de-en \
+--path /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.3_kneser_n2_d0.95_#4/checkpoint_best.pt \
+--batch-size 128 --beam 5 --remove-bpe
+
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.02_#1
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.02_#2
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.02_#3
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.02_#4
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.04_#1
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.04_#2
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.04_#3
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.04_#4
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.08_#1
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.08_#2
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.08_#3
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.08_#4
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.16_#1
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.16_#2
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.16_#3
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.16_#4
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.32_#1
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.32_#2
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.32_#3
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.32_#4
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.64_#1
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.64_#2
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.64_#3
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.64_#4
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.95_#1
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.95_#2
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.95_#3
+iwslt14_de_en_dropout_0.3_kneser_n2_d0.95_#4
+
+
+
+
+
+bsub -I  -R "rusage[ngpus_excl_p=1,mem=16384]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-eval-lm data-bin/ru \
+--path /cluster/scratch/andriusb/checkpoints/ru_kneser_n2_d0.9_dropout_0.3_#1/checkpoint_best.pt \
 --max-sentences 2 \
 --tokens-per-sample 512 \
---context-window 510
+--context-window 511
 
-w2_cross_entropy              w2-jelinek_0.11_-0.01_0.9_#3  w2_label_smoothing_0.15
-w2_good_turing_n1             w2-jelinek_0.11_-0.01_0.9_#4  w2_label_smoothing_0.175
-w2_good_turing_n2             w2-jelinek_0.12_-0.02_0.9     w2_label_smoothing_0.2
-w2-jelinek_0.0_0.1_0.9        w2-jelinek_0.13_-0.03_0.9     w2_label_smoothing_kl_test
-w2-jelinek_0.05_0.05_0.9      w2-jelinek0.14_-0.04_0.9      w2_label_smoothing_test
-w2-jelinek_0.05_0.95          w2-jelinek0.15_-0.05_0.9      w2_label_smoothing_test_test
-w2-jelinek_0.06_0.04_0.9      w2-jelinek0.15_0.85           w2_n2_kneser_0.01
-w2-jelinek_0.07_0.03_0.9      w2-jelinek_0.16_-0.06_0.9     w2_n2_kneser_0.02
-w2-jelinek_0.08_0.02_0.9      w2-jelinek_0.2_0.8            w2_n2_kneser_0.04
-w2-jelinek_0.09_0.01_0.9      w2-jelinek_0.25_0.75          w2_n2_kneser_0.08
-w2-jelinek_0.09_0.01_0.9_#1   w2-jelinek_test               w2_n2_kneser_0.16
-w2-jelinek_0.09_0.01_0.9_#2   w2_katz_k2_n2                 w2_n2_kneser_0.32
-w2-jelinek_0.09_0.01_0.9_#3   w2_katz_k3_n2                 w2_n2_kneser_0.64
-w2-jelinek_0.09_0.01_0.9_#4   w2_katz_k4_n2                 w2_unigram_smoothing_0.005
-w2-jelinek_0.1_0.0_0.9        w2_katz_k5_n2                 w2_unigram_smoothing_0.01
-w2-jelinek_0.1_0.0_0.9_#1     w2_label_smoothing_0.001      w2_unigram_smoothing_0.02
-w2-jelinek_0.1_0.0_0.9_#2     w2_label_smoothing_0.01       w2_unigram_smoothing_0.04
-w2-jelinek_0.1_0.0_0.9_#3     w2_label_smoothing_0.02       w2_unigram_smoothing_0.06
-w2-jelinek_0.1_0.0_0.9_#4     w2_label_smoothing_0.04       w2_unigram_smoothing_0.08
-w2-jelinek_0.1_0.9            w2_label_smoothing_0.06       w2_unigram_smoothing_0.1
-w2-jelinek_0.11_-0.01_0.9     w2_label_smoothing_0.08       w2_unigram_smoothing_0.12
-w2-jelinek_0.11_-0.01_0.9_#1  w2_label_smoothing_0.1        w2_unigram_smoothing_0.14
-w2-jelinek_0.11_-0.01_0.9_#2  w2_label_smoothing_0.125
+de_kneser_n2_d0.025_dropout_0.3_#1
+de_kneser_n2_d0.05_dropout_0.3_#1
+de_kneser_n2_d0.075_dropout_0.3_#1
+de_kneser_n2_d0.1_dropout_0.3_#1
+de_kneser_n2_d0.2_dropout_0.3_#1
+de_kneser_n2_d0.4_dropout_0.3_#1
+de_kneser_n2_d0.9_dropout_0.3_#1
+(env) [andriusb@eu-login-46 fairseq]$ ls /cluster/scratch/andriusb/checkpoints/ | grep ru_kneser_n2_d0.
+ru_kneser_n2_d0.025_dropout_0.3_#1
+ru_kneser_n2_d0.05_dropout_0.3_#1
+ru_kneser_n2_d0.075_dropout_0.3_#1
+ru_kneser_n2_d0.1_dropout_0.3_#1
+ru_kneser_n2_d0.2_dropout_0.3_#1
+ru_kneser_n2_d0.4_dropout_0.3_#1
+ru_kneser_n2_d0.9_dropout_0.3_#1
+
+
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.0_0.1_0.9_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.0_0.1_0.9_#2
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.0_0.1_0.9_#3
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.0_0.1_0.9_#4
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.01_0.09_0.9_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.01_0.09_0.9_#2
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.01_0.09_0.9_#3
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.01_0.09_0.9_#4
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.02_0.08_0.9_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.02_0.08_0.9_#2
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.02_0.08_0.9_#3
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.02_0.08_0.9_#4
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.04_0.06_0.9_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.04_0.06_0.9_#2
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.04_0.06_0.9_#3
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.04_0.06_0.9_#4
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.06_0.04_0.9_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.06_0.04_0.9_#2
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.06_0.04_0.9_#3
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.06_0.04_0.9_#4
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.08_0.02_0.9_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.08_0.02_0.9_#2
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.08_0.02_0.9_#3
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.08_0.02_0.9_#4
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.09_0.01_0.9_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.09_0.01_0.9_#2
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.09_0.01_0.9_#3
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.35_jelinek_0.09_0.01_0.9_#4
+
+
+--jason-log-dir
+
+bsub -I  -R "rusage[ngpus_excl_p=1,mem=20000]" CUDA_VISIBLE_DEVICES=0  \
+fairseq-eval-lm data-bin/wikitext-2-raw-full \
+--path /cluster/scratch/andriusb/checkpoints/w103_fp16-label_smoothing_0.1_#3/checkpoint_best.pt \
+--max-sentences 2 \
+--tokens-per-sample 512 \
+--jason-test-output throwaway/test5.txt \
+--context-window 500

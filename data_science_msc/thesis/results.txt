@@ -658,8 +658,79 @@ Variance checks:
 2022-02-03 06:05:17 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1020.7s (240.59 tokens/s)
 2022-02-03 06:05:17 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0401, Perplexity: 263.21
 
+268.518, sample standard deviation 4.4653297750558
 
 
+
+2022-02-03 05:49:07 | INFO | fairseq.tasks.language_modeling | dictionary: 76624 types
+2022-02-03 05:49:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.0_0.9_#1/checkpoint_best.pt
+2022-02-03 05:49:17 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-02-03 05:49:17 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-02-03 05:49:17 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 122,785 examples
+2022-02-03 06:07:17 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1046.4s (234.67 tokens/s)
+2022-02-03 06:07:17 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.1254, Perplexity: 279.25
+
+2022-02-03 05:49:07 | INFO | fairseq.tasks.language_modeling | dictionary: 76624 types
+2022-02-03 05:49:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.0_0.9_#2/checkpoint_best.pt
+2022-02-03 05:49:16 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-02-03 05:49:16 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-02-03 05:49:16 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 122,785 examples
+2022-02-03 06:07:31 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1059.2s (231.84 tokens/s)
+2022-02-03 06:07:31 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0959, Perplexity: 273.59
+
+2022-02-03 05:49:07 | INFO | fairseq.tasks.language_modeling | dictionary: 76624 types
+2022-02-03 05:49:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.0_0.9_#3/checkpoint_best.pt
+2022-02-03 05:49:17 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-02-03 05:49:17 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-02-03 05:49:17 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 122,785 examples
+2022-02-03 06:06:54 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1022.9s (240.08 tokens/s)
+2022-02-03 06:06:54 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.1782, Perplexity: 289.65
+
+2022-02-03 05:49:07 | INFO | fairseq.tasks.language_modeling | dictionary: 76624 types
+2022-02-03 05:49:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.1_0.0_0.9_#4/checkpoint_best.pt
+2022-02-03 05:49:17 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-02-03 05:49:17 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-02-03 05:49:17 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 122,785 examples
+2022-02-03 06:06:49 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1017.4s (241.36 tokens/s)
+2022-02-03 06:06:49 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0820, Perplexity: 270.96
+
+277.718, sample standard deviation 7.3156797360191
+
+
+
+2022-02-03 05:48:03 | INFO | fairseq.tasks.language_modeling | dictionary: 76624 types
+2022-02-03 05:48:03 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.11_-0.01_0.9_#1/checkpoint_best.pt
+2022-02-03 05:48:08 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-02-03 05:48:08 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-02-03 05:48:08 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 122,785 examples
+2022-02-03 06:05:55 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1026.9s (239.13 tokens/s)
+2022-02-03 06:05:55 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.1423, Perplexity: 282.53
+
+2022-02-03 05:48:03 | INFO | fairseq.tasks.language_modeling | dictionary: 76624 types
+2022-02-03 05:48:03 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.11_-0.01_0.9_#2/checkpoint_best.pt
+2022-02-03 05:48:09 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-02-03 05:48:09 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-02-03 05:48:09 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 122,785 examples
+2022-02-03 06:05:56 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1027.3s (239.04 tokens/s)
+2022-02-03 06:05:56 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0547, Perplexity: 265.89
+
+2022-02-03 05:48:07 | INFO | fairseq.tasks.language_modeling | dictionary: 76624 types
+2022-02-03 05:48:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.11_-0.01_0.9_#3/checkpoint_best.pt
+2022-02-03 05:48:17 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-02-03 05:48:17 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-02-03 05:48:17 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 122,785 examples
+2022-02-03 06:05:44 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1010.5s (243.03 tokens/s)
+2022-02-03 06:05:44 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0548, Perplexity: 265.91
+
+2022-02-03 05:48:07 | INFO | fairseq.tasks.language_modeling | dictionary: 76624 types
+2022-02-03 05:48:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2-jelinek_0.11_-0.01_0.9_#4/checkpoint_best.pt
+2022-02-03 05:48:17 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-02-03 05:48:17 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-02-03 05:48:17 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 122,785 examples
+2022-02-03 06:05:38 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1004.6s (244.45 tokens/s)
+2022-02-03 06:05:38 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.1701, Perplexity: 288.03
+
+275.358, sample standard deviation 9.8967934200932
 
 
 
@@ -740,3 +811,1241 @@ Unigram smoothing
 2022-01-24 15:51:34 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1059.9s (231.69 tokens/s)
 2022-01-24 15:51:34 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.5003, Perplexity: 362.11
 
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+WIKITEXT 103
+
+######################################################################################################
+######################################################################################################
+Cross entropy
+
+31 epochs
+
+
+2022-02-16 06:16:27 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-16 06:16:27 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-cross_entropy_#1/checkpoint_best.pt
+2022-02-16 06:16:50 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-16 06:16:50 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-16 06:16:50 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-16 07:39:38 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4925.0s (49.86 tokens/s)
+2022-02-16 07:39:38 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.0883, Perplexity: 34.02
+
+2022-02-16 06:17:01 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-16 06:17:01 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-cross_entropy_#2/checkpoint_best.pt
+2022-02-16 06:17:16 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-16 06:17:16 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-16 06:17:16 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-16 07:40:33 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4918.7s (49.93 tokens/s)
+2022-02-16 07:40:33 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.0840, Perplexity: 33.92
+
+2022-02-16 06:16:59 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-16 06:16:59 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-cross_entropy_#3/checkpoint_best.pt
+2022-02-16 06:17:19 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-16 06:17:19 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-16 06:17:19 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-16 07:40:05 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4924.2s (49.87 tokens/s)
+2022-02-16 07:40:05 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.0629, Perplexity: 33.43
+
+
+
+######################################################################################################
+######################################################################################################
+Label Smoothing
+
+31 epochs
+
+2022-02-16 06:17:31 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-16 06:17:31 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-label_smoothing_0.1_#1/checkpoint_best.pt
+2022-02-16 06:17:52 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-16 06:17:52 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-16 06:17:52 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-16 07:40:55 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4940.9s (49.70 tokens/s)
+2022-02-16 07:40:55 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.1518, Perplexity: 35.55
+
+2022-02-16 06:17:38 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-16 06:17:38 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-label_smoothing_0.1_#2/checkpoint_best.pt
+2022-02-16 06:18:04 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-16 06:18:04 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-16 06:18:04 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-16 07:41:06 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4935.4s (49.76 tokens/s)
+2022-02-16 07:41:06 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.1459, Perplexity: 35.41
+
+2022-02-16 06:17:31 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-16 06:17:31 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-label_smoothing_0.1_#3/checkpoint_best.pt
+2022-02-16 06:17:50 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-16 06:17:50 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-16 06:17:50 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-16 07:42:09 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 5016.6s (48.95 tokens/s)
+2022-02-16 07:42:09 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.1474, Perplexity: 35.44
+
+
+######################################################################################################
+######################################################################################################
+Jelinek-Mercer Smoothing
+
+19 ish epochs
+
+2022-02-20 17:03:01 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-20 17:03:01 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-jelinek_0.09_0.01_0.9_#1/checkpoint_best.pt
+2022-02-20 17:03:21 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-20 17:03:21 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-20 17:03:21 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-20 18:26:30 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4947.1s (49.64 tokens/s)
+2022-02-20 18:26:30 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.1337, Perplexity: 35.11
+
+2022-02-20 17:03:09 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-20 17:03:09 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-jelinek_0.09_0.01_0.9_#2/checkpoint_best.pt
+2022-02-20 17:03:32 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-20 17:03:32 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-20 17:03:32 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-20 18:27:19 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4984.8s (49.26 tokens/s)
+2022-02-20 18:27:19 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.1375, Perplexity: 35.20
+
+2022-02-20 17:03:01 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-20 17:03:01 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-jelinek_0.09_0.01_0.9_#3/checkpoint_best.pt
+2022-02-20 17:03:19 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-20 17:03:19 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-20 17:03:19 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-20 18:26:26 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4943.4s (49.68 tokens/s)
+2022-02-20 18:26:26 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.1235, Perplexity: 34.86
+
+
+
+2022-02-20 17:03:30 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-20 17:03:30 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-jelinek_0.11_-0.01_0.9_#1/checkpoint_best.pt
+2022-02-20 17:03:44 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-20 17:03:44 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-20 17:03:44 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-20 18:25:03 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4843.4s (50.70 tokens/s)
+2022-02-20 18:25:03 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.7793, Perplexity: 54.92
+
+2022-02-20 17:04:18 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-20 17:04:18 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-jelinek_0.11_-0.01_0.9_#2/checkpoint_best.pt
+2022-02-20 17:05:07 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-20 17:05:07 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-20 17:05:07 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-20 18:28:12 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4943.2s (49.68 tokens/s)
+2022-02-20 18:28:12 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.7461, Perplexity: 53.67
+
+2022-02-20 17:04:17 | INFO | fairseq.tasks.language_modeling | dictionary: 623952 types
+2022-02-20 17:04:17 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16-jelinek_0.11_-0.01_0.9_#3/checkpoint_best.pt
+2022-02-20 17:05:10 | INFO | fairseq_cli.eval_lm | num. model params: 338,377,728
+2022-02-20 17:05:10 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-full/test
+2022-02-20 17:05:10 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-full test 122,785 examples
+2022-02-20 18:35:01 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 5349.1s (45.91 tokens/s)
+2022-02-20 18:35:01 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.7780, Perplexity: 54.87
+
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+WIKITEXT 103 at 0.5 size
+Cross entropy
+
+2022-02-22 12:10:47 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-22 12:10:47 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-cross_entropy_#1/checkpoint_best.pt
+2022-02-22 12:11:03 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-22 12:11:03 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-22 12:11:03 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-22 13:12:23 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3639.2s (67.48 tokens/s)
+2022-02-22 13:12:23 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.5683, Perplexity: 47.45
+
+2022-02-22 12:10:37 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-22 12:10:37 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-cross_entropy_#2/checkpoint_best.pt
+2022-02-22 12:10:50 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-22 12:10:50 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-22 12:10:50 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-22 13:11:16 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3586.8s (68.46 tokens/s)
+2022-02-22 13:11:16 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.5513, Perplexity: 46.89
+
+2022-02-22 05:30:18 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-22 05:30:18 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-cross_entropy_#3/checkpoint_best.pt
+2022-02-22 05:30:34 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-22 05:30:34 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-22 05:30:34 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-22 06:30:52 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3590.8s (68.39 tokens/s)
+2022-02-22 06:30:52 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.5312, Perplexity: 46.24
+
+
+######################################################################################################
+######################################################################################################
+Label Smoothing
+
+2022-02-20 17:46:59 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-20 17:46:59 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.01_#1/checkpoint_best.pt
+2022-02-20 17:47:13 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-20 17:47:13 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-20 17:47:13 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-20 18:46:50 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3536.6s (69.44 tokens/s)
+2022-02-20 18:46:50 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.5111, Perplexity: 45.61
+
+2022-02-20 17:47:10 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-20 17:47:10 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.02_#1/checkpoint_best.pt
+2022-02-20 17:47:53 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-20 17:47:53 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-20 17:47:53 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-20 18:49:06 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3634.1s (67.57 tokens/s)
+2022-02-20 18:49:06 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4774, Perplexity: 44.55
+
+2022-02-20 17:47:59 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-20 17:47:59 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.04_#1/checkpoint_best.pt
+2022-02-20 17:48:09 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-20 17:48:09 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-20 17:48:09 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-20 18:45:55 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3439.4s (71.40 tokens/s)
+2022-02-20 18:45:55 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4669, Perplexity: 44.23
+
+2022-02-27 15:20:17 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.04_#2/checkpoint_best.pt
+2022-02-27 15:20:27 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-27 15:20:27 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-27 15:20:27 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-27 16:18:18 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3443.2s (71.32 tokens/s)
+2022-02-27 16:18:18 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4698, Perplexity: 44.32
+
+2022-02-27 15:20:16 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-27 15:20:16 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.04_#3/checkpoint_best.pt
+2022-02-27 15:20:34 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-27 15:20:34 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-27 15:20:34 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-27 16:17:59 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3416.9s (71.87 tokens/s)
+2022-02-27 16:17:59 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.6527, Perplexity: 50.31
+
+2022-02-27 15:20:50 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-27 15:20:50 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.04_#4/checkpoint_best.pt
+2022-02-27 15:21:09 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-27 15:21:09 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-27 15:21:09 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-27 16:21:57 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3603.3s (68.15 tokens/s)
+2022-02-27 16:21:57 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.6778, Perplexity: 51.19
+
+2022-02-20 17:48:13 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-20 17:48:13 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.08_#1/checkpoint_best.pt
+2022-02-20 17:48:49 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-20 17:48:49 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-20 17:48:49 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-20 18:50:19 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3651.5s (67.25 tokens/s)
+2022-02-20 18:50:19 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4686, Perplexity: 44.28
+
+2022-02-20 17:48:31 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-20 17:48:31 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.5_fp16-label_smoothing_0.1_#1/checkpoint_best.pt
+2022-02-20 17:48:43 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-20 17:48:43 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-20 17:48:43 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-20 18:48:07 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3532.3s (69.52 tokens/s)
+2022-02-20 18:48:07 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4846, Perplexity: 44.78
+
+
+######################################################################################################
+######################################################################################################
+Jelinek-Mercer
+
+
+2022-02-24 09:45:39 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-24 09:45:39 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.032_0.008_0.96_#1/checkpoint_best.pt
+2022-02-24 09:45:55 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-24 09:45:55 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-24 09:45:55 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-24 10:47:00 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3624.0s (67.76 tokens/s)
+2022-02-24 10:47:00 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4536, Perplexity: 43.82
+
+2022-02-24 09:46:26 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-24 09:46:26 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.034_0.006_0.96_#1/checkpoint_best.pt
+2022-02-24 09:47:11 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-24 09:47:11 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-24 09:47:11 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-24 11:10:22 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4922.8s (49.88 tokens/s)
+2022-02-24 11:10:22 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4636, Perplexity: 44.1
+
+2022-02-24 09:44:36 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-24 09:44:36 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.036_0.004_0.96_#1/checkpoint_best.pt
+2022-02-24 09:44:49 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-24 09:44:49 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-24 09:44:49 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-24 10:46:06 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3632.9s (67.60 tokens/s)
+2022-02-24 10:46:06 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4529, Perplexity: 43.80
+
+2022-02-27 15:27:16 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-27 15:27:16 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.036_0.004_0.96_#2/checkpoint_best.pt
+2022-02-27 15:27:30 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-27 15:27:30 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-27 15:27:30 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-27 16:28:31 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3620.9s (67.82 tokens/s)
+2022-02-27 16:28:31 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4543, Perplexity: 43.84
+
+2022-02-27 15:27:16 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-27 15:27:16 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.036_0.004_0.96_#3/checkpoint_best.pt
+2022-02-27 15:27:29 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-27 15:27:30 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-27 15:27:30 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-27 16:28:08 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3597.8s (68.25 tokens/s)
+2022-02-27 16:28:08 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4578, Perplexity: 43.95
+
+2022-02-27 15:28:52 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-27 15:28:52 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.036_0.004_0.96_#4/checkpoint_best.pt
+2022-02-27 15:29:14 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-27 15:29:14 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-27 15:29:14 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-27 16:29:43 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3585.4s (68.49 tokens/s)
+2022-02-27 16:29:43 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4568, Perplexity: 43.92
+
+2022-02-24 09:45:02 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-24 09:45:02 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.038_0.002_0.96_#1/checkpoint_best.pt
+2022-02-24 09:45:15 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-24 09:45:15 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-24 09:45:15 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-24 10:52:21 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3982.6s (61.66 tokens/s)
+2022-02-24 10:52:21 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.7336, Perplexity: 53.21
+
+2022-02-27 15:27:24 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-27 15:27:24 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.038_0.002_0.96_#5/checkpoint_best.pt
+2022-02-27 15:27:46 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-27 15:27:46 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-27 15:27:46 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-27 16:28:47 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3618.0s (67.87 tokens/s)
+2022-02-27 16:28:47 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4695, Perplexity: 44.31
+
+2022-02-27 15:27:24 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-27 15:27:24 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-jelinek_0.038_0.002_0.96_#6/checkpoint_best.pt
+2022-02-27 15:27:45 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-27 15:27:45 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-27 15:27:45 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-27 16:28:38 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3607.2s (68.08 tokens/s)
+2022-02-27 16:28:38 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.4310, Perplexity: 43.14
+
+######################################################################################################
+######################################################################################################
+Good-Turing
+
+2022-02-27 15:28:52 | INFO | fairseq.tasks.language_modeling | dictionary: 430640 types
+2022-02-27 15:28:52 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.5-good-turing-n1/checkpoint_best.pt
+2022-02-27 15:29:14 | INFO | fairseq_cli.eval_lm | num. model params: 239,401,984
+2022-02-27 15:29:14 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.5/test
+2022-02-27 15:29:14 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.5 test 122,785 examples
+2022-02-27 16:29:57 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 3599.8s (68.22 tokens/s)
+2022-02-27 16:29:57 | INFO | fairseq_cli.eval_lm | Loss (base 2): 5.5321, Perplexity: 46.27
+
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+WIKITEXT 103 at 0.25 size
+Cross entropy
+
+2022-03-02 07:09:12 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-02 07:09:12 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-cross_entropy_#1/checkpoint_best.pt
+2022-03-02 07:09:21 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-02 07:09:21 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-02 07:09:21 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-02 07:52:52 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2576.7s (95.30 tokens/s)
+2022-03-02 07:52:52 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.1902, Perplexity: 73.02
+
+2022-03-02 07:09:13 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-02 07:09:13 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-cross_entropy_#2/checkpoint_best.pt
+2022-03-02 07:09:22 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-02 07:09:22 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-02 07:09:22 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-02 07:52:29 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2561.1s (95.88 tokens/s)
+2022-03-02 07:52:29 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.1616, Perplexity: 71.58
+
+2022-03-02 07:09:51 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-02 07:09:51 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-cross_entropy_#3/checkpoint_best.pt
+2022-03-02 07:10:07 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-02 07:10:07 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-02 07:10:07 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-02 07:54:11 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2610.2s (94.08 tokens/s)
+2022-03-02 07:54:11 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0893, Perplexity: 68.09
+
+2022-03-02 07:11:41 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-02 07:11:41 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-cross_entropy_#4/checkpoint_best.pt
+2022-03-02 07:11:50 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-02 07:11:50 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-02 07:11:50 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-02 07:55:30 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2587.7s (94.90 tokens/s)
+2022-03-02 07:55:30 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0941, Perplexity: 68.31
+
+######################################################################################################
+######################################################################################################
+Label Smoothing
+
+2022-03-02 07:13:11 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-02 07:13:11 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-label_smoothing_0.01_#1/checkpoint_best.pt
+2022-03-02 07:13:21 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-02 07:13:21 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-02 07:13:21 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-02 07:56:07 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2529.2s (97.09 tokens/s)
+2022-03-02 07:56:07 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0664, Perplexity: 67.01
+
+2022-03-02 07:13:11 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-02 07:13:11 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-label_smoothing_0.02_#1/checkpoint_best.pt
+2022-03-02 07:13:21 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-02 07:13:21 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-02 07:13:21 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-02 07:56:04 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2524.7s (97.27 tokens/s)
+2022-03-02 07:56:04 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0606, Perplexity: 66.75
+
+2022-03-02 07:13:11 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-02 07:13:11 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-label_smoothing_0.04_#1/checkpoint_best.pt
+2022-03-02 07:13:21 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-02 07:13:21 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-02 07:13:21 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-02 07:56:04 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2530.0s (97.06 tokens/s)
+2022-03-02 07:56:04 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0251, Perplexity: 65.12
+
+2022-03-02 07:13:48 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-02 07:13:48 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-label_smoothing_0.08_#1/checkpoint_best.pt
+2022-03-02 07:14:05 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-02 07:14:05 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-02 07:14:05 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-02 07:58:39 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2632.2s (93.29 tokens/s)
+2022-03-02 07:58:39 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0404, Perplexity: 65.82
+
+2022-03-02 07:13:48 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-02 07:13:48 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-label_smoothing_0.1_#1/checkpoint_best.pt
+2022-03-02 07:14:05 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-02 07:14:05 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-02 07:14:05 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-02 07:58:49 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2642.4s (92.93 tokens/s)
+2022-03-02 07:58:49 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0263, Perplexity: 65.18
+
+2022-03-05 08:42:43 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-label_smoothing_0.1_#2/checkpoint_best.pt
+2022-03-05 08:42:52 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:42:52 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:42:53 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:26:09 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2567.5s (95.65 tokens/s)
+2022-03-05 09:26:09 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0367, Perplexity: 65.65
+
+2022-03-05 08:43:19 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-label_smoothing_0.1_#3/checkpoint_best.pt
+2022-03-05 08:43:37 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:43:37 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:43:37 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:26:53 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2568.5s (95.61 tokens/s)
+2022-03-05 09:26:53 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0567, Perplexity: 66.56
+
+2022-03-05 08:43:12 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.25_fp16-label_smoothing_0.1_#4/checkpoint_best.pt
+2022-03-05 08:43:28 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:43:28 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:43:28 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:28:53 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2679.5s (91.65 tokens/s)
+2022-03-05 09:28:53 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0739, Perplexity: 67.37
+
+
+######################################################################################################
+######################################################################################################
+Jelinek-Mercer
+
+2022-03-03 09:47:57 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-03 09:47:57 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.09_0.01_0.9_#1/checkpoint_best.pt
+2022-03-03 09:48:14 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-03 09:48:14 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-03 09:48:14 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-03 10:31:37 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2569.7s (95.56 tokens/s)
+2022-03-03 10:31:37 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0292, Perplexity: 65.31
+
+2022-03-03 09:48:31 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-03 09:48:31 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.08_0.02_0.9_#1/checkpoint_best.pt
+2022-03-03 09:48:49 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-03 09:48:49 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-03 09:48:49 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-03 10:31:58 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2551.9s (96.23 tokens/s)
+2022-03-03 10:31:58 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0188, Perplexity: 64.84
+
+2022-03-03 09:48:51 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-03 09:48:51 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.06_0.04_0.9_#1/checkpoint_best.pt
+2022-03-03 09:49:01 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-03 09:49:01 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-03 09:49:01 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-03 10:32:02 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2546.2s (96.44 tokens/s)
+2022-03-03 10:32:02 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0149, Perplexity: 64.66
+
+2022-03-05 08:44:41 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.04_0.06_0.9_#2/checkpoint_best.pt
+2022-03-05 08:44:54 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:44:54 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:44:54 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:30:07 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2669.2s (92.00 tokens/s)
+2022-03-05 09:30:07 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0522, Perplexity: 66.36
+
+2022-03-05 08:44:41 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.04_0.06_0.9_#3/checkpoint_best.pt
+2022-03-05 08:44:54 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:44:54 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:44:54 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:29:22 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2626.4s (93.50 tokens/s)
+2022-03-05 09:29:22 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0086, Perplexity: 64.38
+
+2022-03-05 08:45:09 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.04_0.06_0.9_#4/checkpoint_best.pt
+2022-03-05 08:45:21 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:45:21 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:45:21 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:30:20 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2657.3s (92.41 tokens/s)
+2022-03-05 09:30:20 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0052, Perplexity: 64.23
+
+2022-03-03 09:48:55 | INFO | fairseq.tasks.language_modeling | dictionary: 291888 types
+2022-03-03 09:48:55 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.04_0.06_0.9_#1/checkpoint_best.pt
+2022-03-03 09:49:05 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-03 09:49:05 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-03 09:49:05 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-03 10:32:18 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2557.6s (96.02 tokens/s)
+2022-03-03 10:32:18 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0115, Perplexity: 64.51
+
+2022-03-05 08:43:52 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.02_0.08_0.9_#2/checkpoint_best.pt
+2022-03-05 08:44:10 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:44:10 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:44:10 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:29:25 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2671.8s (91.91 tokens/s)
+2022-03-05 09:29:25 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0429, Perplexity: 65.93
+
+2022-03-05 08:46:11 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.02_0.08_0.9_#3/checkpoint_best.pt
+2022-03-05 08:46:23 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:46:23 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:46:23 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:31:31 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2662.9s (92.22 tokens/s)
+2022-03-05 09:31:31 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.0143, Perplexity: 64.64
+
+2022-03-05 08:46:11 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.0_0.1_0.9_#1/checkpoint_best.pt
+2022-03-05 08:46:23 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:46:23 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:46:23 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:30:41 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2613.6s (93.96 tokens/s)
+2022-03-05 09:30:41 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.1092, Perplexity: 69.03
+
+2022-03-05 08:46:40 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.25-jelinek_0.0_0.1_0.9_#3/checkpoint_best.pt
+2022-03-05 08:46:52 | INFO | fairseq_cli.eval_lm | num. model params: 168,360,960
+2022-03-05 08:46:52 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.25/test
+2022-03-05 08:46:52 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.25 test 122,785 examples
+2022-03-05 09:31:18 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2624.2s (93.58 tokens/s)
+2022-03-05 09:31:18 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.1472, Perplexity: 70.88
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+WIKITEXT 103 at 0.125 size
+Cross entropy
+
+2022-03-05 08:55:47 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-cross_entropy_#1/checkpoint_best.pt
+2022-03-05 08:55:56 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-05 08:55:56 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-05 08:55:56 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-05 09:29:15 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1965.5s (124.94 tokens/s)
+2022-03-05 09:29:15 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.8813, Perplexity: 117.89
+
+2022-03-05 08:55:55 | INFO | fairseq.tasks.language_modeling | dictionary: 201328 types
+2022-03-05 08:55:55 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-cross_entropy_#2/checkpoint_best.pt
+2022-03-05 08:56:20 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-05 08:56:20 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-05 08:56:21 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-05 09:29:01 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1930.6s (127.20 tokens/s)
+2022-03-05 09:29:01 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9429, Perplexity: 123.03
+
+2022-03-05 08:56:22 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-cross_entropy_#4/checkpoint_best.pt
+2022-03-05 08:56:38 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-05 08:56:38 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-05 08:56:38 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-05 09:30:37 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1996.7s (122.99 tokens/s)
+2022-03-05 09:30:37 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9169, Perplexity: 120.83
+
+######################################################################################################
+######################################################################################################
+Label Smoothing
+
+2022-03-05 08:56:22 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.01_#1/checkpoint_best.pt
+2022-03-05 08:56:38 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-05 08:56:38 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-05 08:56:38 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-05 09:31:15 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2034.6s (120.70 tokens/s)
+(env) [andriusb@eu-login-27 fairseq]$ li.eval_lm | Loss (base 2): 6.8334, Perplexity: 114.04
+
+2022-03-08 06:33:44 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.01_#2/checkpoint_best.pt
+2022-03-08 06:33:58 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-08 06:33:58 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-08 06:33:58 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-08 07:06:23 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1915.2s (128.22 tokens/s)
+2022-03-08 07:06:23 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.7898, Perplexity: 110.64
+
+2022-03-05 08:56:48 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.02_#1/checkpoint_best.pt
+2022-03-05 08:56:56 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-05 08:56:56 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-05 08:56:56 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-05 09:30:27 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1972.4s (124.50 tokens/s)
+(env) [andriusb@eu-login-27 fairseq]$ li.eval_lm | Loss (base 2): 6.8510, Perplexity: 115.44
+
+2022-03-08 06:34:13 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.02_#2/checkpoint_best.pt
+2022-03-08 06:34:26 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-08 06:34:26 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-08 06:34:26 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-08 07:06:58 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1917.6s (128.06 tokens/s)
+2022-03-08 07:06:58 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.7801, Perplexity: 109.90
+
+2022-03-05 08:56:54 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.04_#1/checkpoint_best.pt
+2022-03-05 08:57:08 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-05 08:57:08 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-05 08:57:08 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-05 09:29:18 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1884.8s (130.29 tokens/s)
+2022-03-05 09:29:18 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.8482, Perplexity: 115.21
+
+2022-03-08 06:34:14 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.04_#2/checkpoint_best.pt
+2022-03-08 06:34:27 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-08 06:34:27 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-08 06:34:27 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-08 07:07:13 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1932.7s (127.06 tokens/s)
+2022-03-08 07:07:13 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.8310, Perplexity: 113.85
+
+2022-03-05 08:58:03 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.06_#1/checkpoint_best.pt
+2022-03-05 08:58:30 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-05 08:58:30 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-05 08:58:30 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-05 09:30:57 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1919.2s (127.96 tokens/s)
+2022-03-05 09:30:57 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9591, Perplexity: 124.42
+
+2022-03-08 06:34:10 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.06_#2/checkpoint_best.pt
+2022-03-08 06:34:18 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-08 06:34:18 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-08 06:34:18 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-08 07:06:25 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1894.6s (129.62 tokens/s)
+2022-03-08 07:06:25 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.8109, Perplexity: 112.28
+
+2022-03-05 08:57:20 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.08_#1/checkpoint_best.pt
+2022-03-05 08:57:29 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-05 08:57:29 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-05 08:57:29 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-05 09:30:20 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1936.3s (126.83 tokens/s)
+(env) [andriusb@eu-login-27 fairseq]$ li.eval_lm | Loss (base 2): 6.9619, Perplexity: 124.67
+
+2022-03-08 06:34:41 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.08_#2/checkpoint_best.pt
+2022-03-08 06:34:54 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-08 06:34:54 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-08 06:34:54 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-08 07:07:20 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1917.8s (128.05 tokens/s)
+2022-03-08 07:07:20 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.8269, Perplexity: 113.53
+
+2022-03-05 08:58:03 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.1_#1/checkpoint_best.pt
+2022-03-05 08:58:26 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-05 08:58:26 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-05 08:58:26 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-05 09:30:34 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1853.2s (132.51 tokens/s)
+(env) [andriusb@eu-login-27 fairseq]$ li.eval_lm | Loss (base 2): 6.9509, Perplexity: 123.72
+
+2022-03-08 06:34:41 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.125_fp16-label_smoothing_0.1_#2/checkpoint_best.pt
+2022-03-08 06:34:54 | INFO | fairseq_cli.eval_lm | num. model params: 121,994,240
+2022-03-08 06:34:54 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.125/test
+2022-03-08 06:34:54 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.125 test 122,785 examples
+2022-03-08 07:07:07 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1899.6s (129.28 tokens/s)
+2022-03-08 07:07:07 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.8245, Perplexity: 113.34
+
+
+
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+WIKITEXT 103 at 0.0625 size
+Cross entropy
+
+2022-03-05 09:07:48 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-cross_entropy_#1/checkpoint_best.pt
+2022-03-05 09:07:58 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:07:58 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:07:58 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:36:14 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1649.3s (148.89 tokens/s)
+2022-03-05 09:36:14 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.6806, Perplexity: 205.16
+
+2022-03-05 09:10:23 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-cross_entropy_#2/checkpoint_best.pt
+2022-03-05 09:10:29 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:10:29 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:10:29 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:34:51 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1433.7s (171.28 tokens/s)
+2022-03-05 09:34:51 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.6831, Perplexity: 205.51
+
+2022-03-05 09:07:54 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-cross_entropy_#3/checkpoint_best.pt
+2022-03-05 09:08:07 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:08:07 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:08:07 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:32:59 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1461.6s (168.01 tokens/s)
+2022-03-05 09:32:59 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.6902, Perplexity: 206.52
+
+2022-03-05 09:07:55 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-cross_entropy_#4/checkpoint_best.pt
+2022-03-05 09:08:08 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:08:08 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:08:08 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:33:49 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1505.1s (163.16 tokens/s)
+2022-03-05 09:33:49 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.6355, Perplexity: 198.84
+
+######################################################################################################
+######################################################################################################
+Label Smoothing
+
+2022-03-05 09:10:30 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.01_#1/checkpoint_best.pt
+2022-03-05 09:10:44 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:10:44 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:10:44 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:35:53 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1478.6s (166.09 tokens/s)
+(env) [andriusb@eu-login-27 fairseq]$ li.eval_lm | Loss (base 2): 7.4776, Perplexity: 178.23
+
+2022-03-08 06:28:14 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.01_#2/checkpoint_best.pt
+2022-03-08 06:28:21 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-08 06:28:21 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-08 06:28:21 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-08 06:54:58 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1554.8s (157.94 tokens/s)
+2022-03-08 06:54:58 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.4218, Perplexity: 171.47
+
+2022-03-05 09:10:33 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.02_#1/checkpoint_best.pt
+2022-03-05 09:10:45 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:10:45 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:10:45 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:35:49 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1471.1s (166.93 tokens/s)
+(env) [andriusb@eu-login-27 fairseq]$ li.eval_lm | Loss (base 2): 7.4543, Perplexity: 175.38
+
+2022-03-08 06:28:14 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.02_#2/checkpoint_best.pt
+2022-03-08 06:28:21 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-08 06:28:21 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-08 06:28:21 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-08 06:54:43 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1538.9s (159.58 tokens/s)
+2022-03-08 06:54:43 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.4276, Perplexity: 172.16
+
+2022-03-05 09:10:33 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.04_#1/checkpoint_best.pt
+2022-03-05 09:10:45 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:10:45 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:10:45 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:34:52 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1420.6s (172.86 tokens/s)
+2022-03-05 09:34:52 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.4503, Perplexity: 174.88
+
+2022-03-08 06:28:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.04_#2/checkpoint_best.pt
+2022-03-08 06:28:14 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-08 06:28:14 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-08 06:28:14 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-08 06:54:37 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1544.0s (159.04 tokens/s)
+2022-03-08 06:54:37 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.5488, Perplexity: 187.25
+
+2022-03-05 09:10:23 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.06_#1/checkpoint_best.pt
+2022-03-05 09:10:37 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:10:37 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:10:37 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:35:41 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1469.4s (167.12 tokens/s)
+2022-03-05 09:35:41 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.4456, Perplexity: 174.32
+
+2022-03-08 06:28:39 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.06_#2/checkpoint_best.pt
+2022-03-08 06:28:46 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-08 06:28:46 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-08 06:28:46 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-08 06:55:05 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1540.4s (159.42 tokens/s)
+2022-03-08 06:55:05 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.4840, Perplexity: 179.02
+
+2022-03-05 09:10:26 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.08_#1/checkpoint_best.pt
+2022-03-05 09:10:32 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:10:33 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:10:33 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:36:18 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1511.5s (162.47 tokens/s)
+(env) [andriusb@eu-login-27 fairseq]$ li.eval_lm | Loss (base 2): 7.4672, Perplexity: 176.95
+
+2022-03-08 06:28:47 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.08_#2/checkpoint_best.pt
+2022-03-08 06:28:58 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-08 06:28:58 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-08 06:28:58 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-08 06:55:44 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1563.9s (157.02 tokens/s)
+2022-03-08 06:55:44 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.4457, Perplexity: 174.33
+
+2022-03-05 09:10:26 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.1_#1/checkpoint_best.pt
+2022-03-05 09:10:33 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-05 09:10:33 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-05 09:10:33 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-05 09:35:55 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1488.5s (164.97 tokens/s)
+(env) [andriusb@eu-login-27 fairseq]$ li.eval_lm | Loss (base 2): 7.4876, Perplexity: 179.47
+
+2022-03-08 06:28:47 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.0625_fp16-label_smoothing_0.1_#2/checkpoint_best.pt
+2022-03-08 06:28:58 | INFO | fairseq_cli.eval_lm | num. model params: 89,639,936
+2022-03-08 06:28:58 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.0625/test
+2022-03-08 06:28:58 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.0625 test 122,785 examples
+2022-03-08 06:55:35 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1554.8s (157.94 tokens/s)
+2022-03-08 06:55:35 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.4772, Perplexity: 178.18
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+WIKITEXT 103 at 0.03125 size
+
+2022-03-06 08:59:10 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-cross_entropy_#1/checkpoint_best.pt
+2022-03-06 08:59:22 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-06 08:59:22 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-06 08:59:22 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-06 09:18:59 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1149.2s (213.69 tokens/s)
+2022-03-06 09:18:59 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.4429, Perplexity: 348.00
+
+2022-03-06 08:59:47 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-cross_entropy_#2/checkpoint_best.pt
+2022-03-06 08:59:55 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-06 08:59:55 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-06 08:59:55 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-06 09:20:24 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1197.5s (205.07 tokens/s)
+2022-03-06 09:20:24 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.3736, Perplexity: 331.68
+
+2022-03-06 08:59:47 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-cross_entropy_#3/checkpoint_best.pt
+2022-03-06 08:59:55 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-06 08:59:55 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-06 08:59:55 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-06 09:20:18 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1191.5s (206.10 tokens/s)
+2022-03-06 09:20:18 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.3787, Perplexity: 332.83
+
+2022-03-06 09:00:10 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-cross_entropy_#4/checkpoint_best.pt
+2022-03-06 09:00:14 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-06 09:00:14 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-06 09:00:14 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-06 09:20:43 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1196.2s (205.30 tokens/s)
+2022-03-06 09:20:43 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.2819, Perplexity: 311.24
+
+######################################################################################################
+######################################################################################################
+Label Smoothing
+
+2022-03-06 09:05:04 | INFO | fairseq.tasks.language_modeling | dictionary: 96056 types
+2022-03-06 09:05:04 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.01_#1/checkpoint_best.pt
+2022-03-06 09:05:09 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-06 09:05:09 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-06 09:05:09 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-06 09:25:17 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1180.9s (207.95 tokens/s)
+2022-03-06 09:25:17 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0533, Perplexity: 265.64
+
+2022-03-08 06:51:41 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.01_#2/checkpoint_best.pt
+2022-03-08 06:51:52 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:51:52 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:51:52 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:12:18 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1194.4s (205.60 tokens/s)
+2022-03-08 07:12:18 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0669, Perplexity: 268.16
+
+2022-03-06 09:05:12 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.02_#1/checkpoint_best.pt
+2022-03-06 09:05:22 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-06 09:05:23 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-06 09:05:23 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-06 09:26:11 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1212.5s (202.53 tokens/s)
+2022-03-06 09:26:11 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0378, Perplexity: 262.80
+
+2022-03-08 06:51:41 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.02_#2/checkpoint_best.pt
+2022-03-08 06:51:52 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:51:52 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:51:52 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:12:22 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1198.8s (204.85 tokens/s)
+2022-03-08 07:12:22 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0450, Perplexity: 264.11
+
+2022-03-06 09:05:13 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.04_#1/checkpoint_best.pt
+2022-03-06 09:05:23 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-06 09:05:23 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-06 09:05:23 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-06 09:25:46 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1194.0s (205.67 tokens/s)
+2022-03-06 09:25:46 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0152, Perplexity: 258.70
+
+2022-03-08 06:52:38 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.04_#2/checkpoint_best.pt
+2022-03-08 06:52:45 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:52:45 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:52:45 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:12:56 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1180.2s (208.07 tokens/s)
+2022-03-08 07:12:56 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9900, Perplexity: 254.24
+
+2022-03-08 06:52:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.06_#2/checkpoint_best.pt
+2022-03-08 06:52:13 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:52:13 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:52:13 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:12:28 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1184.5s (207.32 tokens/s)
+2022-03-08 07:12:28 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9826, Perplexity: 252.92
+
+2022-03-06 09:05:13 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.08_#1/checkpoint_best.pt
+2022-03-06 09:05:23 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-06 09:05:23 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-06 09:05:23 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-06 09:25:12 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1160.0s (211.70 tokens/s)
+2022-03-06 09:25:12 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0059, Perplexity: 257.05
+
+2022-03-08 06:52:38 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.08_#2/checkpoint_best.pt
+2022-03-08 06:52:45 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:52:45 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:52:45 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:13:18 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1202.7s (204.18 tokens/s)
+2022-03-08 07:13:18 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9574, Perplexity: 248.56
+
+2022-03-06 09:05:13 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.1_#1/checkpoint_best.pt
+2022-03-06 09:05:23 | INFO | fairseq_cli.eval_lm | num. modelparams:68,094,976 
+2022-03-06 09:05:23 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test 
+2022-03-06 09:05:23 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 
+2022-03-06 09:25:07 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1154.1s (212.78 tokens/s) 
+2022-03-06 09:25:07 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.0248, Perplexity: 260.44 
+
+2022-03-08 06:52:38 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_size_0.03125_fp16-label_smoothing_0.1_#2/checkpoint_best.pt
+2022-03-08 06:52:45 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:52:45 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:52:45 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:13:08 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1192.6s (205.91 tokens/s)
+2022-03-08 07:13:08 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9405, Perplexity: 245.66
+
+######################################################################################################
+######################################################################################################
+Jelinek-Mercer
+
+2022-03-08 07:32:17 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.0_0.08_0.92_#2/checkpoint_best.pt
+2022-03-08 07:32:29 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 07:32:29 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 07:32:29 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:53:38 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1231.4s (199.42 tokens/s)
+2022-03-08 07:53:38 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.2999, Perplexity: 315.14
+
+2022-03-08 06:48:37 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.02_0.06_0.92_#1/checkpoint_best.pt
+2022-03-08 06:48:43 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:48:43 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:48:43 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:09:03 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1186.3s (207.00 tokens/s)
+2022-03-08 07:09:03 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9563, Perplexity: 248.36
+
+2022-03-08 06:49:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.02_0.06_0.92_#2/checkpoint_best.pt
+2022-03-08 06:49:13 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:49:13 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:49:13 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:10:04 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1216.4s (201.88 tokens/s)
+2022-03-08 07:10:04 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9974, Perplexity: 255.53
+
+2022-03-08 06:49:36 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.04_0.04_0.92_#1/checkpoint_best.pt
+2022-03-08 06:49:42 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:49:42 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:49:42 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:10:48 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1232.0s (199.33 tokens/s)
+2022-03-08 07:10:48 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9400, Perplexity: 245.58
+
+2022-03-08 06:49:37 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.04_0.04_0.92_#2/checkpoint_best.pt
+2022-03-08 06:49:43 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:49:43 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:49:43 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:10:11 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1194.9s (205.51 tokens/s)
+2022-03-08 07:10:11 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9430, Perplexity: 246.08
+
+2022-03-08 06:50:06 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.06_0.02_0.92_#1/checkpoint_best.pt
+2022-03-08 06:50:12 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:50:12 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:50:12 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:10:35 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1190.3s (206.31 tokens/s)
+2022-03-08 07:10:35 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9680, Perplexity: 250.38
+
+2022-03-08 06:50:07 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.06_0.02_0.92_#2/checkpoint_best.pt
+2022-03-08 06:50:13 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:50:13 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:50:13 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:10:50 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1204.4s (203.89 tokens/s)
+2022-03-08 07:10:50 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9435, Perplexity: 246.16
+
+2022-03-08 06:50:47 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.07_0.01_0.92_#1/checkpoint_best.pt
+2022-03-08 06:50:59 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:51:00 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:51:00 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:12:12 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1235.1s (198.82 tokens/s)
+2022-03-08 07:12:12 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9614, Perplexity: 249.23
+
+2022-03-08 06:50:47 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w103_fp16_size_0.03125-jelinek_0.07_0.01_0.92_#2/checkpoint_best.pt
+2022-03-08 06:51:00 | INFO | fairseq_cli.eval_lm | num. model params: 68,094,976
+2022-03-08 06:51:00 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-103-raw-size-0.03125/test
+2022-03-08 06:51:00 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-103-raw-size-0.03125 test 122,785 examples
+2022-03-08 07:12:20 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1244.1s (197.39 tokens/s)
+2022-03-08 07:12:20 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.9442, Perplexity: 246.29
+
+
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+wikitext-2-raw
+
+2022-03-08 19:12:23 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_ffn_embed_dim_1024_#1/checkpoint_best.pt
+2022-03-08 19:12:33 | INFO | fairseq_cli.eval_lm | num. model params: 51,848,192
+2022-03-08 19:12:33 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-03-08 19:12:33 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 245,569 examples
+2022-03-08 19:49:09 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2120.6s (115.80 tokens/s)
+2022-03-08 19:49:09 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.8936, Perplexity: 475.59
+
+2022-03-09 06:20:37 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_all_clara_mods_#1/checkpoint_best.pt
+2022-03-09 06:20:42 | INFO | fairseq_cli.eval_lm | num. model params: 51,848,192
+2022-03-09 06:20:42 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-03-09 06:20:42 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 245,569 examples
+2022-03-09 06:55:28 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2014.3s (121.92 tokens/s)
+2022-03-09 06:55:28 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.8405, Perplexity: 458.41
+
+2022-03-08 19:11:47 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_default_config_#1/checkpoint_best.pt
+2022-03-08 19:11:53 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-03-08 19:11:53 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-03-08 19:11:53 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 245,569 examples
+2022-03-08 19:52:53 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2375.9s (103.36 tokens/s)
+2022-03-08 19:52:53 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.7690, Perplexity: 436.24
+
+2022-03-08 19:11:18 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_decoder_attention_heads4_#1/checkpoint_best.pt
+2022-03-08 19:11:23 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-03-08 19:11:23 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-03-08 19:11:23 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 245,569 examples
+2022-03-08 19:46:27 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2047.7s (119.92 tokens/s)
+2022-03-08 19:46:27 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.7611, Perplexity: 433.87
+
+2022-03-08 19:13:17 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_dropout_0.3_#1/checkpoint_best.pt
+2022-03-08 19:13:22 | INFO | fairseq_cli.eval_lm | num. model params: 58,145,792
+2022-03-08 19:13:22 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-03-08 19:13:22 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 245,569 examples
+2022-03-08 19:49:34 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 2107.9s (116.50 tokens/s)
+2022-03-08 19:49:34 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.5346, Perplexity: 370.82
+
+2022-03-08 19:11:18 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cross_entropy_arch_lm_gpt_#1/checkpoint_best.pt
+2022-03-08 19:11:25 | INFO | fairseq_cli.eval_lm | num. model params: 143,903,232
+2022-03-08 19:11:25 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-raw-full/test
+2022-03-08 19:11:25 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-raw-full test 245,569 examples
+2022-03-08 20:28:42 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 4586.9s (53.54 tokens/s)
+2022-03-08 20:28:42 | INFO | fairseq_cli.eval_lm | Loss (base 2): 8.7641, Perplexity: 434.78
+
+wikitext-2-raw
+
+2022-03-09 06:21:04 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_all_clara_mods_#1/checkpoint_best.pt
+2022-03-09 06:21:08 | INFO | fairseq_cli.eval_lm | num. model params: 29,656,064
+2022-03-09 06:21:08 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-full/test
+2022-03-09 06:21:08 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-full test 245,569 examples
+2022-03-09 06:45:47 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1337.6s (183.59 tokens/s)
+2022-03-09 06:45:47 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.0172, Perplexity: 129.54
+
+2022-03-09 06:21:42 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_decoder_attention_heads4_#1/checkpoint_best.pt
+2022-03-09 06:21:53 | INFO | fairseq_cli.eval_lm | num. model params: 35,953,664
+2022-03-09 06:21:53 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-full/test
+2022-03-09 06:21:53 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-full test 245,569 examples
+2022-03-09 06:46:47 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1437.6s (170.81 tokens/s)
+2022-03-09 06:46:47 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9848, Perplexity: 126.66
+
+2022-03-09 06:21:43 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_default_config_#1/checkpoint_best.pt
+2022-03-09 06:21:54 | INFO | fairseq_cli.eval_lm | num. model params: 35,953,664
+2022-03-09 06:21:54 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-full/test
+2022-03-09 06:21:54 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-full test 245,569 examples
+2022-03-09 06:49:15 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1572.3s (156.19 tokens/s)
+2022-03-09 06:49:15 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.0134, Perplexity: 129.19
+
+2022-03-09 06:22:06 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_dropout_0.3_#1/checkpoint_best.pt
+2022-03-09 06:22:10 | INFO | fairseq_cli.eval_lm | num. model params: 35,953,664
+2022-03-09 06:22:10 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-full/test
+2022-03-09 06:22:10 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-full test 245,569 examples
+2022-03-09 06:48:28 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1514.9s (162.10 tokens/s)
+2022-03-09 06:48:28 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.8646, Perplexity: 116.53
+
+2022-03-09 06:22:05 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_full_cross_entropy_ffn_embed_dim_1024_#1/checkpoint_best.pt
+2022-03-09 06:22:09 | INFO | fairseq_cli.eval_lm | num. model params: 29,656,064
+2022-03-09 06:22:09 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-full/test
+2022-03-09 06:22:09 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-full test 245,569 examples
+2022-03-09 06:46:27 | INFO | fairseq_cli.eval_lm | Evaluated 245,569 tokens in 1305.9s (188.05 tokens/s)
+2022-03-09 06:46:27 | INFO | fairseq_cli.eval_lm | Loss (base 2): 7.0576, Perplexity: 133.21
+
+
+
+
+
+
+
+
+
+2022-03-10 18:16:03 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.02_default_config_#1//checkpoint_best.pt
+2022-03-10 18:16:16 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:16:16 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:16:16 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:42:35 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1508.1s (167.15 tokens/s)
+2022-03-10 18:42:35 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9545, Perplexity: 124.02
+
+2022-03-10 18:16:37 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.04_default_config_#1//checkpoint_best.pt
+2022-03-10 18:16:49 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:16:50 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:16:50 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:41:59 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1446.8s (174.23 tokens/s)
+2022-03-10 18:41:59 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9363, Perplexity: 122.48
+
+2022-03-10 18:20:01 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.06_default_config_#1//checkpoint_best.pt
+2022-03-10 18:20:08 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:20:08 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:20:08 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:47:27 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1561.9s (161.39 tokens/s)
+2022-03-10 18:47:27 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9646, Perplexity: 124.90
+
+2022-03-10 18:20:33 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.08_default_config_#1//checkpoint_best.pt
+2022-03-10 18:20:44 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:20:44 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:20:44 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:46:12 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1463.9s (172.20 tokens/s)
+2022-03-10 18:46:12 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9443, Perplexity: 123.15
+
+2022-03-10 18:20:33 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.1_default_config_#1//checkpoint_best.pt
+2022-03-10 18:20:44 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:20:44 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:20:44 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:46:10 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1462.0s (172.43 tokens/s)
+2022-03-10 18:46:10 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9545, Perplexity: 124.03
+
+2022-03-10 18:20:33 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.12_default_config_#1//checkpoint_best.pt
+2022-03-10 18:20:44 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:20:44 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:20:44 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:45:56 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1449.0s (173.97 tokens/s)
+2022-03-10 18:45:56 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9986, Perplexity: 127.87
+
+2022-03-10 18:29:29 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.02_dropout_0.3_#1/checkpoint_best.pt
+2022-03-10 18:29:37 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:29:37 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:29:37 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:55:29 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1482.1s (170.09 tokens/s)
+2022-03-10 18:55:29 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9545, Perplexity: 124.02
+
+2022-03-10 18:29:56 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.04_dropout_0.3_#1/checkpoint_best.pt
+2022-03-10 18:30:01 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:30:01 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:30:01 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:55:20 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1455.0s (173.26 tokens/s)
+2022-03-10 18:55:20 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9232, Perplexity: 121.36
+
+2022-03-10 18:30:24 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.08_dropout_0.3_#1/checkpoint_best.pt
+2022-03-10 18:30:28 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:30:28 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:30:28 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 19:03:23 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1873.6s (134.55 tokens/s)
+2022-03-10 19:03:23 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9443, Perplexity: 123.15
+
+2022-03-10 18:30:23 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.1_dropout_0.3_#1/checkpoint_best.pt
+2022-03-10 18:30:28 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:30:28 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:30:28 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:56:13 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1482.6s (170.03 tokens/s)
+2022-03-10 18:56:13 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9858, Perplexity: 126.74
+
+2022-03-10 18:31:56 | INFO | fairseq_cli.eval_lm | loading model(s) from /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.12_dropout_0.3_#1/checkpoint_best.pt
+2022-03-10 18:32:04 | INFO | fairseq_cli.eval_lm | num. model params: 32,398,336
+2022-03-10 18:32:04 | INFO | fairseq.data.data_utils | loaded 4,358 examples from: data-bin/wikitext-2-cleaned-bpe-full/test
+2022-03-10 18:32:04 | INFO | fairseq_cli.eval_lm | data-bin/wikitext-2-cleaned-bpe-full test 252,087 examples
+2022-03-10 18:57:47 | INFO | fairseq_cli.eval_lm | Evaluated 252,087 tokens in 1474.3s (170.99 tokens/s)
+2022-03-10 18:57:47 | INFO | fairseq_cli.eval_lm | Loss (base 2): 6.9986, Perplexity: 127.87
+
+
+
+109.41

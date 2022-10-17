@@ -1151,3 +1151,340 @@ He's taking epsilon, which is just the total amount of mass saved for uniform di
 Doesn't that make it not a proper distribution? 
 
 Okay so 
+
+
+
+bsub -J w2_UID_beta_0.005 -o runs/w2_UID_beta_0.005 -W 1200 -R "rusage[mem=32000, ngpus_excl_p=1]" \
+fairseq-train --task language_modeling \
+data-bin/wikitext-2-raw-full \
+--save-dir /cluster/scratch/andriusb/checkpoints/w2_UID_beta_0.005 \
+--jason-log-dir jason-ln-logs-w2/w2_UID_beta_0.01 \
+--arch transformer_lm --share-decoder-input-output-vgbffembed \
+--dropout 0.1 \
+--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+--tokens-per-sample 512 --sample-break-mode none \
+--max-tokens 2048 --update-freq 16 \
+--max-update 300000 \
+--fp16 \
+--no-epoch-checkpoints --no-last-checkpoints \
+--criterion reg_allvar_cross_entropy --beta-coefficient 0.005 
+
+
+
+
+
+
+
+1801350 lines in wikitext 3 so
+
+let's try
+
+900675
+
+
+
+
+APEX
+
+module load gcc/6.3.0 python_gpu/3.8.5 hdf5 eth_proxy
+
+
+
+without apex, a batch of jelinek on size 0.5 wikitext 103 raw takes 15 minutes. 
+
+with apex, a batch of jelinek on size 0.5 wikitext 103 raw takes 
+
+find . -name  'checkpoint[0-9].pt' -delete
+
+#-delete
+
+
+jelinek 5 6 and not 7 on half of wikitext 3 are running on big boy GPUs
+
+7 was cancelled
+
+number of tokens in wikitext2 I think 2088628
+
+103227021
+
+
+Wikitext2-raw-full counts of words that happen once:
+
+(Pdb) self.scc[1]
+32055
+(Pdb) self.N
+2088628
+(Pdb) self.dict_size
+76624
+
+mass saved for smoothing = 0.0153
+
+wikitext 103
+
+(Pdb) self.N
+103227021
+(Pdb) self.scc[1]
+270457
+(Pdb) self.dict_size
+623952
+
+wikitext-2-raw-bpe
+
+(Pdb) self.N
+2259153
+(Pdb) self.scc[1]
+1239
+(Pdb) self.dict_size
+30008
+
+wikitext-2-cleaned-bpe
+
+(Pdb) self.N
+2165206
+(Pdb) self.scc[1]
+0
+(Pdb) self.dict_size
+26336
+
+
+
+
+mass saved for smoothing = 0.00262
+
+
+1801350 lines in wikitext 103 train, so 450337
+
+
+
+
+206753735 andriusb RUN   gpuhe.24h  eu-login-26 eu-g3-062   w103_size_0.25_fp16_cross_entropy_#2 Mar  1 09:30
+206754198 andriusb RUN   gpuhe.24h  eu-login-26 eu-g3-055   w103_size_0.25_fp16_label_smoothing_0.02_#1 Mar  1 09:39
+206754233 andriusb RUN   gpuhe.24h  eu-login-26 eu-g3-055   w103_size_0.25_fp16_label_smoothing_0.04_#1 Mar  1 09:39
+206754280 andriusb RUN   gpuhe.24h  eu-login-26 eu-g3-055   w103_size_0.25_fp16_label_smoothing_0.08_#1 Mar  1 09:40
+206753645 andriusb RUN   gpuhe.24h  eu-login-26 eu-g3-065   w103_size_0.25_fp16_cross_entropy_#1 Mar  1 09:28
+206753739 andriusb RUN   gpuhe.24h  eu-login-26 eu-g3-065   w103_size_0.25_fp16_cross_entropy_#3 Mar  1 09:30
+206753757 andriusb RUN   gpuhe.24h  eu-login-26 eu-g3-058   w103_size_0.25_fp16_cross_entropy_#4 Mar  1 09:30
+206754167 andriusb RUN   gpuhe.24h  eu-login-26 eu-g3-058   w103_size_0.25_fp16_label_smoothing_0.1_#1 Mar  1 09:38
+206754176 andriusb RUN   gpuhe.24h  eu-login-26 eu-g3-058   w103_size_0.25_fp16_label_smoothing_0.01_#1 Mar  1 09:38
+
+
+
+size: 0.125{
+  Rerunning label smoothing since the results are a bit uniform
+}
+
+size: 0.0625{
+  rerunning label smoothing
+}
+
+size 0.03125{
+  rerunning label smoothing
+  running jelinek at 0.08 total mass reserved
+}
+
+
+
+/cluster/work/cotterell/tclark/word-order-uid/data/data-bin-bpe
+
+
+
+
+Find beter set of hyperparameters for small datasets
+
+Get for 3 different values of different hyperparameter values for each smoothing method
+
+below 100 perplexity on wikitext2 
+
+sum(p.numel() for p in model.parameters() if p.requires_grad) = 58145792
+
+with default fairseq transformer
+
+
+51848192
+with --decoder-ffn-embed-dim 1024 
+
+58145792
+with --decoder-attention-heads 4
+
+51848192
+with both
+
+with --arch-lm-gpt
+143903232
+
+
+perplexities on wikitext-2-raw-full v.s. wikitext-2-cleaned-full
+
+ffn_embed_dim 1024
+475.59 v.s. 133.21
+
+all clara mods
+458.41 v.s. 129.54
+
+default config
+436.24 v.s. 129.19
+
+decoder heads 4
+433.87 v.s. 126.66
+
+dropout 0.3
+370.82 v.s. 116.53
+
+arch_lm_gpt
+434.78 v.s. pending (takes 2.5 times longer to run inference)
+
+
+
+/cluster/home/andriusb/fq/fast
+
+
+1801350 total lines in wikitext103 cleaned train file
+
+900,675 at 0.5
+
+awk '{for(i = 1; i <= NF; i++) {a[$i]++}} END {for(k in a) if(a[k] == 1){counter++} print "Unique words in file " FILENAME " are: "counter}' wiki.train.tokens 
+
+cat wiki.train.tokens |tr '\n' ' '|tr '\t' ' '|tr -s ' '|tr ' ' '\n'|sort|uniq|wc -l
+
+awk -v RS=" " '{a[$0]++} END{for(k in a) sum++; print sum}' wiki.train.tokens
+
+
+cp /cluster/home/andriusb/fq/fast ./
+
+./fast learnbpe 40000 wiki.train.tokens > codes
+
+./fast applybpe wiki.train.tokens_bpe wiki.train.tokens codes 
+
+./fast getvocab wiki.train.tokens_bpe > vocab
+
+./fast applybpe wiki.test.tokens_bpe wiki.test.tokens codes vocab
+
+./fast applybpe wiki.valid.tokens_bpe wiki.valid.tokens codes vocab
+
+
+
+/cluster/work/cotterell/tclark/word-order-uid/data/data-bin-bpe/de
+
+en, de, ru, vi, hi
+
+103000000
+
+okay so /16 is the factor for the wikitext103, or 0.0625
+
+
+208071525 andriusb RUN   gpu.120h   eu-login-45 eu-g2-02    ru_kneser_n2_d0.1_dropout_0.3_#1 Mar 13 12:28
+208071533 andriusb RUN   gpu.120h   eu-login-45 eu-g2-02    ru_kneser_n2_d0.15_dropout_0.3_#1 Mar 13 12:28
+208071507 andriusb RUN   gpu.120h   eu-login-45 eu-g2-01    ru_kneser_n2_d0.025_dropout_0.3_#1 Mar 13 12:28
+208071508 andriusb RUN   gpu.120h   eu-login-45 eu-g2-01    ru_kneser_n2_d0.05_dropout_0.3_#1 Mar 13 12:28
+208071620 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06    ru_kneser_n2_d0.2_dropout_0.3_#1 Mar 13 12:29
+208071705 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06    ru_kneser_n2_d0.5_dropout_0.3_#1 Mar 13 12:29
+208071770 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06    ru_kneser_n2_d0.9_dropout_0.3_#1 Mar 13 12:29
+208071512 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06    ru_kneser_n2_d0.075_dropout_0.3_#1 Mar 13 12:28
+
+208071453 andriusb RUN   gpu.120h   eu-login-45 eu-g2-10    de_kneser_n2_d0.025_dropout_0.3_#1 Mar 13 12:26
+208071455 andriusb RUN   gpu.120h   eu-login-45 eu-g2-09    de_kneser_n2_d0.05_dropout_0.3_#1 Mar 13 12:26
+208071459 andriusb RUN   gpu.120h   eu-login-45 eu-g2-03    de_kneser_n2_d0.1_dropout_0.3_#1 Mar 13 12:26
+208071460 andriusb RUN   gpu.120h   eu-login-45 eu-g2-02    de_kneser_n2_d0.15_dropout_0.3_#1 Mar 13 12:26
+208071462 andriusb RUN   gpu.120h   eu-login-45 eu-g2-02    de_kneser_n2_d0.2_dropout_0.3_#1 Mar 13 12:27
+208071467 andriusb RUN   gpu.120h   eu-login-45 eu-g3-002   de_kneser_n2_d0.5_dropout_0.3_#1 Mar 13 12:27
+208071470 andriusb RUN   gpu.120h   eu-login-45 eu-g2-01    de_kneser_n2_d0.9_dropout_0.3_#1 Mar 13 12:27
+208071456 andriusb RUN   gpu.120h   eu-login-45 eu-g2-06    de_kneser_n2_d0.075_dropout_0.3_#1 Mar 13 12:26
+
+
+In case stuff times out
+
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.0_0.075_0.925_#1.txt
+TARGET=$1
+DIVERGENCE=Uniform
+grep -o "$DIVERGENCE: [0-9]*\.[0-9]*" runs/$TARGET | grep -o "[0-9]*\.[0-9]*" > divergences/$TARGET
+perl -pe 's/\n/$1,/' divergences/$TARGET > divergences/temp_$TARGET
+sed -i '1s/^/[ /' divergences/temp_$TARGET
+sed '$ s/.$//' divergences/temp_$TARGET > divergences/$TARGET
+echo "]" >> divergences/$TARGET
+rm divergences/temp_$TARGET
+mv divergences/$TARGET divergences/$DIVERGENCE\_$TARGET
+DIVERGENCE=Unigram
+grep -o "$DIVERGENCE: [0-9]*\.[0-9]*" runs/$TARGET | grep -o "[0-9]*\.[0-9]*" > divergences/$TARGET
+perl -pe 's/\n/$1,/' divergences/$TARGET > divergences/temp_$TARGET
+sed -i '1s/^/[ /' divergences/temp_$TARGET
+sed '$ s/.$//' divergences/temp_$TARGET > divergences/$TARGET
+echo "]" >> divergences/$TARGET
+rm divergences/temp_$TARGET
+mv divergences/$TARGET divergences/$DIVERGENCE\_$TARGET
+
+
+
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.0_0.075_0.925_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.01_0.065_0.925_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.02_0.055_0.925_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.03_0.045_0.925_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.04_0.035_0.925_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.05_0.025_0.925_#1
+wikitext-103-cleaned-bpe-size0.0625_dropout_0.3_jelinek_0.06_0.015_0.925_#1
+
+
+Language models and why they don't work section with regularization
+
+IWSLT tested more thoroughly
+
+Maybe add another dataset
+
+50 pages ish for the thesis 
+
+pictures
+
+macros
+
+0.4 avg 33.04333333333333
+
+0.3 32.75
+
+32.5
+
+smoothing:
+
+0.1 33.295
+0.2 33.87
+0.3 33.8
+
+
+Jelinek intervals for de-en: 0.19, 0.18, 0.16, 0.14, 0.08, 0.04, 0.02, 0.01, 0.0
+
+So need 0.12, 0.1, 0.06
+
+/cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_label_smoothing_0.02_dropout_0.3_#2/checkpoint_best.pt
+
+For dropout need 0.05 0.15, 0.25, 0.35, 4.5
+
+
+Shit I did: kneser for de_en, kneser for wikitext103, jelinek for wikitext103
+
+210654167 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-083   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.02_dropout_0.35_#1 Mar 23 19:09
+210654183 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-083   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.02_dropout_0.35_#2 Mar 23 19:09
+210654209 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-083   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.02_dropout_0.35_#3 Mar 23 19:09
+210654225 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-083   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.02_dropout_0.35_#4 Mar 23 19:09
+210654282 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-083   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.04_dropout_0.35_#3 Mar 23 19:10
+210654292 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-083   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.04_dropout_0.35_#4 Mar 23 19:10
+210654316 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-083   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.08_dropout_0.35_#1 Mar 23 19:11
+210654324 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-083   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.08_dropout_0.35_#2 Mar 23 19:11
+210654280 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.04_dropout_0.35_#1 Mar 23 19:10
+210654281 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.04_dropout_0.35_#2 Mar 23 19:10
+210654370 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.16_dropout_0.35_#1 Mar 23 19:11
+210654398 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.16_dropout_0.35_#4 Mar 23 19:12
+210654423 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-049   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.32_dropout_0.35_#1 Mar 23 19:12
+210654331 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-052   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.08_dropout_0.35_#3 Mar 23 19:11
+210654342 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-052   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.08_dropout_0.35_#4 Mar 23 19:11
+210654507 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-052   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.64_dropout_0.35_#2 Mar 23 19:13
+210654522 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-052   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.64_dropout_0.35_#3 Mar 23 19:13
+210654535 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-052   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.64_dropout_0.35_#4 Mar 23 19:13
+210655098 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-052   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#1 Mar 23 19:20
+210655116 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-052   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#2 Mar 23 19:20
+210655120 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-052   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#3 Mar 23 19:20
+210654456 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-055   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.32_dropout_0.35_#3 Mar 23 19:12
+210654500 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-055   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.64_dropout_0.35_#1 Mar 23 19:12
+210655131 andriusb RUN   gpuhe.24h  eu-login-27 eu-g3-055   wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#4 Mar 23 19:20
+
+ls /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#1
+
+cp  /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.95_dropout_0.35_#4/checkpoint_best.pt  /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.02_dropout_0.35_#4/checkpoint_last.pt
